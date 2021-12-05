@@ -10,11 +10,22 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
+import { LoaderFunction } from "remix";
 
 import { CardAuth } from "~/components/CardAuth";
 import { LinkUI } from "~/components/LinkUI";
 import { Logo } from "~/components/Logo";
 import { PasswordField } from "~/components/PasswordField";
+import { authenticator } from "~/services/auth.server";
+
+export let loader: LoaderFunction = async ({ request }) => {
+  // If the user is already authenticated redirect to /dashboard directly
+  const user = await authenticator.isAuthenticated(request, {
+    successRedirect: "/",
+  });
+  console.log({ user });
+  return user;
+};
 
 export default function Login() {
   return (
@@ -29,10 +40,6 @@ export default function Login() {
         <Heading textAlign="center" size="xl" fontWeight="extrabold">
           Sign in to your account
         </Heading>
-        <Text mt="4" mb="8" align="center" maxW="md" fontWeight="medium">
-          <Text as="span">Don&apos;t have an account?</Text>
-          <LinkUI href="#">Start free trial</LinkUI>
-        </Text>
         <CardAuth>
           <chakra.form action="/auth/auth0" method="post">
             <Stack spacing="6">

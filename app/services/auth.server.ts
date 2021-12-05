@@ -1,5 +1,7 @@
+import { User } from "@prisma/client";
+import { redirect } from "@remix-run/server-runtime";
 import { Auth0Strategy, Authenticator } from "remix-auth";
-import { User } from "~/models/user";
+import { db } from "./db.server";
 import { sessionStorage } from "./session.server";
 
 // Create an instance of the authenticator, pass a generic with what your
@@ -21,10 +23,14 @@ let auth0Strategy = new Auth0Strategy(
     console.log({ auth0Params });
     console.log({ profile });
 
-    return {
-      email: "lucas@lucas.com",
-      password: "234234234234",
-    };
+    const user = await db.user.findUnique({
+      where: { email: profile.emails[0].value },
+    });
+
+    console.log({ user });
+
+    if (!user) redirect("/login?error=user_not_found");
+    return user;
   }
 );
 

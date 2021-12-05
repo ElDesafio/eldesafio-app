@@ -1,6 +1,6 @@
 // app/routes/auth.auth0.tsx
 import { ActionFunction, LoaderFunction, redirect } from "remix";
-import { authenticator } from "~/util/auth.server";
+import { authenticator } from "~/services/auth.server";
 
 // export let loader: LoaderFunction = async ({ request }) => {
 //   authenticator.authenticate("auth0", request);
