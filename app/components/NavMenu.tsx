@@ -13,8 +13,6 @@ import { useLocation } from "remix";
 
 const MobileNavMenu = (props: { isOpen?: boolean }) => {
   const location = useLocation();
-  console.log(location.pathname);
-
   const navItems = [
     {
       label: "Participantes",
@@ -74,6 +72,7 @@ const MobileNavMenu = (props: { isOpen?: boolean }) => {
             to={navItem.to}
             active={navItem.active}
             label={navItem.label}
+            key={navItem.label}
           />
         ))}
       </Box>
@@ -83,8 +82,6 @@ const MobileNavMenu = (props: { isOpen?: boolean }) => {
 
 const DesktopNavMenu = () => {
   const location = useLocation();
-  console.log(location.pathname);
-
   const navItems = [
     {
       label: "Participantes",
@@ -131,6 +128,7 @@ const DesktopNavMenu = () => {
           icon={navItem.icon}
           active={navItem.active}
           label={navItem.label}
+          key={navItem.label}
         />
       ))}
     </HStack>

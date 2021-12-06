@@ -11,7 +11,91 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
+  id                  Int           @id @default(autoincrement())
+  email               String        @unique
+  name                String
+  createdAt           DateTime      @default(now()) @db.Timestamptz
+  updatedAt           DateTime      @default(now()) @updatedAt @db.Timestamptz
+  createdParticipants Participant[] @relation("CreatedByUser")
+  updatedParticipants Participant[] @relation("UpdatedByUser")
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Neighborhood {
+  LA_LATA
+  MORENO
+  SAN_FRANCISQUITO
+  OTHER
+}
+
+enum PhoneBelongsTo {
+  SELF
+  MOTHER
+  FATHER
+  TUTOR
+}
+
+model Participant {
+  id                         Int              @id @default(autoincrement())
+  active                     Boolean          @default(false)
+  firstName                  String
+  lastName                   String
+  birthday                   String
+  dni                        String?
+  sex                        Sex
+  email                      String?
+  neighborhood               Neighborhood?
+  city                       String?
+  address                    String?
+  picture                    String?
+  medicalInsurance           String?
+  phone1                     String?
+  phone1HasWhatsapp          Boolean?         @default(false)
+  phone1BelongsTo            PhoneBelongsTo?
+  phone2                     String?
+  phone2HasWhatsapp          Boolean?         @default(false)
+  phone2BelongsTo            PhoneBelongsTo?
+  biography                  String?
+  presentedDNI               Boolean          @default(false)
+  presentedHealthCertificate Boolean          @default(false)
+  healthCertificateDate      DateTime?        @db.Date
+  createdByUser              User             @relation("CreatedByUser", fields: [createdBy], references: [id])
+  createdBy                  Int
+  updatedByUser              User             @relation("UpdatedByUser", fields: [updatedBy], references: [id])
+  updatedBy                  Int
+  createdAt                  DateTime         @default(now()) @db.Timestamptz
+  updatedAt                  DateTime         @default(now()) @updatedAt @db.Timestamptz
+  surveyBiography            SurveyBiography? @relation(fields: [surveyBiographyId], references: [id])
+  surveyBiographyId          Int?
+}
+
+model SurveyBiography {
+  /// SurvayBiography id
+  id                  Int     @id @default(autoincrement())
+  /// Who the participant lives with
+  livesWith           String
+  /// Whether the participant changed school
+  changedSchool       Boolean @default(false)
+  /// Whether the participant repeated the school year
+  repeatedYear        Boolean @default(false)
+  /// How are they going in the school
+  schoolSituation     String
+  /// Why is the participant interested in participating in the programs?
+  programsInterest    String
+  /// Whether participated in the programs before
+  participatedBefore  Boolean @default(false)
+  /// Whether are they doing other activities besided El Desafio
+  otherActivities     Boolean @default(false)
+  /// Personal description
+  personalDescription String
+  /// Home Activities and typical day activities
+  homeActivities      String
+
+
+  Participant Participant[]
 }

@@ -33,7 +33,12 @@ export default function Dashboard() {
   // use the user to render the UI of your private route
   const { isMenuOpen, toggle } = useMobileMenuState();
   return (
-    <Flex direction="column" bg={mode("gray.100", "gray.800")} height="100vh">
+    <Flex
+      direction="column"
+      bg={mode("gray.100", "gray.800")}
+      height="auto"
+      minHeight="100vh"
+    >
       <Flex align="center" bg="blue.600" color="white" px="6" minH="16">
         <Flex justify="space-between" align="center" w="full">
           <MobileHamburgerMenu onClick={toggle} isOpen={isMenuOpen} />
