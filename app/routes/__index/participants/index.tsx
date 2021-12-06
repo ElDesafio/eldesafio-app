@@ -89,7 +89,6 @@ export default function Participants() {
                         <Box flexShrink={0}>
                           <Avatar
                             size="md"
-                            name={`${participant.firstName} ${participant.lastName}`}
                             src={participant.picture || undefined}
                           />
                         </Box>
@@ -114,9 +113,11 @@ export default function Participants() {
                     </Td>
                     <Td>{participant.dni}</Td>
                     <Td textAlign="right">
-                      <Button variant="link" colorScheme="blue">
-                        Edit
-                      </Button>
+                      <Link to={`${participant.id}/edit`}>
+                        <Button variant="link" colorScheme="blue">
+                          Edit
+                        </Button>
+                      </Link>
                     </Td>
                   </Tr>
                 ))}

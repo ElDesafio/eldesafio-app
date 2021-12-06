@@ -23,7 +23,7 @@ import * as z from "zod";
 import { FormStack } from "~/components/Form/FormStack";
 import { useState } from "react";
 import { FormSelect } from "~/components/Form/FormSelect";
-import { Neighborhood, PhoneBelongsTo, Sex } from ".prisma/client";
+import { Neighborhood, Participant, PhoneBelongsTo, Sex } from ".prisma/client";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
 
 const emptyStringToUndefined = z.literal("").transform(() => undefined);
@@ -40,32 +40,42 @@ const participantFormSchema = z.object({
   picture: z
     .optional(z.string().url("La URL de la imagen no es válida"))
     .or(z.literal(""))
-    .transform((value) => value || undefined),
+    .transform((value) => value || undefined)
+    .nullable(),
   sex: z.nativeEnum(Sex, {
     errorMap: (issue) => ({
       message: "Sexo no puede estar vacío",
     }),
   }),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  neighborhood: asOptionalField(z.nativeEnum(Neighborhood)),
-  email: asOptionalField(z.string().email("No es un correo elecrónico válido")),
-  phone1: z.string().optional(),
-  phone1HasWhatsapp: asOptionalField(z.string()),
-  phone1BelongsTo: asOptionalField(z.nativeEnum(PhoneBelongsTo)),
-  phone2: z.string().optional(),
-  phone2HasWhatsapp: asOptionalField(z.string()),
-  phone2BelongsTo: asOptionalField(z.nativeEnum(PhoneBelongsTo)),
-  biography: z.string().optional(),
-  presentedHealthCertificate: asOptionalField(z.string()),
-  healthCertificateDate: asOptionalField(z.string().optional()),
-  presentedDNI: asOptionalField(z.string()),
+  address: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  neighborhood: asOptionalField(z.nativeEnum(Neighborhood)).nullable(),
+  email: asOptionalField(
+    z.string().email("No es un correo elecrónico válido")
+  ).nullable(),
+  phone1: z.string().optional().nullable(),
+  phone1HasWhatsapp: asOptionalField(z.string()).nullable(),
+  phone1BelongsTo: asOptionalField(z.nativeEnum(PhoneBelongsTo)).nullable(),
+  phone2: z.string().optional().nullable(),
+  phone2HasWhatsapp: asOptionalField(z.string()).nullable(),
+  phone2BelongsTo: asOptionalField(z.nativeEnum(PhoneBelongsTo)).nullable(),
+  biography: z.string().optional().nullable(),
+  presentedHealthCertificate: asOptionalField(z.string()).nullable(),
+  healthCertificateDate: asOptionalField(z.string().optional()).nullable(),
+  presentedDNI: asOptionalField(z.string()).nullable(),
 });
 
 export const participantFormValidator = withZod(participantFormSchema);
 
-export function ParticipantForm() {
-  const [uploadedImage, setUploadedImage] = useState<string>("");
+export function ParticipantForm({
+  defaultValues,
+}: {
+  defaultValues?: Partial<Participant>;
+}) {
+  const [uploadedImage, setUploadedImage] = useState<string>(
+    defaultValues?.picture || ""
+  );
+  console.log({ defaultValues });
 
   return (
     <Box as="main" py="8" flex="1">
@@ -77,7 +87,24 @@ export function ParticipantForm() {
           shadow="base"
         >
           <Box px={{ base: "4", md: "10" }} maxWidth="7xl">
-            <ValidatedForm validator={participantFormValidator} method="post">
+            <ValidatedForm
+              validator={participantFormValidator}
+              defaultValues={{
+                ...defaultValues,
+                phone1HasWhatsapp: defaultValues?.phone1HasWhatsapp
+                  ? "true"
+                  : undefined,
+                phone2HasWhatsapp: defaultValues?.phone2HasWhatsapp
+                  ? "true"
+                  : undefined,
+                presentedHealthCertificate:
+                  defaultValues?.presentedHealthCertificate
+                    ? "true"
+                    : undefined,
+                presentedDNI: defaultValues?.presentedDNI ? "true" : undefined,
+              }}
+              method="post"
+            >
               <Stack spacing="4" divider={<StackDivider />}>
                 <FieldGroup title="Foto">
                   <Stack

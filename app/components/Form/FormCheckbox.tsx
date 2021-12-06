@@ -23,6 +23,8 @@ export const FormCheckbox = ({
   ...rest
 }: FormCheckboxProps & CheckboxProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
+  console.log(name, defaultValue);
+  console.log("rest.value", rest.value);
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
@@ -32,6 +34,7 @@ export const FormCheckbox = ({
         onBlur={validate}
         onChange={clearError}
         defaultValue={defaultValue}
+        defaultChecked={defaultValue}
         {...rest}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
