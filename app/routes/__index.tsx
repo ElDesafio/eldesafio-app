@@ -48,8 +48,8 @@ export default function Dashboard() {
           <Logo
             display={{ base: "none", lg: "block" }}
             flexShrink={0}
-            h="5"
-            marginEnd="10"
+            h="16"
+            marginEnd="12"
           />
 
           {/* Desktop Navigation Menu */}
