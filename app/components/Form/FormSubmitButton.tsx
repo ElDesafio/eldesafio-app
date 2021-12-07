@@ -10,7 +10,7 @@ export const FormSubmitButton = () => {
       disabled={isSubmitting}
       isLoading={isSubmitting}
     >
-      {isSubmitting ? "Creando..." : "Crear"}
+      {isSubmitting ? "Enviando..." : "Enviar"}
     </Button>
   );
 };

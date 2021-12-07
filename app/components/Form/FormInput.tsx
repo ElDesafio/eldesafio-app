@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
   InputProps,
+  VisuallyHidden,
   VisuallyHiddenInput,
 } from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
@@ -26,32 +27,25 @@ export const FormInput = ({
   ...rest
 }: FormInputProps & InputProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
+
+  const input = (
+    <Input
+      id={name}
+      name={name}
+      onBlur={validate}
+      onChange={clearError}
+      defaultValue={defaultValue}
+      {...rest}
+    />
+  );
   return (
     <>
-      {hidden ? (
-        <VisuallyHiddenInput
-          id={name}
-          name={name}
-          onBlur={validate}
-          onChange={clearError}
-          defaultValue={defaultValue}
-          type={rest?.type}
-        />
-      ) : (
-        <FormControl isInvalid={!!error} isRequired={isRequired}>
-          <FormLabel htmlFor={name}>{label}</FormLabel>
-          <Input
-            id={name}
-            name={name}
-            onBlur={validate}
-            onChange={clearError}
-            defaultValue={defaultValue}
-            {...rest}
-          />
-          {helperText && <FormHelperText>{helperText}</FormHelperText>}
-          {error && <FormErrorMessage>{error}</FormErrorMessage>}
-        </FormControl>
-      )}
+      <FormControl isInvalid={!!error} isRequired={isRequired}>
+        {!hidden && <FormLabel htmlFor={name}>{label}</FormLabel>}
+        {hidden ? <VisuallyHidden>{input}</VisuallyHidden> : input}
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {error && <FormErrorMessage>{error}</FormErrorMessage>}
+      </FormControl>
     </>
   );
 };

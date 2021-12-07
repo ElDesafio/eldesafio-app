@@ -46,7 +46,7 @@ model Participant {
   firstName                  String
   lastName                   String
   birthday                   String
-  dni                        String?
+  dni                        String
   sex                        Sex
   email                      String?
   neighborhood               Neighborhood?
@@ -55,15 +55,15 @@ model Participant {
   picture                    String?
   medicalInsurance           String?
   phone1                     String?
-  phone1HasWhatsapp          Boolean?         @default(false)
+  phone1HasWhatsapp          Boolean          @default(false)
   phone1BelongsTo            PhoneBelongsTo?
   phone2                     String?
-  phone2HasWhatsapp          Boolean?         @default(false)
+  phone2HasWhatsapp          Boolean          @default(false)
   phone2BelongsTo            PhoneBelongsTo?
   biography                  String?
   presentedDNI               Boolean          @default(false)
   presentedHealthCertificate Boolean          @default(false)
-  healthCertificateDate      DateTime?        @db.Date
+  healthCertificateDate      String?
   createdByUser              User             @relation("CreatedByUser", fields: [createdBy], references: [id])
   createdBy                  Int
   updatedByUser              User             @relation("UpdatedByUser", fields: [updatedBy], references: [id])

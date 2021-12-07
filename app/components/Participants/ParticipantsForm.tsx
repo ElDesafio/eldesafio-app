@@ -25,6 +25,8 @@ import { useState } from "react";
 import { FormSelect } from "~/components/Form/FormSelect";
 import { Neighborhood, Participant, PhoneBelongsTo, Sex } from ".prisma/client";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
+import { FormTextArea } from "../Form/FormTextArea";
+import { useNavigate } from "remix";
 
 const emptyStringToUndefined = z.literal("").transform(() => undefined);
 
@@ -32,50 +34,76 @@ export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
   return schema.optional().or(emptyStringToUndefined);
 }
 
-const participantFormSchema = z.object({
+// https://github.com/colinhacks/zod/issues/372#issuecomment-826380330
+const schemaForType = function <T>() {
+  return function <S extends z.ZodType<T, any, any>>(arg: S) {
+    return arg;
+  };
+};
+
+const schemaCheckbox = z.preprocess((value) => value === "true", z.boolean());
+
+const participantSchema = z.object({
+  // id: z.number(),
+  // medicalInsurance: z.string().nullable(),
+  // createdBy: z.number(),
+  // updatedBy: z.number(),
+  // createdAt: z.date(),
+  // updatedAt: z.date(),
+  // active: z.boolean(),
+  // surveyBiographyId: z.number().nullable(),
   firstName: z.string().nonempty("Nombre no puede estar vacío"),
   lastName: z.string().nonempty("Apellido no puede estar vacío"),
   birthday: z.string().nonempty("Fecha de nacimiento no puede estar vacía"),
   dni: z.string().nonempty("DNI no puede estar vacío"),
-  picture: z
-    .optional(z.string().url("La URL de la imagen no es válida"))
-    .or(z.literal(""))
-    .transform((value) => value || undefined)
-    .nullable(),
+  picture: z.string().url("La URL de la imagen no es válida").nullable(),
   sex: z.nativeEnum(Sex, {
     errorMap: (issue) => ({
       message: "Sexo no puede estar vacío",
     }),
   }),
-  address: z.string().optional().nullable(),
-  city: z.string().optional().nullable(),
-  neighborhood: asOptionalField(z.nativeEnum(Neighborhood)).nullable(),
-  email: asOptionalField(
-    z.string().email("No es un correo elecrónico válido")
-  ).nullable(),
-  phone1: z.string().optional().nullable(),
-  phone1HasWhatsapp: asOptionalField(z.string()).nullable(),
-  phone1BelongsTo: asOptionalField(z.nativeEnum(PhoneBelongsTo)).nullable(),
-  phone2: z.string().optional().nullable(),
-  phone2HasWhatsapp: asOptionalField(z.string()).nullable(),
-  phone2BelongsTo: asOptionalField(z.nativeEnum(PhoneBelongsTo)).nullable(),
-  biography: z.string().optional().nullable(),
-  presentedHealthCertificate: asOptionalField(z.string()).nullable(),
-  healthCertificateDate: asOptionalField(z.string().optional()).nullable(),
-  presentedDNI: asOptionalField(z.string()).nullable(),
+  address: z.string().nullable(),
+  city: z.string().nullable(),
+  neighborhood: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.nativeEnum(Neighborhood).nullable()
+  ),
+  email: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.string().email("No es un correo elecrónico válido").nullable()
+  ),
+  phone1: z.string().nullable(),
+  phone1HasWhatsapp: schemaCheckbox,
+  phone1BelongsTo: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.nativeEnum(PhoneBelongsTo).nullable()
+  ),
+  phone2: z.string().nullable(),
+  phone2HasWhatsapp: schemaCheckbox,
+  phone2BelongsTo: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.nativeEnum(PhoneBelongsTo).nullable()
+  ),
+  biography: z.string().nullable(),
+  presentedHealthCertificate: schemaCheckbox,
+  healthCertificateDate: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.string().nullable()
+  ),
+  presentedDNI: schemaCheckbox,
 });
 
-export const participantFormValidator = withZod(participantFormSchema);
+export const participantFormValidator = withZod(participantSchema);
 
 export function ParticipantForm({
   defaultValues,
 }: {
-  defaultValues?: Partial<Participant>;
+  defaultValues?: Partial<z.infer<typeof participantSchema>>;
 }) {
   const [uploadedImage, setUploadedImage] = useState<string>(
     defaultValues?.picture || ""
   );
-  console.log({ defaultValues });
+  let navigate = useNavigate();
 
   return (
     <Box as="main" py="8" flex="1">
@@ -89,20 +117,7 @@ export function ParticipantForm({
           <Box px={{ base: "4", md: "10" }} maxWidth="7xl">
             <ValidatedForm
               validator={participantFormValidator}
-              defaultValues={{
-                ...defaultValues,
-                phone1HasWhatsapp: defaultValues?.phone1HasWhatsapp
-                  ? "true"
-                  : undefined,
-                phone2HasWhatsapp: defaultValues?.phone2HasWhatsapp
-                  ? "true"
-                  : undefined,
-                presentedHealthCertificate:
-                  defaultValues?.presentedHealthCertificate
-                    ? "true"
-                    : undefined,
-                presentedDNI: defaultValues?.presentedDNI ? "true" : undefined,
-              }}
+              defaultValues={defaultValues}
               method="post"
             >
               <Stack spacing="4" divider={<StackDivider />}>
@@ -305,13 +320,11 @@ export function ParticipantForm({
                   </VStack>
                 </FieldGroup>
                 <FieldGroup title="Biografía">
-                  <FormControl id="biography">
-                    <Textarea rows={5} />
-                    <FormHelperText>
-                      Si surgen datos importantes durante la inscripción se
-                      pueden detallar aquí (se puede actualizar después)
-                    </FormHelperText>
-                  </FormControl>
+                  <FormTextArea
+                    name="biography"
+                    rows={5}
+                    helperText="Si surgen datos importantes durante la inscripción se pueden detallar aquí (se puede actualizar después)"
+                  />
                 </FieldGroup>
                 <FieldGroup title="Documentos Presentados">
                   <Stack width="full" spacing="4">
@@ -336,7 +349,9 @@ export function ParticipantForm({
               </Stack>
               <HStack width="full" justifyContent="center" mt="8">
                 <FormSubmitButton />
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" onClick={() => navigate(-1)}>
+                  Cancelar
+                </Button>
               </HStack>
             </ValidatedForm>
           </Box>

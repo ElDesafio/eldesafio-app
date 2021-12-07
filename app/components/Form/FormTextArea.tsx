@@ -1,6 +1,6 @@
 import {
-  Checkbox,
-  CheckboxProps,
+  Textarea,
+  TextareaProps,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -8,25 +8,25 @@ import {
 } from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
 
-type FormCheckboxProps = {
+type FormTextAreaProps = {
   name: string;
   label?: string;
   isRequired?: boolean;
   helperText?: React.ReactNode;
 };
 
-export const FormCheckbox = ({
+export const FormTextArea = ({
   name,
   label,
   isRequired,
   helperText,
   ...rest
-}: FormCheckboxProps & CheckboxProps) => {
+}: FormTextAreaProps & TextareaProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Checkbox
+      <Textarea
         id={name}
         name={name}
         onBlur={validate}

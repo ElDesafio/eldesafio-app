@@ -22,7 +22,9 @@ export let loader: LoaderFunction = async ({ params }) => {
 };
 
 //ACTION
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, params }) => {
+  const { id } = z.object({ id: z.string() }).parse(params);
+
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
@@ -30,7 +32,6 @@ export const action: ActionFunction = async ({ request }) => {
   const fieldValues = participantFormValidator.validate(
     Object.fromEntries(await request.formData())
   );
-  console.log(fieldValues);
   if (fieldValues.error) return validationError(fieldValues.error);
 
   const {
@@ -44,7 +45,8 @@ export const action: ActionFunction = async ({ request }) => {
     healthCertificateDate,
   } = fieldValues.data;
 
-  const participant = await db.participant.create({
+  const participant = await db.participant.update({
+    where: { id: +id },
     data: {
       ...fieldValues.data,
       neighborhood: neighborhood || undefined,
@@ -55,7 +57,6 @@ export const action: ActionFunction = async ({ request }) => {
       presentedHealthCertificate: !!presentedHealthCertificate,
       presentedDNI: !!presentedDNI,
       healthCertificateDate: healthCertificateDate || undefined,
-      createdBy: user.id,
       updatedBy: user.id,
     },
   });
@@ -65,7 +66,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function EditParticipant() {
   const participant = useLoaderData<Participant>();
-  console.log(participant);
   return (
     <>
       <Box
