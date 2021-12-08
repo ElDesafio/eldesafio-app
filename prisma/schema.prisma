@@ -11,13 +11,20 @@ datasource db {
 }
 
 model User {
-  id                  Int           @id @default(autoincrement())
-  email               String        @unique
-  name                String
-  createdAt           DateTime      @default(now()) @db.Timestamptz
-  updatedAt           DateTime      @default(now()) @updatedAt @db.Timestamptz
-  createdParticipants Participant[] @relation("CreatedByUser")
-  updatedParticipants Participant[] @relation("UpdatedByUser")
+  id                           Int                      @id @default(autoincrement())
+  email                        String                   @unique
+  name                         String
+  createdAt                    DateTime                 @default(now()) @db.Timestamptz
+  updatedAt                    DateTime                 @default(now()) @updatedAt @db.Timestamptz
+  createdParticipants          Participant[]            @relation("CreatedParticipantByUser")
+  updatedParticipants          Participant[]            @relation("UpdatedParticipantByUser")
+  createdPrograms              Program[]                @relation("CreatedProgramByUser")
+  updatedPrograms              Program[]                @relation("UpdatedProgramByUser")
+  createdParticipantOnPrograms ParticipantsOnPrograms[] @relation("CreatedParticipantsOnProgramsByUser")
+  updatedParticipantOnPrograms ParticipantsOnPrograms[] @relation("UpdatedParticipantsOnProgramsByUser")
+  createdProgramDays           ProgramDays[]            @relation("CreatedProgramDaysByUser")
+  updatedProgramDays           ProgramDays[]            @relation("UpdatedProgramDaysByUser")
+  programs                     UsersOnPrograms[]        @relation("UserOnProgramsByUser")
 }
 
 enum Sex {
@@ -41,8 +48,8 @@ enum PhoneBelongsTo {
 }
 
 model Participant {
-  id                         Int              @id @default(autoincrement())
-  active                     Boolean          @default(false)
+  id                         Int                      @id @default(autoincrement())
+  active                     Boolean                  @default(false)
   firstName                  String
   lastName                   String
   birthday                   String
@@ -55,47 +62,124 @@ model Participant {
   picture                    String?
   medicalInsurance           String?
   phone1                     String?
-  phone1HasWhatsapp          Boolean          @default(false)
+  phone1HasWhatsapp          Boolean                  @default(false)
   phone1BelongsTo            PhoneBelongsTo?
   phone2                     String?
-  phone2HasWhatsapp          Boolean          @default(false)
+  phone2HasWhatsapp          Boolean                  @default(false)
   phone2BelongsTo            PhoneBelongsTo?
   biography                  String?
-  presentedDNI               Boolean          @default(false)
-  presentedHealthCertificate Boolean          @default(false)
+  presentedDNI               Boolean                  @default(false)
+  presentedHealthCertificate Boolean                  @default(false)
   healthCertificateDate      String?
-  createdByUser              User             @relation("CreatedByUser", fields: [createdBy], references: [id])
+  createdByUser              User                     @relation("CreatedParticipantByUser", fields: [createdBy], references: [id])
   createdBy                  Int
-  updatedByUser              User             @relation("UpdatedByUser", fields: [updatedBy], references: [id])
+  updatedByUser              User                     @relation("UpdatedParticipantByUser", fields: [updatedBy], references: [id])
   updatedBy                  Int
-  createdAt                  DateTime         @default(now()) @db.Timestamptz
-  updatedAt                  DateTime         @default(now()) @updatedAt @db.Timestamptz
-  surveyBiography            SurveyBiography? @relation(fields: [surveyBiographyId], references: [id])
+  createdAt                  DateTime                 @default(now()) @db.Timestamptz
+  updatedAt                  DateTime                 @default(now()) @updatedAt @db.Timestamptz
+  surveyBiography            SurveyBiography?         @relation(fields: [surveyBiographyId], references: [id])
   surveyBiographyId          Int?
+  programs                   ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByParticipant")
 }
 
 model SurveyBiography {
   /// SurvayBiography id
-  id                  Int     @id @default(autoincrement())
+  id                  Int           @id @default(autoincrement())
   /// Who the participant lives with
   livesWith           String
   /// Whether the participant changed school
-  changedSchool       Boolean @default(false)
+  changedSchool       Boolean       @default(false)
   /// Whether the participant repeated the school year
-  repeatedYear        Boolean @default(false)
+  repeatedYear        Boolean       @default(false)
   /// How are they going in the school
   schoolSituation     String
   /// Why is the participant interested in participating in the programs?
   programsInterest    String
   /// Whether participated in the programs before
-  participatedBefore  Boolean @default(false)
+  participatedBefore  Boolean       @default(false)
   /// Whether are they doing other activities besided El Desafio
-  otherActivities     Boolean @default(false)
+  otherActivities     Boolean       @default(false)
   /// Personal description
   personalDescription String
   /// Home Activities and typical day activities
   homeActivities      String
+  Participant         Participant[]
+}
 
+enum ProgramSex {
+  MALE
+  FEMALE
+  ALL
+}
 
-  Participant Participant[]
+enum Weekdays {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Program {
+  id            Int                      @id @default(autoincrement())
+  name          String
+  description   String?
+  seats         Int
+  ageFrom       Int
+  ageTo         Int
+  ageByYear     Boolean                  @default(false)
+  sex           ProgramSex
+  createdByUser User                     @relation("CreatedProgramByUser", fields: [createdBy], references: [id])
+  createdBy     Int
+  updatedByUser User                     @relation("UpdatedProgramByUser", fields: [updatedBy], references: [id])
+  updatedBy     Int
+  createdAt     DateTime                 @default(now()) @db.Timestamptz
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamptz
+  participants  ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByProgram")
+  programDays   ProgramDays[]            @relation("ProgramDaysByProgram")
+  educators     UsersOnPrograms[]        @relation("UserOnProgramsByProgram")
+}
+
+model UsersOnPrograms {
+  user          User     @relation("UserOnProgramsByUser", fields: [userId], references: [id])
+  userId        Int
+  program       Program  @relation("UserOnProgramsByProgram", fields: [programId], references: [id])
+  programId     Int
+  isFacilitator Boolean  @default(false)
+  createdAt     DateTime @default(now()) @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@id([userId, programId])
+}
+
+model ParticipantsOnPrograms {
+  program       Program     @relation("ParticipantOnProgramsByProgram", fields: [programId], references: [id])
+  programId     Int
+  participant   Participant @relation("ParticipantOnProgramsByParticipant", fields: [participantId], references: [id])
+  participantId Int
+  createdAt     DateTime    @default(now()) @db.Timestamptz
+  updatedAt     DateTime    @default(now()) @updatedAt @db.Timestamptz
+  createdByUser User        @relation("CreatedParticipantsOnProgramsByUser", fields: [createdBy], references: [id])
+  createdBy     Int
+  updatedByUser User        @relation("UpdatedParticipantsOnProgramsByUser", fields: [updatedBy], references: [id])
+  updatedBy     Int
+
+  @@id([programId, participantId])
+}
+
+model ProgramDays {
+  id            Int      @id @default(autoincrement())
+  program       Program  @relation("ProgramDaysByProgram", fields: [programId], references: [id])
+  programId     Int
+  day           Weekdays
+  fromTime      String
+  toTime        String
+  createdAt     DateTime @default(now()) @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz
+  createdByUser User     @relation("CreatedProgramDaysByUser", fields: [createdBy], references: [id])
+  createdBy     Int
+  updatedByUser User     @relation("UpdatedProgramDaysByUser", fields: [updatedBy], references: [id])
+  updatedBy     Int
 }
