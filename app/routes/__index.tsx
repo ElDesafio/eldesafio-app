@@ -60,7 +60,7 @@ export default function Dashboard() {
             flex={{ base: "1", lg: "0" }}
             display={{ lg: "none" }}
             flexShrink={0}
-            h="5"
+            h="16"
           />
 
           <HStack spacing="3">

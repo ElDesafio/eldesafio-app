@@ -1,0 +1,8 @@
+.participant-general-table tbody td {
+  padding-inline-start: 0;
+  border-bottom: 0;
+}
+
+.participant-general-table tbody td:first-of-type {
+  width: 200px;
+}

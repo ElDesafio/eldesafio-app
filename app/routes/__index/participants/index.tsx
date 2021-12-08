@@ -19,16 +19,11 @@ import {
 } from "@chakra-ui/react";
 import { MdAdd } from "react-icons/md";
 import { Link, LoaderFunction, useLoaderData } from "remix";
-import { TabLink } from "~/components/TabLink";
 import { db } from "~/services/db.server";
-import { DateTime } from "luxon";
+import { getAge } from "~/util/utils";
 
 export const loader: LoaderFunction = async () => {
   const participants = await db.participant.findMany();
-  const now = new Date();
-  // const birth = new Date("1981-12-06");
-  console.log(DateTime.fromISO("1981-12-06").toString());
-  console.log(DateTime.now().toString());
   return participants;
 };
 
@@ -94,7 +89,9 @@ export default function Participants() {
                         </Box>
                         <Box>
                           <Box fontSize="sm" fontWeight="medium">
-                            {participant.firstName} {participant.lastName}
+                            <Link to={`/participants/${participant.id}`}>
+                              {participant.firstName} {participant.lastName}
+                            </Link>
                           </Box>
                           <Box fontSize="sm" color="gray.500">
                             cambiareste@correo.com
@@ -102,15 +99,7 @@ export default function Participants() {
                         </Box>
                       </Stack>
                     </Td>
-                    <Td>
-                      {Math.floor(
-                        DateTime.now().diff(
-                          DateTime.fromISO(participant.birthday),
-                          ["years"]
-                        ).years
-                      )}{" "}
-                      años
-                    </Td>
+                    <Td>{getAge(participant.birthday)}</Td>
                     <Td>{participant.dni}</Td>
                     <Td textAlign="right">
                       <Link to={`${participant.id}/edit`}>
