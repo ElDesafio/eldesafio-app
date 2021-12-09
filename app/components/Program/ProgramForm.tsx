@@ -7,10 +7,11 @@ import {
   StackDivider,
   VStack,
   Container,
+  IconButton,
 } from "@chakra-ui/react";
 import { FieldGroup } from "~/components/FieldGroup";
 
-import { ValidatedForm, withZod } from "remix-validated-form";
+import { ValidatedForm } from "remix-validated-form";
 import { FormInput } from "~/components/Form/FormInput";
 import { FormSubmitButton } from "~/components/Form/FormSubmitButton";
 import * as z from "zod";
@@ -21,6 +22,9 @@ import { FormCheckbox } from "~/components/Form/FormCheckbox";
 import { FormTextArea } from "../Form/FormTextArea";
 import { useNavigate } from "remix";
 import { schemaCheckbox, withZodArray } from "~/util/utils";
+import { FaTrashAlt } from "react-icons/fa";
+import { useState } from "react";
+import { v4 as uuid } from "uuid";
 
 const programSchema = z.object({
   name: z.string().nonempty("Nombre no puede estar vacío"),
@@ -79,8 +83,8 @@ const programSchema = z.object({
           message: "Día no puede estar vacío",
         }),
       }),
-      fromTime: z.string().nonempty("Hora Desde no puede estar vacío"),
-      toTime: z.string().nonempty("Hora Hasta no puede estar vacío"),
+      fromTime: z.string().nonempty("Hora Inicio no puede estar vacío"),
+      toTime: z.string().nonempty("Hora Fin no puede estar vacío"),
     })
     .array(),
 });
@@ -93,6 +97,15 @@ export function ProgramForm({
   defaultValues?: Partial<z.infer<typeof programSchema>>;
 }) {
   let navigate = useNavigate();
+
+  // If the object has no `id` we use a random id. This is only so we can use it as a key
+  const [daysIds, setDaysIds] = useState(
+    defaultValues?.programDays?.length && defaultValues?.programDays?.length > 0
+      ? defaultValues.programDays.map((day) => ({
+          id: day.id,
+        }))
+      : [{ id: uuid() }]
+  );
 
   return (
     <Box as="main" py="8" flex="1">
@@ -184,36 +197,58 @@ export function ProgramForm({
                 </FieldGroup>
                 <FieldGroup title="Días de clase">
                   <VStack width="full" spacing="6" alignItems="flex-start">
-                    <FormStack width="full">
-                      <FormSelect
-                        name="programDays[0][day]"
-                        label="Día"
-                        isRequired
-                        placeholder="Seleccionar día"
-                      >
-                        <option value={Weekdays.MONDAY}>Lunes</option>
-                        <option value={Weekdays.TUESDAY}>Martes</option>
-                        <option value={Weekdays.WEDNESDAY}>Miércoles</option>
-                        <option value={Weekdays.THURSDAY}>Jueves</option>
-                        <option value={Weekdays.FRIDAY}>Viernes</option>
-                        <option value={Weekdays.SATURDAY}>Sábado</option>
-                        <option value={Weekdays.SUNDAY}>Doming</option>
-                      </FormSelect>
-                      <FormInput
-                        name="programDays[0][fromTime]"
-                        label="Hora Inicio"
-                        type="time"
-                        isRequired
-                        step="1800" // 30 min
-                      />
-                      <FormInput
-                        name="programDays[0][toTime]"
-                        label="Hora Fin"
-                        type="time"
-                        isRequired
-                        step="1800" // 30 min
-                      />
-                    </FormStack>
+                    {daysIds.map((id, index) => (
+                      <FormStack width="full" key={id.id}>
+                        <FormSelect
+                          name={`programDays[${id.id}][day]`}
+                          label="Día"
+                          isRequired
+                          placeholder="Seleccionar día"
+                        >
+                          <option value={Weekdays.MONDAY}>Lunes</option>
+                          <option value={Weekdays.TUESDAY}>Martes</option>
+                          <option value={Weekdays.WEDNESDAY}>Miércoles</option>
+                          <option value={Weekdays.THURSDAY}>Jueves</option>
+                          <option value={Weekdays.FRIDAY}>Viernes</option>
+                          <option value={Weekdays.SATURDAY}>Sábado</option>
+                          <option value={Weekdays.SUNDAY}>Doming</option>
+                        </FormSelect>
+                        <FormInput
+                          name={`programDays[${index}][fromTime]`}
+                          label="Hora Inicio"
+                          type="time"
+                          isRequired
+                          step="1800" // 30 min
+                        />
+                        <FormInput
+                          name={`programDays[${index}][toTime]`}
+                          label="Hora Fin"
+                          type="time"
+                          isRequired
+                          step="1800" // 30 min
+                        />
+                        <IconButton
+                          alignSelf="flex-end"
+                          colorScheme="blue"
+                          aria-label="Search database"
+                          onClick={() =>
+                            setDaysIds(
+                              daysIds.filter(
+                                (dayId, index2) => index2 !== index
+                              )
+                            )
+                          }
+                          icon={<FaTrashAlt />}
+                        />
+                      </FormStack>
+                    ))}
+                    <Button
+                      colorScheme="blue"
+                      size="xs"
+                      onClick={() => setDaysIds([...daysIds, { id: uuid() }])}
+                    >
+                      Agregar día
+                    </Button>
                   </VStack>
                 </FieldGroup>
                 <FieldGroup title="Resultados">

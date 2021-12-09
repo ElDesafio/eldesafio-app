@@ -43,7 +43,7 @@ const getIssuesForError = (err: z.ZodError<any>): z.ZodIssue[] => {
   });
 };
 
-type convertDataToArrayObject = {
+type generalObject = {
   [key: string]: any;
 };
 
@@ -51,12 +51,18 @@ const isObject = (obj: unknown) => {
   return Object.prototype.toString.call(obj) === "[object Object]";
 };
 
+export function convertDefaultValuesForForm(
+  data: generalObject
+): generalObject {
+  return {};
+}
+
 function convertDataToArray(data: unknown): unknown {
   if (!isObject(data)) return data;
 
-  const newData: convertDataToArrayObject = {};
+  const newData: generalObject = {};
 
-  for (const [key, value] of Object.entries(data as convertDataToArrayObject)) {
+  for (const [key, value] of Object.entries(data as generalObject)) {
     const matches = key.match(
       /(?<mainKey>.*)\[(?<arrayIndex>[0-9]+)\]\[(?<subObjectKey>.*)\]/
     );
@@ -67,11 +73,16 @@ function convertDataToArray(data: unknown): unknown {
 
     if (matches.groups) {
       const { mainKey, arrayIndex, subObjectKey } = matches.groups;
+      const index = parseInt(arrayIndex);
+
       if (!newData.hasOwnProperty(mainKey)) {
         newData[mainKey] = [{}];
       }
+      if (newData[mainKey][index] === undefined) {
+        newData[mainKey][index] = {};
+      }
 
-      newData[mainKey][parseInt(arrayIndex)][subObjectKey] = value;
+      newData[mainKey][index][subObjectKey] = value;
     }
   }
   return newData;
@@ -94,9 +105,14 @@ export function withZodArray<T>(zodSchema: z.Schema<T>): Validator<T> {
       const result = zodSchema.safeParse(convertDataToArray(data));
       if (result.success) return { error: undefined };
       return {
-        error: getIssuesForError(result.error).find(
-          (issue) => issue.path.join(".") === field
-        )?.message,
+        error: getIssuesForError(result.error).find((issue) => {
+          if (typeof issue.path[1] === "number") {
+            return (
+              `${issue.path[0]}[${issue.path[1]}][${issue.path[2]}]` === field
+            );
+          }
+          return issue.path.join(".") === field;
+        })?.message,
       };
     },
   };
