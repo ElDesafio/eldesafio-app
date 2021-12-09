@@ -4,7 +4,11 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  InputElementProps,
+  InputGroup,
+  InputLeftElement,
   InputProps,
+  InputRightElement,
   VisuallyHidden,
   VisuallyHiddenInput,
 } from "@chakra-ui/react";
@@ -16,6 +20,8 @@ type FormInputProps = {
   isRequired?: boolean;
   hidden?: boolean;
   helperText?: React.ReactNode;
+  leftElement?: InputElementProps;
+  rightElement?: InputElementProps;
 };
 
 export const FormInput = ({
@@ -24,6 +30,9 @@ export const FormInput = ({
   isRequired,
   hidden = false,
   helperText,
+  leftElement,
+  rightElement,
+  maxWidth,
   ...rest
 }: FormInputProps & InputProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
@@ -40,9 +49,17 @@ export const FormInput = ({
   );
   return (
     <>
-      <FormControl isInvalid={!!error} isRequired={isRequired}>
+      <FormControl
+        isInvalid={!!error}
+        isRequired={isRequired}
+        maxWidth={maxWidth}
+      >
         {!hidden && <FormLabel htmlFor={name}>{label}</FormLabel>}
-        {hidden ? <VisuallyHidden>{input}</VisuallyHidden> : input}
+        <InputGroup>
+          {leftElement && <InputLeftElement {...leftElement} />}
+          {hidden ? <VisuallyHidden>{input}</VisuallyHidden> : input}
+          {rightElement && <InputRightElement {...rightElement} />}
+        </InputGroup>
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
         {error && <FormErrorMessage>{error}</FormErrorMessage>}
       </FormControl>

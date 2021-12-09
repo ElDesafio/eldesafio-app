@@ -1,4 +1,4 @@
-import { Participant } from ".prisma/client";
+import { Participant, Program } from ".prisma/client";
 import {
   Avatar,
   Box,
@@ -23,12 +23,12 @@ import { db } from "~/services/db.server";
 import { getAge } from "~/util/utils";
 
 export const loader: LoaderFunction = async () => {
-  const participants = await db.participant.findMany();
-  return participants;
+  const programs = await db.program.findMany();
+  return programs;
 };
 
-export default function Participants() {
-  const participants = useLoaderData<Participant[]>();
+export default function Programs() {
+  const programs = useLoaderData<Program[]>();
   return (
     <>
       <Box
@@ -40,7 +40,7 @@ export default function Participants() {
         <Container maxW="7xl">
           <Flex>
             <Heading size="lg" mb="0">
-              Participantes
+              Programas
             </Heading>
             <Spacer />
             <Link to="new">
@@ -65,44 +65,35 @@ export default function Participants() {
               <Thead bg={useColorModeValue("gray.50", "gray.800")}>
                 <Tr>
                   <Th whiteSpace="nowrap" scope="col">
-                    PARTICIPANTE
+                    NOMBRE
+                  </Th>
+                  <Th whiteSpace="nowrap" scope="col">
+                    ASISTENCIAS
+                  </Th>
+                  <Th whiteSpace="nowrap" scope="col">
+                    CUPOS
+                  </Th>
+                  <Th whiteSpace="nowrap" scope="col">
+                    PARTICIPANTES
                   </Th>
                   <Th whiteSpace="nowrap" scope="col">
                     EDAD
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col">
-                    DNI
                   </Th>
                   <Th whiteSpace="nowrap" scope="col"></Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {participants.map((participant) => (
-                  <Tr key={participant.id}>
-                    <Td whiteSpace="nowrap">
-                      <Stack direction="row" spacing="4" align="center">
-                        <Box flexShrink={0}>
-                          <Avatar
-                            size="md"
-                            src={participant.picture || undefined}
-                          />
-                        </Box>
-                        <Box>
-                          <Box fontSize="sm" fontWeight="medium">
-                            <Link to={`/participants/${participant.id}`}>
-                              {participant.firstName} {participant.lastName}
-                            </Link>
-                          </Box>
-                          <Box fontSize="sm" color="gray.500">
-                            cambiareste@correo.com
-                          </Box>
-                        </Box>
-                      </Stack>
+                {programs.map((program) => (
+                  <Tr key={program.id}>
+                    <Td whiteSpace="nowrap">{program.name}</Td>
+                    <Td>asistencias 20%</Td>
+                    <Td>{program.seats}</Td>
+                    <Td>20 / 0</Td>
+                    <Td>
+                      {program.ageFrom} a {program.ageTo} años
                     </Td>
-                    <Td>{getAge(participant.birthday)}</Td>
-                    <Td>{participant.dni}</Td>
                     <Td textAlign="right">
-                      <Link to={`${participant.id}/edit`}>
+                      <Link to={`${program.id}/edit`}>
                         <Button variant="link" colorScheme="blue">
                           Edit
                         </Button>

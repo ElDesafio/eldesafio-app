@@ -18,7 +18,7 @@ import { useLoaderData } from "remix";
 import { z } from "zod";
 import { db } from "~/services/db.server";
 import { getAge, getFormattedDate } from "~/util/utils";
-import styles from "./index.css";
+import styles from "~/css/participant-general.css";
 
 export function links() {
   return [

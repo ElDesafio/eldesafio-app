@@ -22,8 +22,6 @@ model User {
   updatedPrograms              Program[]                @relation("UpdatedProgramByUser")
   createdParticipantOnPrograms ParticipantsOnPrograms[] @relation("CreatedParticipantsOnProgramsByUser")
   updatedParticipantOnPrograms ParticipantsOnPrograms[] @relation("UpdatedParticipantsOnProgramsByUser")
-  createdProgramDays           ProgramDays[]            @relation("CreatedProgramDaysByUser")
-  updatedProgramDays           ProgramDays[]            @relation("UpdatedProgramDaysByUser")
   programs                     UsersOnPrograms[]        @relation("UserOnProgramsByUser")
 }
 
@@ -126,6 +124,7 @@ model Program {
   id            Int                      @id @default(autoincrement())
   name          String
   description   String?
+  year          Int
   seats         Int
   ageFrom       Int
   ageTo         Int
@@ -170,16 +169,12 @@ model ParticipantsOnPrograms {
 }
 
 model ProgramDays {
-  id            Int      @id @default(autoincrement())
-  program       Program  @relation("ProgramDaysByProgram", fields: [programId], references: [id])
-  programId     Int
-  day           Weekdays
-  fromTime      String
-  toTime        String
-  createdAt     DateTime @default(now()) @db.Timestamptz
-  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz
-  createdByUser User     @relation("CreatedProgramDaysByUser", fields: [createdBy], references: [id])
-  createdBy     Int
-  updatedByUser User     @relation("UpdatedProgramDaysByUser", fields: [updatedBy], references: [id])
-  updatedBy     Int
+  id        Int      @id @default(autoincrement())
+  program   Program  @relation("ProgramDaysByProgram", fields: [programId], references: [id])
+  programId Int
+  day       Weekdays
+  fromTime  String
+  toTime    String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 }

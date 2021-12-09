@@ -27,21 +27,7 @@ import { Neighborhood, Participant, PhoneBelongsTo, Sex } from ".prisma/client";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
 import { FormTextArea } from "../Form/FormTextArea";
 import { useNavigate } from "remix";
-
-const emptyStringToUndefined = z.literal("").transform(() => undefined);
-
-export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
-  return schema.optional().or(emptyStringToUndefined);
-}
-
-// https://github.com/colinhacks/zod/issues/372#issuecomment-826380330
-const schemaForType = function <T>() {
-  return function <S extends z.ZodType<T, any, any>>(arg: S) {
-    return arg;
-  };
-};
-
-const schemaCheckbox = z.preprocess((value) => value === "true", z.boolean());
+import { schemaCheckbox } from "~/util/utils";
 
 const participantSchema = z.object({
   // id: z.number(),
@@ -219,11 +205,11 @@ export function ParticipantForm({
                 </FieldGroup>
                 <FieldGroup title="Datos Personales">
                   <VStack width="full" spacing="6">
-                    <FormStack>
+                    <FormStack width="full">
                       <FormInput name="firstName" label="Nombre" isRequired />
                       <FormInput name="lastName" label="Apellido" isRequired />
                     </FormStack>
-                    <FormStack>
+                    <FormStack width="full">
                       <FormInput
                         name="birthday"
                         label="Fecha de Nacimiento"
@@ -246,7 +232,7 @@ export function ParticipantForm({
                 </FieldGroup>
                 <FieldGroup title="Datos de Contacto">
                   <VStack width="full" spacing="6">
-                    <FormStack>
+                    <FormStack width="full">
                       <FormInput name="address" label="Dirección" />
                       <FormInput name="city" label="Ciudad" />
                       <FormSelect
@@ -262,14 +248,14 @@ export function ParticipantForm({
                         <option value={Neighborhood.OTHER}>Otro</option>
                       </FormSelect>
                     </FormStack>
-                    <FormStack>
+                    <FormStack width="full">
                       <FormInput
                         name="email"
                         label="Correo Electrónico"
                         type="email"
                       />
                     </FormStack>
-                    <FormStack>
+                    <FormStack width="full">
                       <FormInput name="phone1" label="Teléfono 1" />
                       <FormCheckbox
                         name="phone1HasWhatsapp"
@@ -293,7 +279,7 @@ export function ParticipantForm({
                         <option value={PhoneBelongsTo.TUTOR}>Tutor/Otro</option>
                       </FormSelect>
                     </FormStack>
-                    <FormStack>
+                    <FormStack width="full">
                       <FormInput name="phone2" label="Teléfono 2" />
                       <FormCheckbox
                         name="phone2HasWhatsapp"
@@ -328,7 +314,7 @@ export function ParticipantForm({
                 </FieldGroup>
                 <FieldGroup title="Documentos Presentados">
                   <Stack width="full" spacing="4">
-                    <FormStack>
+                    <FormStack width="full">
                       <FormCheckbox
                         name="presentedHealthCertificate"
                         value="true"
