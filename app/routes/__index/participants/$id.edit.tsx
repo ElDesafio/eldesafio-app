@@ -76,7 +76,7 @@ export default function EditParticipant() {
       >
         <Container maxW="7xl">
           <Heading size="lg" mb="0">
-            Crear Participante
+            Editar Participante
           </Heading>
         </Container>
       </Box>
