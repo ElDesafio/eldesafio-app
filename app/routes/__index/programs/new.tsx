@@ -12,57 +12,6 @@ import {
   programFormValidator,
 } from "~/components/Program/ProgramForm";
 
-// export const loader: LoaderFunction = async ({ request }) => {
-//   let user = await authenticator.isAuthenticated(request, {
-//     failureRedirect: "/login",
-//   });
-
-//   const newProgram = {
-//     name: "Hockey",
-//     year: 2021,
-//     sex: "MALE",
-//     seats: 21,
-//     ageFrom: 15,
-//     ageTo: 17,
-//     ageByYear: false,
-//     programDays: [
-//       {
-//         day: "MONDAY",
-//         fromTime: "18:00",
-//         toTime: "19:00",
-//       },
-//       {
-//         day: "MONDAY",
-//         fromTime: "18:00",
-//         toTime: "19:00",
-//       },
-//       {
-//         day: "MONDAY",
-//         fromTime: "18:00",
-//         toTime: "19:00",
-//       },
-//     ],
-//   };
-
-//   const fieldValues = programFormValidator.validate(newProgram);
-
-//   const { programDays, ...rest } = newProgram;
-
-//   const program = await db.program.create({
-//     data: {
-//       ...rest,
-//       createdBy: user.id,
-//       updatedBy: user.id,
-//       programDays: {
-//         create: programDays,
-//       },
-//     },
-//   });
-
-//   console.log(program);
-//   return program;
-// };
-
 export const action: ActionFunction = async ({ request }) => {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",

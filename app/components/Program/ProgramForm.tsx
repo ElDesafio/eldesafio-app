@@ -21,10 +21,11 @@ import { ProgramSex, Weekdays } from ".prisma/client";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
 import { FormTextArea } from "../Form/FormTextArea";
 import { useNavigate } from "remix";
-import { schemaCheckbox, withZodArray } from "~/util/utils";
+import { flattenData, schemaCheckbox, withZodFlatten } from "~/util/utils";
 import { FaTrashAlt } from "react-icons/fa";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
+import { MdAdd } from "react-icons/md";
 
 const programSchema = z.object({
   name: z.string().nonempty("Nombre no puede estar vacío"),
@@ -74,10 +75,11 @@ const programSchema = z.object({
       .positive()
       .max(120)
   ),
-
   ageByYear: schemaCheckbox,
   programDays: z
     .object({
+      id: z.number().optional(),
+      programId: z.number().optional(),
       day: z.nativeEnum(Weekdays, {
         errorMap: (issue) => ({
           message: "Día no puede estar vacío",
@@ -89,7 +91,7 @@ const programSchema = z.object({
     .array(),
 });
 
-export const programFormValidator = withZodArray(programSchema);
+export const programFormValidator = withZodFlatten(programSchema);
 
 export function ProgramForm({
   defaultValues,
@@ -99,12 +101,10 @@ export function ProgramForm({
   let navigate = useNavigate();
 
   // If the object has no `id` we use a random id. This is only so we can use it as a key
-  const [daysIds, setDaysIds] = useState(
+  const [daysIds, setDaysIds] = useState<(string | number)[]>(
     defaultValues?.programDays?.length && defaultValues?.programDays?.length > 0
-      ? defaultValues.programDays.map((day) => ({
-          id: day.id,
-        }))
-      : [{ id: uuid() }]
+      ? defaultValues.programDays.map((day) => day.id || uuid())
+      : [uuid()]
   );
 
   return (
@@ -119,7 +119,7 @@ export function ProgramForm({
           <Box px={{ base: "4", md: "10" }} maxWidth="7xl">
             <ValidatedForm
               validator={programFormValidator}
-              defaultValues={defaultValues}
+              defaultValues={flattenData(defaultValues) as any} // hack so TS doesn't complain. https://github.com/airjp73/remix-validated-form/issues/1
               method="post"
             >
               <Stack spacing="4" divider={<StackDivider />}>
@@ -198,9 +198,9 @@ export function ProgramForm({
                 <FieldGroup title="Días de clase">
                   <VStack width="full" spacing="6" alignItems="flex-start">
                     {daysIds.map((id, index) => (
-                      <FormStack width="full" key={id.id}>
+                      <FormStack width="full" key={id}>
                         <FormSelect
-                          name={`programDays[${id.id}][day]`}
+                          name={`programDays.${index}.day`}
                           label="Día"
                           isRequired
                           placeholder="Seleccionar día"
@@ -214,14 +214,14 @@ export function ProgramForm({
                           <option value={Weekdays.SUNDAY}>Doming</option>
                         </FormSelect>
                         <FormInput
-                          name={`programDays[${index}][fromTime]`}
+                          name={`programDays.${index}.fromTime`}
                           label="Hora Inicio"
                           type="time"
                           isRequired
                           step="1800" // 30 min
                         />
                         <FormInput
-                          name={`programDays[${index}][toTime]`}
+                          name={`programDays.${index}.toTime`}
                           label="Hora Fin"
                           type="time"
                           isRequired
@@ -243,9 +243,10 @@ export function ProgramForm({
                       </FormStack>
                     ))}
                     <Button
+                      leftIcon={<MdAdd />}
                       colorScheme="blue"
                       size="xs"
-                      onClick={() => setDaysIds([...daysIds, { id: uuid() }])}
+                      onClick={() => setDaysIds([...daysIds, uuid()])}
                     >
                       Agregar día
                     </Button>

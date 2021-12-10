@@ -21,7 +21,7 @@ export let loader: LoaderFunction = async ({ params }) => {
 
   const program: Program | null = await db.program.findUnique({
     where: { id: +id },
-    include: { programDays: true },
+    include: { programDays: { orderBy: { day: "asc" } } },
   });
   return program;
 };
@@ -39,28 +39,26 @@ export const action: ActionFunction = async ({ request, params }) => {
   );
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  // const participant = await db.participant.update({
-  //   where: { id: +id },
-  //   data: {
-  //     ...fieldValues.data,
-  //     neighborhood: neighborhood || undefined,
-  //     phone1HasWhatsapp: !!phone1HasWhatsapp,
-  //     phone1BelongsTo: phone1BelongsTo || undefined,
-  //     phone2HasWhatsapp: !!phone2HasWhatsapp,
-  //     phone2BelongsTo: phone2BelongsTo || undefined,
-  //     presentedHealthCertificate: !!presentedHealthCertificate,
-  //     presentedDNI: !!presentedDNI,
-  //     healthCertificateDate: healthCertificateDate || undefined,
-  //     updatedBy: user.id,
-  //   },
-  // });
+  console.log(JSON.stringify(fieldValues));
 
-  return redirect("/participants");
+  const { programDays, ...rest } = fieldValues.data;
+
+  const program = await db.program.update({
+    where: { id: +id },
+    data: {
+      ...rest,
+      programDays: {
+        deleteMany: {},
+        create: programDays,
+      },
+    },
+  });
+
+  return redirect("/programs");
 };
 
 export default function EditParticipant() {
   const program = useLoaderData<Program>();
-  console.log(program);
   return (
     <>
       <Box

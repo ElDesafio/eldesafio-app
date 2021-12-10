@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { FieldErrors, Validator } from "remix-validated-form";
 import { z } from "zod";
+import { flatten, unflatten } from "flat";
 
 export function getAge(birthday: string): string {
   const age = Math.floor(
@@ -57,41 +58,22 @@ export function convertDefaultValuesForForm(
   return {};
 }
 
-function convertDataToArray(data: unknown): unknown {
+function unFlattenData(data: unknown): unknown {
   if (!isObject(data)) return data;
 
-  const newData: generalObject = {};
-
-  for (const [key, value] of Object.entries(data as generalObject)) {
-    const matches = key.match(
-      /(?<mainKey>.*)\[(?<arrayIndex>[0-9]+)\]\[(?<subObjectKey>.*)\]/
-    );
-    if (!matches) {
-      newData[key] = value;
-      continue;
-    }
-
-    if (matches.groups) {
-      const { mainKey, arrayIndex, subObjectKey } = matches.groups;
-      const index = parseInt(arrayIndex);
-
-      if (!newData.hasOwnProperty(mainKey)) {
-        newData[mainKey] = [{}];
-      }
-      if (newData[mainKey][index] === undefined) {
-        newData[mainKey][index] = {};
-      }
-
-      newData[mainKey][index][subObjectKey] = value;
-    }
-  }
-  return newData;
+  return unflatten(data);
 }
 
-export function withZodArray<T>(zodSchema: z.Schema<T>): Validator<T> {
+export function flattenData(data: unknown): unknown {
+  if (!isObject(data)) return data;
+
+  return flatten(data);
+}
+
+export function withZodFlatten<T>(zodSchema: z.Schema<T>): Validator<T> {
   return {
     validate: (value: unknown) => {
-      const result = zodSchema.safeParse(convertDataToArray(value));
+      const result = zodSchema.safeParse(unFlattenData(value));
       if (result.success) return { data: result.data, error: undefined };
 
       const fieldErrors: FieldErrors = {};
@@ -102,17 +84,12 @@ export function withZodArray<T>(zodSchema: z.Schema<T>): Validator<T> {
       return { error: fieldErrors, data: undefined };
     },
     validateField: (data, field) => {
-      const result = zodSchema.safeParse(convertDataToArray(data));
+      const result = zodSchema.safeParse(unFlattenData(data));
       if (result.success) return { error: undefined };
       return {
-        error: getIssuesForError(result.error).find((issue) => {
-          if (typeof issue.path[1] === "number") {
-            return (
-              `${issue.path[0]}[${issue.path[1]}][${issue.path[2]}]` === field
-            );
-          }
-          return issue.path.join(".") === field;
-        })?.message,
+        error: getIssuesForError(result.error).find(
+          (issue) => issue.path.join(".") === field
+        )?.message,
       };
     },
   };

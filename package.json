@@ -20,6 +20,7 @@
     "@remix-run/serve": "^1.0.6",
     "@types/luxon": "^2.0.7",
     "dotenv": "^10.0.0",
+    "flat": "^5.0.2",
     "framer-motion": "^4.1.17",
     "luxon": "^2.1.1",
     "react": "^17.0.2",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^1.0.6",
+    "@types/flat": "^5.0.2",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@types/uuid": "^8.3.3",
