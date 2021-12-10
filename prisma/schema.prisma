@@ -23,6 +23,8 @@ model User {
   createdParticipantOnPrograms ParticipantsOnPrograms[] @relation("CreatedParticipantsOnProgramsByUser")
   updatedParticipantOnPrograms ParticipantsOnPrograms[] @relation("UpdatedParticipantsOnProgramsByUser")
   programs                     UsersOnPrograms[]        @relation("UserOnProgramsByUser")
+  createdSchools               School[]                 @relation("CreatedSchoolByUser")
+  updatedSchools               School[]                 @relation("UpdatedSchoolByUser")
 }
 
 enum Sex {
@@ -177,4 +179,22 @@ model ProgramDays {
   toTime    String
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+}
+
+model School {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  address            String
+  city               String
+  phone              String?
+  principalName      String?
+  principalPhone     String?
+  vicePrincipalName  String?
+  vicePrincipalPhone String?
+  createdAt          DateTime @default(now()) @db.Timestamptz
+  updatedAt          DateTime @default(now()) @updatedAt @db.Timestamptz
+  createdByUser      User     @relation("CreatedSchoolByUser", fields: [createdBy], references: [id])
+  createdBy          Int
+  updatedByUser      User     @relation("UpdatedSchoolByUser", fields: [updatedBy], references: [id])
+  updatedBy          Int
 }
