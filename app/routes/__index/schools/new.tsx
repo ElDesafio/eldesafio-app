@@ -4,9 +4,9 @@ import { validationError } from "remix-validated-form";
 import { db } from "~/services/db.server";
 import { authenticator } from "~/services/auth.server";
 import {
-  ProgramForm,
-  programFormValidator,
-} from "~/components/Program/ProgramForm";
+  SchoolForm,
+  schoolFormValidator,
+} from "~/components/School/SchoolForm";
 
 export const action: ActionFunction = async ({ request }) => {
   let user = await authenticator.isAuthenticated(request, {
@@ -15,25 +15,20 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = Object.fromEntries(await request.formData());
 
-  const fieldValues = programFormValidator.validate(formData);
+  const fieldValues = schoolFormValidator.validate(formData);
   console.log(fieldValues);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const { programDays, ...rest } = fieldValues.data;
-
-  const program = await db.program.create({
+  const school = await db.school.create({
     data: {
-      ...rest,
+      ...fieldValues.data,
       createdBy: user.id,
       updatedBy: user.id,
-      programDays: {
-        create: programDays,
-      },
     },
   });
 
-  return redirect("/programs");
+  return redirect("/schools");
 };
 
 export default function NewProgram() {
@@ -47,12 +42,12 @@ export default function NewProgram() {
       >
         <Container maxW="7xl">
           <Heading size="lg" mb="0">
-            Crear Programa
+            Crear Escuela
           </Heading>
         </Container>
       </Box>
 
-      <ProgramForm />
+      <SchoolForm />
     </>
   );
 }

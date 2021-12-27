@@ -56,7 +56,7 @@ const participantSchema = z.object({
   ),
   email: z.preprocess(
     (value) => (value === "" ? null : value),
-    z.string().email("No es un correo elecrónico válido").nullable()
+    z.string().email("No es un correo electrónico válido").nullable()
   ),
   phone1: z.string().nullable(),
   phone1HasWhatsapp: schemaCheckbox,

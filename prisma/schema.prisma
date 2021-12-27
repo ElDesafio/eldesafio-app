@@ -186,6 +186,7 @@ model School {
   name               String
   address            String
   city               String
+  email              String?
   phone              String?
   principalName      String?
   principalPhone     String?

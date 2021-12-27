@@ -1,14 +1,11 @@
-import { Participant, Program } from ".prisma/client";
+import { School } from ".prisma/client";
 import {
-  Avatar,
   Box,
   Button,
   Container,
   Flex,
   Heading,
-  Img,
   Spacer,
-  Stack,
   Table,
   Tbody,
   Td,
@@ -20,15 +17,14 @@ import {
 import { MdAdd } from "react-icons/md";
 import { Link, LoaderFunction, useLoaderData } from "remix";
 import { db } from "~/services/db.server";
-import { getAge } from "~/util/utils";
 
 export const loader: LoaderFunction = async () => {
-  const programs = await db.program.findMany();
+  const programs = await db.school.findMany();
   return programs;
 };
 
 export default function Programs() {
-  const programs = useLoaderData<Program[]>();
+  const schools = useLoaderData<School[]>();
   return (
     <>
       <Box
@@ -40,12 +36,12 @@ export default function Programs() {
         <Container maxW="7xl">
           <Flex>
             <Heading size="lg" mb="0">
-              Programas
+              Escuelas
             </Heading>
             <Spacer />
             <Link to="new">
               <Button leftIcon={<MdAdd />} colorScheme="blue">
-                Nuevo
+                Nueva
               </Button>
             </Link>
           </Flex>
@@ -68,32 +64,24 @@ export default function Programs() {
                     NOMBRE
                   </Th>
                   <Th whiteSpace="nowrap" scope="col">
-                    ASISTENCIAS
+                    DIRECCIÓN
                   </Th>
                   <Th whiteSpace="nowrap" scope="col">
-                    CUPOS
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col">
-                    PARTICIPANTES
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col">
-                    EDAD
+                    TELÉFONO
                   </Th>
                   <Th whiteSpace="nowrap" scope="col"></Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {programs.map((program) => (
-                  <Tr key={program.id}>
-                    <Td whiteSpace="nowrap">{program.name}</Td>
-                    <Td>asistencias 20%</Td>
-                    <Td>{program.seats}</Td>
-                    <Td>20 / 0</Td>
+                {schools.map((school) => (
+                  <Tr key={school.id}>
+                    <Td whiteSpace="nowrap">{school.name}</Td>
                     <Td>
-                      {program.ageFrom} a {program.ageTo} años
+                      {school.address} ({school.city})
                     </Td>
+                    <Td>{school.phone}</Td>
                     <Td textAlign="right">
-                      <Link to={`${program.id}/edit`}>
+                      <Link to={`${school.id}/edit`}>
                         <Button variant="link" colorScheme="blue">
                           Edit
                         </Button>
