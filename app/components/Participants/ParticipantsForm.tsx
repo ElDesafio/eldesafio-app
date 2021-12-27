@@ -105,6 +105,7 @@ export function ParticipantForm({
               validator={participantFormValidator}
               defaultValues={defaultValues}
               method="post"
+              noValidate
             >
               <Stack spacing="4" divider={<StackDivider />}>
                 <FieldGroup title="Foto">
