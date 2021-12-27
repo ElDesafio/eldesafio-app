@@ -1,5 +1,11 @@
 import { Box, Container, Heading, useColorModeValue } from "@chakra-ui/react";
-import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+  useLoaderData,
+} from "remix";
 import { validationError } from "remix-validated-form";
 import { db } from "~/services/db.server";
 import { authenticator } from "~/services/auth.server";
@@ -28,6 +34,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
+
+  if (!user) throw json("Unauthorized", { status: 403 });
 
   const fieldValues = schoolFormValidator.validate(
     Object.fromEntries(await request.formData())
