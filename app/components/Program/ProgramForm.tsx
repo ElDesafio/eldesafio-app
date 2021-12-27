@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { FieldGroup } from "~/components/FieldGroup";
 
-import { ValidatedForm } from "remix-validated-form";
+import { ValidatedForm, withZod } from "remix-validated-form";
 import { FormInput } from "~/components/Form/FormInput";
 import { FormSubmitButton } from "~/components/Form/FormSubmitButton";
 import * as z from "zod";
@@ -21,7 +21,7 @@ import { ProgramSex, Weekdays } from ".prisma/client";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
 import { FormTextArea } from "../Form/FormTextArea";
 import { useNavigate } from "remix";
-import { flattenData, schemaCheckbox, withZodFlatten } from "~/util/utils";
+import { schemaCheckbox } from "~/util/utils";
 import { FaTrashAlt } from "react-icons/fa";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
@@ -91,7 +91,7 @@ const programSchema = z.object({
     .array(),
 });
 
-export const programFormValidator = withZodFlatten(programSchema);
+export const programFormValidator = withZod(programSchema);
 
 export function ProgramForm({
   defaultValues,
@@ -119,8 +119,9 @@ export function ProgramForm({
           <Box px={{ base: "4", md: "10" }} maxWidth="7xl">
             <ValidatedForm
               validator={programFormValidator}
-              defaultValues={flattenData(defaultValues) as any} // hack so TS doesn't complain. https://github.com/airjp73/remix-validated-form/issues/1
+              defaultValues={defaultValues}
               method="post"
+              noValidate
             >
               <Stack spacing="4" divider={<StackDivider />}>
                 <FieldGroup title="Datos Básicos">
@@ -200,7 +201,7 @@ export function ProgramForm({
                     {daysIds.map((id, index) => (
                       <FormStack width="full" key={id}>
                         <FormSelect
-                          name={`programDays.${index}.day`}
+                          name={`programDays[${index}].day`}
                           label="Día"
                           isRequired
                           placeholder="Seleccionar día"
@@ -214,14 +215,14 @@ export function ProgramForm({
                           <option value={Weekdays.SUNDAY}>Doming</option>
                         </FormSelect>
                         <FormInput
-                          name={`programDays.${index}.fromTime`}
+                          name={`programDays[${index}].fromTime`}
                           label="Hora Inicio"
                           type="time"
                           isRequired
                           step="1800" // 30 min
                         />
                         <FormInput
-                          name={`programDays.${index}.toTime`}
+                          name={`programDays[${index}].toTime`}
                           label="Hora Fin"
                           type="time"
                           isRequired

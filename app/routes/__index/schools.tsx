@@ -13,7 +13,7 @@ export default function Participants() {
       <Box bg={useColorModeValue("white", "gray.900")} pt="8" shadow="sm">
         <Container maxW="7xl">
           <Heading size="lg" mb="3">
-            Schools
+            Escuelas
           </Heading>
           <Stack direction="row" spacing="4">
             <TabLink aria-current="page" href="#">
