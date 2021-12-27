@@ -16,7 +16,6 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
 
   const fieldValues = programFormValidator.validate(formData);
-  console.log(fieldValues);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 

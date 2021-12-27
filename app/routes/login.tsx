@@ -23,7 +23,6 @@ export let loader: LoaderFunction = async ({ request }) => {
   const user = await authenticator.isAuthenticated(request, {
     successRedirect: "/",
   });
-  console.log({ user });
   return user;
 };
 

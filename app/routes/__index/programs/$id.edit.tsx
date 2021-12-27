@@ -39,8 +39,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   );
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  console.log(JSON.stringify(fieldValues));
-
   const { programDays, ...rest } = fieldValues.data;
 
   const program = await db.program.update({

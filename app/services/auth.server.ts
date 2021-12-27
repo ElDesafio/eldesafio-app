@@ -19,16 +19,9 @@ let auth0Strategy = new Auth0Strategy(
   async ({ accessToken, refreshToken, extraParams, profile }) => {
     // Get the user data from your DB or API using the tokens and profile
     // return User.findOrCreate({ email: profile.emails[0].value });
-    console.log({ accessToken });
-    console.log({ refreshToken });
-    console.log({ extraParams });
-    console.log({ profile });
-
     const user = await db.user.findUnique({
       where: { email: profile.emails[0].value },
     });
-
-    console.log({ user });
 
     if (!user) redirect("/login?error=user_not_found");
     return user;

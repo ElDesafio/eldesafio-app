@@ -167,7 +167,6 @@ export function ParticipantForm({
                                     result &&
                                     result.event === "success"
                                   ) {
-                                    console.log(result);
                                     setUploadedImage(result.info.secure_url);
                                   }
                                 }
