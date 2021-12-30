@@ -1,5 +1,11 @@
 import { Box, Container, Heading, useColorModeValue } from "@chakra-ui/react";
-import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+  useLoaderData,
+} from "remix";
 import { validationError } from "remix-validated-form";
 import { db } from "~/services/db.server";
 import { authenticator } from "~/services/auth.server";
@@ -9,16 +15,21 @@ import {
 } from "~/components/Participants/ParticipantsForm";
 import * as z from "zod";
 
-import { Participant } from ".prisma/client";
+import { Participant, Prisma } from ".prisma/client";
+
+async function getParticipant(id: number) {
+  const participant = await db.participant.findUnique({
+    where: { id: id },
+    include: { school: true },
+  });
+  return participant;
+}
 
 // LOADER
 export let loader: LoaderFunction = async ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const participant: Participant | null = await db.participant.findUnique({
-    where: { id: +id },
-  });
-  return participant;
+  return await getParticipant(+id);
 };
 
 //ACTION
@@ -29,9 +40,13 @@ export const action: ActionFunction = async ({ request, params }) => {
     failureRedirect: "/login",
   });
 
-  const fieldValues = participantFormValidator.validate(
-    Object.fromEntries(await request.formData())
-  );
+  if (!user) throw json("Unauthorized", { status: 403 });
+
+  const formData = Object.fromEntries(await request.formData());
+  console.log(formData);
+
+  const fieldValues = participantFormValidator.validate(formData);
+
   if (fieldValues.error) return validationError(fieldValues.error);
 
   const {
@@ -65,7 +80,24 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function EditParticipant() {
-  const participant = useLoaderData<Participant>();
+  const participant =
+    useLoaderData<Prisma.PromiseReturnType<typeof getParticipant>>();
+
+  let schoolName: string | undefined;
+
+  if (participant?.school) {
+    schoolName = participant.school.name;
+  }
+
+  let participantClean: Participant;
+
+  if (participant?.school) {
+    const { school, ...rest } = participant;
+    participantClean = { ...rest };
+  } else {
+    participantClean = participant as Participant;
+  }
+
   return (
     <>
       <Box
@@ -81,7 +113,10 @@ export default function EditParticipant() {
         </Container>
       </Box>
 
-      <ParticipantForm defaultValues={participant} />
+      <ParticipantForm
+        defaultValues={participantClean}
+        schoolName={schoolName}
+      />
     </>
   );
 }

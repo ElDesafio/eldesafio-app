@@ -2,7 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+
 }
 
 datasource db {
@@ -47,6 +49,21 @@ enum PhoneBelongsTo {
   TUTOR
 }
 
+enum SchoolYear {
+  GRADE_1
+  GRADE_2
+  GRADE_3
+  GRADE_4
+  GRADE_5
+  GRADE_6
+  GRADE_7
+  YEAR_1
+  YEAR_2
+  YEAR_3
+  YEAR_4
+  YEAR_5
+}
+
 model Participant {
   id                         Int                      @id @default(autoincrement())
   active                     Boolean                  @default(false)
@@ -68,6 +85,9 @@ model Participant {
   phone2HasWhatsapp          Boolean                  @default(false)
   phone2BelongsTo            PhoneBelongsTo?
   biography                  String?
+  school                     School?                  @relation(fields: [schoolId], references: [id])
+  notSchooled                Boolean                  @default(false)
+  schoolYear                 SchoolYear?
   presentedDNI               Boolean                  @default(false)
   presentedHealthCertificate Boolean                  @default(false)
   healthCertificateDate      String?
@@ -80,6 +100,7 @@ model Participant {
   surveyBiography            SurveyBiography?         @relation(fields: [surveyBiographyId], references: [id])
   surveyBiographyId          Int?
   programs                   ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByParticipant")
+  schoolId                   Int?
 }
 
 model SurveyBiography {
@@ -182,7 +203,7 @@ model ProgramDays {
 }
 
 model School {
-  id                 Int      @id @default(autoincrement())
+  id                 Int           @id @default(autoincrement())
   name               String
   address            String
   city               String
@@ -192,10 +213,11 @@ model School {
   principalPhone     String?
   vicePrincipalName  String?
   vicePrincipalPhone String?
-  createdAt          DateTime @default(now()) @db.Timestamptz
-  updatedAt          DateTime @default(now()) @updatedAt @db.Timestamptz
-  createdByUser      User     @relation("CreatedSchoolByUser", fields: [createdBy], references: [id])
+  createdAt          DateTime      @default(now()) @db.Timestamptz
+  updatedAt          DateTime      @default(now()) @updatedAt @db.Timestamptz
+  createdByUser      User          @relation("CreatedSchoolByUser", fields: [createdBy], references: [id])
   createdBy          Int
-  updatedByUser      User     @relation("UpdatedSchoolByUser", fields: [updatedBy], references: [id])
+  updatedByUser      User          @relation("UpdatedSchoolByUser", fields: [updatedBy], references: [id])
   updatedBy          Int
+  Participant        Participant[]
 }

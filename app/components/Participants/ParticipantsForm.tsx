@@ -5,11 +5,9 @@ import {
   useColorModeValue,
   Avatar,
   FormControl,
-  FormHelperText,
   HStack,
   StackDivider,
   Text,
-  Textarea,
   VStack,
   Container,
 } from "@chakra-ui/react";
@@ -23,11 +21,12 @@ import * as z from "zod";
 import { FormStack } from "~/components/Form/FormStack";
 import { useState } from "react";
 import { FormSelect } from "~/components/Form/FormSelect";
-import { Neighborhood, Participant, PhoneBelongsTo, Sex } from ".prisma/client";
+import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from ".prisma/client";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
 import { FormTextArea } from "../Form/FormTextArea";
 import { useNavigate } from "remix";
 import { schemaCheckbox } from "~/util/utils";
+import { FormAutocomplete } from "../Form/FormAutocomplete";
 
 const participantSchema = z.object({
   // id: z.number(),
@@ -42,7 +41,10 @@ const participantSchema = z.object({
   lastName: z.string().nonempty("Apellido no puede estar vacío"),
   birthday: z.string().nonempty("Fecha de nacimiento no puede estar vacía"),
   dni: z.string().nonempty("DNI no puede estar vacío"),
-  picture: z.string().url("La URL de la imagen no es válida").nullable(),
+  picture: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.string().url("La URL de la imagen no es válida").nullable()
+  ),
   sex: z.nativeEnum(Sex, {
     errorMap: (issue) => ({
       message: "Sexo no puede estar vacío",
@@ -58,6 +60,7 @@ const participantSchema = z.object({
     (value) => (value === "" ? null : value),
     z.string().email("No es un correo electrónico válido").nullable()
   ),
+  medicalInsurance: z.string().nullable(),
   phone1: z.string().nullable(),
   phone1HasWhatsapp: schemaCheckbox,
   phone1BelongsTo: z.preprocess(
@@ -69,6 +72,15 @@ const participantSchema = z.object({
   phone2BelongsTo: z.preprocess(
     (value) => (value === "" ? null : value),
     z.nativeEnum(PhoneBelongsTo).nullable()
+  ),
+  schoolId: z.preprocess(
+    (value) => (value === "" ? null : Number(value)),
+    z.number().positive().nullable()
+  ),
+  notSchooled: schemaCheckbox,
+  schoolYear: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.nativeEnum(SchoolYear).nullable()
   ),
   biography: z.string().nullable(),
   presentedHealthCertificate: schemaCheckbox,
@@ -83,8 +95,10 @@ export const participantFormValidator = withZod(participantSchema);
 
 export function ParticipantForm({
   defaultValues,
+  schoolName,
 }: {
   defaultValues?: Partial<z.infer<typeof participantSchema>>;
+  schoolName?: string;
 }) {
   const [uploadedImage, setUploadedImage] = useState<string>(
     defaultValues?.picture || ""
@@ -208,6 +222,16 @@ export function ParticipantForm({
                     <FormStack width="full">
                       <FormInput name="firstName" label="Nombre" isRequired />
                       <FormInput name="lastName" label="Apellido" isRequired />
+                      <FormSelect
+                        name="sex"
+                        label="Sexo"
+                        placeholder="Seleccionar sexo"
+                        isRequired
+                      >
+                        <option value={Sex.MALE}>Varón</option>
+                        <option value={Sex.FEMALE}>Mujer</option>
+                        <option value={Sex.OTHER}>Otro</option>
+                      </FormSelect>
                     </FormStack>
                     <FormStack width="full">
                       <FormInput
@@ -217,16 +241,7 @@ export function ParticipantForm({
                         isRequired
                       />
                       <FormInput name="dni" label="DNI" isRequired />
-                      <FormSelect
-                        name="sex"
-                        label="Sexo"
-                        isRequired
-                        placeholder="Seleccionar sexo"
-                      >
-                        <option value={Sex.MALE}>Varón</option>
-                        <option value={Sex.FEMALE}>Mujer</option>
-                        <option value={Sex.OTHER}>Otro</option>
-                      </FormSelect>
+                      <FormInput name="medicalInsurance" label="Obra Social" />
                     </FormStack>
                   </VStack>
                 </FieldGroup>
@@ -301,6 +316,49 @@ export function ParticipantForm({
                         <option value={PhoneBelongsTo.MOTHER}>Madre</option>
                         <option value={PhoneBelongsTo.FATHER}>Padre</option>
                         <option value={PhoneBelongsTo.TUTOR}>Tutor/Otro</option>
+                      </FormSelect>
+                    </FormStack>
+                  </VStack>
+                </FieldGroup>
+                <FieldGroup title="Datos Escuela">
+                  <VStack width="full" spacing="6">
+                    <FormStack width="full">
+                      <FormControl>
+                        <FormCheckbox name="notSchooled" value="true">
+                          No Escolarizado
+                        </FormCheckbox>
+                      </FormControl>
+                    </FormStack>
+
+                    <FormStack width="full">
+                      <FormAutocomplete
+                        searchFor="school"
+                        defaultSelectedLabel={schoolName}
+                        name="schoolId"
+                        label="Nombre Escuela"
+                        placeholder="Buscar..."
+                      />
+                      <FormSelect
+                        name="schoolYear"
+                        label="Grado/Año"
+                        placeholder="Seleccionar grado/año"
+                      >
+                        <optgroup label="Grado">
+                          <option value={SchoolYear.GRADE_1}>1º grado</option>
+                          <option value={SchoolYear.GRADE_2}>2º grado</option>
+                          <option value={SchoolYear.GRADE_3}>3º grado</option>
+                          <option value={SchoolYear.GRADE_4}>4º grado</option>
+                          <option value={SchoolYear.GRADE_5}>5º grado</option>
+                          <option value={SchoolYear.GRADE_6}>6º grado</option>
+                          <option value={SchoolYear.GRADE_7}>7º grado</option>
+                        </optgroup>
+                        <optgroup label="Año">
+                          <option value={SchoolYear.YEAR_1}>1º año</option>
+                          <option value={SchoolYear.YEAR_2}>2º año</option>
+                          <option value={SchoolYear.YEAR_3}>3º año</option>
+                          <option value={SchoolYear.YEAR_4}>4º año</option>
+                          <option value={SchoolYear.YEAR_5}>5º año</option>
+                        </optgroup>
                       </FormSelect>
                     </FormStack>
                   </VStack>

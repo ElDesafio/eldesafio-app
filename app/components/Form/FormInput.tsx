@@ -12,6 +12,7 @@ import {
   VisuallyHidden,
   VisuallyHiddenInput,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { useField } from "remix-validated-form";
 
 type FormInputProps = {
@@ -36,14 +37,20 @@ export const FormInput = ({
   ...rest
 }: FormInputProps & InputProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
+  const [value, setValue] = useState(
+    defaultValue == null ? undefined : defaultValue
+  );
 
   const input = (
     <Input
       id={name}
       name={name}
       onBlur={validate}
-      onChange={clearError}
-      defaultValue={defaultValue}
+      onChange={(event) => {
+        clearError();
+        setValue(event.target.value);
+      }}
+      value={value}
       {...rest}
     />
   );
