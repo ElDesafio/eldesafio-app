@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { FieldErrors, Validator } from "remix-validated-form";
 import { z } from "zod";
 import { flatten, unflatten } from "flat";
+import { useSearchParams } from "remix";
 
 export function getAge(birthday: string): string {
   const age = Math.floor(
@@ -14,6 +15,13 @@ export function getFormattedDate(date: string): string {
   return DateTime.fromISO(date)
     .setLocale("es")
     .toLocaleString(DateTime.DATE_FULL);
+}
+
+export function useSelectedYear() {
+  let [searchParams] = useSearchParams();
+  const selectedYear =
+    searchParams.get("year") ?? DateTime.now().year.toString();
+  return selectedYear;
 }
 
 export const schemaCheckbox = z.preprocess(
@@ -33,3 +41,9 @@ const schemaForType = function <T>() {
     return arg;
   };
 };
+
+export enum ProgramSexText {
+  MALE = "varón",
+  FEMALE = "mujer",
+  ALL = "mixto",
+}

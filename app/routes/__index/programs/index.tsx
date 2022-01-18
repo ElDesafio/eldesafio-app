@@ -1,14 +1,11 @@
-import { Participant, Program } from ".prisma/client";
+import { Program } from ".prisma/client";
 import {
-  Avatar,
   Box,
   Button,
   Container,
   Flex,
   Heading,
-  Img,
   Spacer,
-  Stack,
   Table,
   Tbody,
   Td,
@@ -20,10 +17,9 @@ import {
 import { MdAdd } from "react-icons/md";
 import { Link, LoaderFunction, useLoaderData } from "remix";
 import { db } from "~/services/db.server";
-import { getAge } from "~/util/utils";
 
 export const loader: LoaderFunction = async () => {
-  const programs = await db.program.findMany();
+  const programs = await db.program.findMany({ orderBy: { name: "asc" } });
   return programs;
 };
 

@@ -7,7 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { LoaderFunction } from "@remix-run/server-runtime";
-import { Outlet, useLoaderData } from "remix";
+import { Outlet, useLoaderData, useLocation, useResolvedPath } from "remix";
 import { z } from "zod";
 import { TabLink } from "~/components/TabLink";
 import { db } from "~/services/db.server";
@@ -30,6 +30,8 @@ export const loader: LoaderFunction = async ({ params }) => {
 export default function Participants() {
   const participant =
     useLoaderData<Pick<Participant, "id" | "firstName" | "lastName">>();
+  const location = useLocation();
+
   return (
     <>
       <Box bg={useColorModeValue("white", "gray.900")} pt="8" shadow="sm">
@@ -38,10 +40,36 @@ export default function Participants() {
             {participant.firstName} {participant.lastName}
           </Heading>
           <Stack direction="row" spacing="4">
-            <TabLink aria-current="page" href="#">
+            <TabLink
+              to={useResolvedPath("").pathname}
+              aria-current={
+                location.pathname === useResolvedPath("").pathname
+                  ? "page"
+                  : undefined
+              }
+            >
               General
             </TabLink>
-            <TabLink href="#">Datos Médicos</TabLink>
+            <TabLink
+              to="programs"
+              aria-current={
+                location.pathname === useResolvedPath("programs").pathname
+                  ? "page"
+                  : undefined
+              }
+            >
+              Programas
+            </TabLink>
+            <TabLink
+              to="health"
+              aria-current={
+                location.pathname === useResolvedPath("health").pathname
+                  ? "page"
+                  : undefined
+              }
+            >
+              Datos Médicos
+            </TabLink>
             <TabLink href="#">Diario</TabLink>
             <TabLink href="#">Biografía</TabLink>
             <TabLink href="#">Cuestionario</TabLink>

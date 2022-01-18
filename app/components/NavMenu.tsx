@@ -17,31 +17,31 @@ const MobileNavMenu = (props: { isOpen?: boolean }) => {
     {
       label: "Participantes",
       to: "/participants",
-      active: location.pathname.includes("/participants"),
+      active: location.pathname.startsWith("/participants"),
       icon: <MdGroup />,
     },
     {
       label: "Programas",
       to: "/programs",
-      active: location.pathname.includes("/programs"),
+      active: location.pathname.startsWith("/programs"),
       icon: <MdSchool />,
     },
     {
       label: "Staff",
       to: "/staff",
-      active: location.pathname.includes("/staff"),
+      active: location.pathname.startsWith("/staff"),
       icon: <AiOutlineTeam />,
     },
     {
       label: "Familiares",
       to: "/family",
-      active: location.pathname.includes("/family"),
+      active: location.pathname.startsWith("/family"),
       icon: <MdOutlineFamilyRestroom />,
     },
     {
       label: "Escuelas",
       to: "/schools",
-      active: location.pathname.includes("/schools"),
+      active: location.pathname.startsWith("/schools"),
       icon: <FaSchool />,
     },
     {
@@ -53,6 +53,7 @@ const MobileNavMenu = (props: { isOpen?: boolean }) => {
   ];
 
   const { isOpen } = props;
+
   return (
     <Flex
       hidden={!isOpen}
@@ -86,37 +87,37 @@ const DesktopNavMenu = () => {
     {
       label: "Participantes",
       to: "/participants",
-      active: location.pathname.includes("/participants"),
+      active: location.pathname.startsWith("/participants"),
       icon: <MdGroup />,
     },
     {
       label: "Programas",
       to: "/programs",
-      active: location.pathname.includes("/programs"),
+      active: location.pathname.startsWith("/programs"),
       icon: <MdSchool />,
     },
     {
       label: "Familiares",
       to: "/family",
-      active: location.pathname.includes("/family"),
+      active: location.pathname.startsWith("/family"),
       icon: <MdOutlineFamilyRestroom />,
     },
     {
       label: "Escuelas",
       to: "/schools",
-      active: location.pathname.includes("/schools"),
+      active: location.pathname.startsWith("/schools"),
       icon: <FaSchool />,
     },
     {
       label: "Staff",
       to: "/staff",
-      active: location.pathname.includes("/staff"),
+      active: location.pathname.startsWith("/staff"),
       icon: <AiOutlineTeam />,
     },
     {
       label: "Admin",
       to: "/admin",
-      active: location.pathname.includes("/admin"),
+      active: location.pathname.startsWith("/admin"),
       icon: <MdAdminPanelSettings />,
     },
   ];
