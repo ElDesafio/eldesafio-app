@@ -176,17 +176,25 @@ model UsersOnPrograms {
   @@id([userId, programId])
 }
 
+enum ParticipantsOnProgramsStatus {
+  ACTIVE
+  INACTIVE
+  WAITING
+}
+
 model ParticipantsOnPrograms {
-  program       Program     @relation("ParticipantOnProgramsByProgram", fields: [programId], references: [id])
-  programId     Int
-  participant   Participant @relation("ParticipantOnProgramsByParticipant", fields: [participantId], references: [id])
-  participantId Int
-  createdAt     DateTime    @default(now()) @db.Timestamptz
-  updatedAt     DateTime    @default(now()) @updatedAt @db.Timestamptz
-  createdByUser User        @relation("CreatedParticipantsOnProgramsByUser", fields: [createdBy], references: [id])
-  createdBy     Int
-  updatedByUser User        @relation("UpdatedParticipantsOnProgramsByUser", fields: [updatedBy], references: [id])
-  updatedBy     Int
+  program          Program                      @relation("ParticipantOnProgramsByProgram", fields: [programId], references: [id])
+  programId        Int
+  participant      Participant                  @relation("ParticipantOnProgramsByParticipant", fields: [participantId], references: [id])
+  participantId    Int
+  status           ParticipantsOnProgramsStatus @default(ACTIVE)
+  waitingListOrder Int?
+  createdAt        DateTime                     @default(now()) @db.Timestamptz
+  updatedAt        DateTime                     @default(now()) @updatedAt @db.Timestamptz
+  createdByUser    User                         @relation("CreatedParticipantsOnProgramsByUser", fields: [createdBy], references: [id])
+  createdBy        Int
+  updatedByUser    User                         @relation("UpdatedParticipantsOnProgramsByUser", fields: [updatedBy], references: [id])
+  updatedBy        Int
 
   @@id([programId, participantId])
 }

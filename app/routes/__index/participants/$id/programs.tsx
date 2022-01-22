@@ -17,8 +17,8 @@ async function getProgramsByYear(year: number) {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  let url = new URL(request.url);
-  let selectedYear = url.searchParams.get("year") ?? DateTime.now().year;
+  const url = new URL(request.url);
+  const selectedYear = url.searchParams.get("year") ?? DateTime.now().year;
   const programs = await getProgramsByYear(+selectedYear);
 
   return programs;
@@ -39,7 +39,7 @@ export default function ParticipantPrograms() {
           ageTo={program.ageTo}
           seatsAvailable={program.seats}
           seatsTaken={5}
-        ></ProgramBox>
+         />
       ))}
     </SimpleGrid>
   );
