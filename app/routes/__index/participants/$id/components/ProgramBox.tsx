@@ -1,4 +1,3 @@
-import { ProgramSex } from '.prisma/client';
 import {
   Box,
   Button,
@@ -7,9 +6,11 @@ import {
   Flex,
   Text,
   useColorModeValue as mode,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { ProgramSexText } from '~/util/utils';
 import { AddToProgramModal } from './AddToProgramModal';
+import { ProgramSex } from '.prisma/client';
 
 type ProgramBoxProps = {
   name: string,
@@ -28,6 +29,8 @@ export const ProgramBox = ({
   ageFrom,
   ageTo,
 }: ProgramBoxProps) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
       <Box
@@ -40,7 +43,9 @@ export const ProgramBox = ({
           <Text as="h5" fontWeight="bold" fontSize="md" isTruncated>
             {name}
           </Text>
-          <Button size="xs">Agregar</Button>
+          <Button size="xs" onClick={onOpen}>
+            Agregar
+          </Button>
         </Flex>
         <Divider />
         <Container spacing="6" py="2" px="4">
@@ -66,13 +71,7 @@ export const ProgramBox = ({
           </Text>
         </Container>
       </Box>
-      <AddToProgramModal
-        isOpen={false}
-        onClose={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-      />
-      <div />
+      <AddToProgramModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

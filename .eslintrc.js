@@ -18,9 +18,12 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint'],
+  plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
   rules: {
-    'comma-dangle': ['always'],
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    semi: 'always',
+    'comma-dangle': ['error', 'always-multiline'],
     'react/self-closing-comp': [
       'error',
       {
