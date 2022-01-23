@@ -1,21 +1,22 @@
-import { Box, Container, Heading, useColorModeValue } from "@chakra-ui/react";
+import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import {
   ActionFunction,
   json,
   LoaderFunction,
   redirect,
   useLoaderData,
-} from "remix";
-import { validationError } from "remix-validated-form";
-import { db } from "~/services/db.server";
-import { authenticator } from "~/services/auth.server";
+} from 'remix';
+import { validationError } from 'remix-validated-form';
+import * as z from 'zod';
+
 import {
   ParticipantForm,
   participantFormValidator,
-} from "~/components/Participants/ParticipantsForm";
-import * as z from "zod";
+} from '~/components/Participants/ParticipantsForm';
+import { authenticator } from '~/services/auth.server';
+import { db } from '~/services/db.server';
 
-import { Participant, Prisma } from ".prisma/client";
+import { Participant, Prisma } from '.prisma/client';
 
 async function getParticipant(id: number) {
   const participant = await db.participant.findUnique({
@@ -25,22 +26,24 @@ async function getParticipant(id: number) {
   return participant;
 }
 
+type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
+
 // LOADER
-export let loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   return await getParticipant(+id);
 };
 
-//ACTION
+// ACTION
 export const action: ActionFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
   });
 
-  if (!user) throw json("Unauthorized", { status: 403 });
+  if (!user) throw json('Unauthorized', { status: 403 });
 
   const formData = Object.fromEntries(await request.formData());
 
@@ -75,12 +78,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect("/participants");
+  return redirect('/participants');
 };
 
 export default function EditParticipant() {
-  const participant =
-    useLoaderData<Prisma.PromiseReturnType<typeof getParticipant>>();
+  const participant = useLoaderData<GetParticipant>();
 
   let schoolName: string | undefined;
 
@@ -100,7 +102,7 @@ export default function EditParticipant() {
   return (
     <>
       <Box
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue('white', 'gray.900')}
         pt="4"
         pb="4"
         shadow="sm"

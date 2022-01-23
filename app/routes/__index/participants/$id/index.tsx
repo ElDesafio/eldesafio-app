@@ -1,4 +1,3 @@
-import { Participant } from ".prisma/client";
 import {
   Avatar,
   Box,
@@ -11,19 +10,22 @@ import {
   Tbody,
   Td,
   Tr,
-} from "@chakra-ui/react";
-import { LoaderFunction } from "@remix-run/server-runtime";
-import { HiCloudUpload } from "react-icons/hi";
-import { useLoaderData } from "remix";
-import { z } from "zod";
-import { db } from "~/services/db.server";
-import { getAge, getFormattedDate } from "~/util/utils";
-import styles from "~/css/participant-general.css";
+} from '@chakra-ui/react';
+import { LoaderFunction } from '@remix-run/server-runtime';
+import { HiCloudUpload } from 'react-icons/hi';
+import { useLoaderData } from 'remix';
+import { z } from 'zod';
+
+import styles from '~/css/participant-general.css';
+import { db } from '~/services/db.server';
+import { getAge, getFormattedDate } from '~/util/utils';
+
+import { Participant } from '.prisma/client';
 
 export function links() {
   return [
     {
-      rel: "stylesheet",
+      rel: 'stylesheet',
       href: styles,
     },
   ];
@@ -47,12 +49,12 @@ export default function ParticipantGeneral() {
       </Heading>
       <Divider mt="2" mb="8" />
       <Stack
-        direction={{ base: "column", lg: "row" }}
+        direction={{ base: 'column', lg: 'row' }}
         spacing={6}
         justifyContent="space-between"
       >
         <Stack
-          direction={{ base: "column", md: "row" }}
+          direction={{ base: 'column', md: 'row' }}
           spacing={{ base: 0, md: 6 }}
           justifyContent="space-between"
           flex="1"
@@ -124,7 +126,7 @@ export default function ParticipantGeneral() {
           </Table>
         </Stack>
         <Stack
-          direction={{ base: "row", lg: "column" }}
+          direction={{ base: 'row', lg: 'column' }}
           spacing="6"
           align="center"
           order={{ base: 1, lg: 2 }}
@@ -132,7 +134,7 @@ export default function ParticipantGeneral() {
           <Avatar size="2xl" src={participant.picture || undefined} />
           <Box>
             <HStack spacing="5">
-              <Button>{participant.active ? "Activo" : "Inactivo"}</Button>
+              <Button>{participant.active ? 'Activo' : 'Inactivo'}</Button>
             </HStack>
           </Box>
         </Stack>

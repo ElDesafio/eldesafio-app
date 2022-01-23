@@ -6,22 +6,26 @@ import {
   Flex,
   Text,
   useColorModeValue as mode,
-  useDisclosure,
 } from '@chakra-ui/react';
+import { useSearchParams } from 'remix';
+
 import { ProgramSexText } from '~/util/utils';
+
 import { AddToProgramModal } from './AddToProgramModal';
 import { ProgramSex } from '.prisma/client';
 
 type ProgramBoxProps = {
-  name: string,
-  sex: ProgramSex,
-  seatsTaken: number,
-  seatsAvailable: number,
-  ageFrom: number,
-  ageTo: number,
+  id: number;
+  name: string;
+  sex: ProgramSex;
+  seatsTaken: number;
+  seatsAvailable: number;
+  ageFrom: number;
+  ageTo: number;
 };
 
 export const ProgramBox = ({
+  id,
   name,
   sex,
   seatsAvailable,
@@ -29,7 +33,9 @@ export const ProgramBox = ({
   ageFrom,
   ageTo,
 }: ProgramBoxProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const modalProgramId = searchParams.get('modalProgramId');
 
   return (
     <>
@@ -43,7 +49,15 @@ export const ProgramBox = ({
           <Text as="h5" fontWeight="bold" fontSize="md" isTruncated>
             {name}
           </Text>
-          <Button size="xs" onClick={onOpen}>
+          <Button
+            size="xs"
+            onClick={() => {
+              setSearchParams(
+                { modalProgramId: id.toString() },
+                { replace: false },
+              );
+            }}
+          >
             Agregar
           </Button>
         </Flex>
@@ -71,7 +85,12 @@ export const ProgramBox = ({
           </Text>
         </Container>
       </Box>
-      <AddToProgramModal isOpen={isOpen} onClose={onClose} />
+      <AddToProgramModal
+        isOpen={modalProgramId === id.toString()}
+        onClose={() => setSearchParams({}, { replace: false })}
+        programId={id}
+        programName={name}
+      />
     </>
   );
 };

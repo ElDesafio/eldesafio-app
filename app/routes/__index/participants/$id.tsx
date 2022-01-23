@@ -1,20 +1,20 @@
-import { Participant } from ".prisma/client";
 import {
   Box,
   Container,
   Heading,
   Stack,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { LoaderFunction } from "@remix-run/server-runtime";
-import { Outlet, useLoaderData, useLocation, useResolvedPath } from "remix";
-import { z } from "zod";
-import { TabLink } from "~/components/TabLink";
-import { db } from "~/services/db.server";
+} from '@chakra-ui/react';
+import { LoaderFunction } from '@remix-run/server-runtime';
+import { Outlet, useLoaderData, useLocation, useResolvedPath } from 'remix';
+import { z } from 'zod';
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const { id } = z.object({ id: z.string() }).parse(params);
+import { TabLink } from '~/components/TabLink';
+import { db } from '~/services/db.server';
 
+import { Prisma } from '.prisma/client';
+
+async function getParticipant(id: number) {
   const participant = await db.participant.findUnique({
     where: { id: +id },
     select: {
@@ -23,28 +23,38 @@ export const loader: LoaderFunction = async ({ params }) => {
       lastName: true,
     },
   });
+  return participant;
+}
+
+export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
+
+export const loader: LoaderFunction = async ({ params }) => {
+  const { id } = z.object({ id: z.string() }).parse(params);
+
+  const participant = await getParticipant(+id);
 
   return participant;
 };
 
 export default function Participants() {
-  const participant =
-    useLoaderData<Pick<Participant, "id" | "firstName" | "lastName">>();
+  const participant = useLoaderData<GetParticipant>();
   const location = useLocation();
+
+  if (!participant) throw new Error("Participant doesn't exist");
 
   return (
     <>
-      <Box bg={useColorModeValue("white", "gray.900")} pt="8" shadow="sm">
+      <Box bg={useColorModeValue('white', 'gray.900')} pt="8" shadow="sm">
         <Container maxW="7xl">
           <Heading size="lg" mb="3">
             {participant.firstName} {participant.lastName}
           </Heading>
           <Stack direction="row" spacing="4">
             <TabLink
-              to={useResolvedPath("").pathname}
+              to={useResolvedPath('').pathname}
               aria-current={
-                location.pathname === useResolvedPath("").pathname
-                  ? "page"
+                location.pathname === useResolvedPath('').pathname
+                  ? 'page'
                   : undefined
               }
             >
@@ -53,8 +63,8 @@ export default function Participants() {
             <TabLink
               to="programs"
               aria-current={
-                location.pathname === useResolvedPath("programs").pathname
-                  ? "page"
+                location.pathname === useResolvedPath('programs').pathname
+                  ? 'page'
                   : undefined
               }
             >
@@ -63,8 +73,8 @@ export default function Participants() {
             <TabLink
               to="health"
               aria-current={
-                location.pathname === useResolvedPath("health").pathname
-                  ? "page"
+                location.pathname === useResolvedPath('health').pathname
+                  ? 'page'
                   : undefined
               }
             >
@@ -81,7 +91,7 @@ export default function Participants() {
       <Box as="main" py="8" flex="1">
         <Container maxW="7xl">
           <Box
-            bg={useColorModeValue("white", "gray.700")}
+            bg={useColorModeValue('white', 'gray.700')}
             p="6"
             rounded="lg"
             shadow="base"

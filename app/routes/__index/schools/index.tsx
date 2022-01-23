@@ -1,4 +1,3 @@
-import { School } from ".prisma/client";
 import {
   Box,
   Button,
@@ -13,12 +12,15 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { MdAdd } from "react-icons/md";
-import { Link, LoaderFunction, useLoaderData } from "remix";
-import { db } from "~/services/db.server";
+} from '@chakra-ui/react';
+import { MdAdd } from 'react-icons/md';
+import { Link, LoaderFunction, useLoaderData } from 'remix';
 
-export const loader: LoaderFunction = async () => {
+import { db } from '~/services/db.server';
+
+import { School } from '.prisma/client';
+
+export const loader: LoaderFunction = async() => {
   const programs = await db.school.findMany();
   return programs;
 };
@@ -28,7 +30,7 @@ export default function Programs() {
   return (
     <>
       <Box
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue('white', 'gray.900')}
         pt="4"
         pb="4"
         shadow="sm"
@@ -51,14 +53,14 @@ export default function Programs() {
       <Box as="main" py="8" flex="1">
         <Container maxW="7xl">
           <Box
-            bg={useColorModeValue("white", "gray.700")}
+            bg={useColorModeValue('white', 'gray.700')}
             p="6"
             rounded="lg"
             shadow="base"
             overflowX="auto"
           >
             <Table borderWidth="1px" fontSize="sm">
-              <Thead bg={useColorModeValue("gray.50", "gray.800")}>
+              <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
                 <Tr>
                   <Th whiteSpace="nowrap" scope="col">
                     NOMBRE
@@ -69,7 +71,7 @@ export default function Programs() {
                   <Th whiteSpace="nowrap" scope="col">
                     TELÉFONO
                   </Th>
-                  <Th whiteSpace="nowrap" scope="col"></Th>
+                  <Th whiteSpace="nowrap" scope="col" />
                 </Tr>
               </Thead>
               <Tbody>
