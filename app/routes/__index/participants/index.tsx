@@ -1,4 +1,3 @@
-import { Participant } from ".prisma/client";
 import {
   Avatar,
   Box,
@@ -16,14 +15,19 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { MdAdd } from "react-icons/md";
-import { Link, LoaderFunction, useLoaderData } from "remix";
-import { db } from "~/services/db.server";
-import { getAge } from "~/util/utils";
+} from '@chakra-ui/react';
+import { MdAdd } from 'react-icons/md';
+import { Link, LoaderFunction, useLoaderData } from 'remix';
+
+import { db } from '~/services/db.server';
+import { getAge } from '~/util/utils';
+
+import { Participant } from '.prisma/client';
 
 export const loader: LoaderFunction = async () => {
-  const participants = await db.participant.findMany();
+  const participants = await db.participant.findMany({
+    orderBy: { firstName: 'asc' },
+  });
   return participants;
 };
 
@@ -32,7 +36,7 @@ export default function Participants() {
   return (
     <>
       <Box
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue('white', 'gray.900')}
         pt="4"
         pb="4"
         shadow="sm"
@@ -55,14 +59,14 @@ export default function Participants() {
       <Box as="main" py="8" flex="1">
         <Container maxW="7xl">
           <Box
-            bg={useColorModeValue("white", "gray.700")}
+            bg={useColorModeValue('white', 'gray.700')}
             p="6"
             rounded="lg"
             shadow="base"
             overflowX="auto"
           >
             <Table borderWidth="1px" fontSize="sm">
-              <Thead bg={useColorModeValue("gray.50", "gray.800")}>
+              <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
                 <Tr>
                   <Th whiteSpace="nowrap" scope="col">
                     PARTICIPANTE
@@ -73,7 +77,7 @@ export default function Participants() {
                   <Th whiteSpace="nowrap" scope="col">
                     DNI
                   </Th>
-                  <Th whiteSpace="nowrap" scope="col"></Th>
+                  <Th whiteSpace="nowrap" scope="col" />
                 </Tr>
               </Thead>
               <Tbody>

@@ -58,7 +58,7 @@ export function AddToProgramModal({
                 type="submit"
                 tabIndex={2}
                 size="sm"
-                colorScheme="blue"
+                colorScheme="teal"
                 variant="outline"
                 mr={3}
               >

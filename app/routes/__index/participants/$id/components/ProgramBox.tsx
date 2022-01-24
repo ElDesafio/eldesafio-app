@@ -4,38 +4,59 @@ import {
   Container,
   Divider,
   Flex,
+  HStack,
+  Tag,
   Text,
   useColorModeValue as mode,
 } from '@chakra-ui/react';
-import { useSearchParams } from 'remix';
+import { ParticipantsOnProgramsStatus } from '@prisma/client';
+import { useParams, useSearchParams } from 'remix';
 
 import { ProgramSexText } from '~/util/utils';
 
+import { GetParticipantProgramsByYear } from '../programs';
 import { AddToProgramModal } from './AddToProgramModal';
-import { ProgramSex } from '.prisma/client';
 
 type ProgramBoxProps = {
-  id: number;
-  name: string;
-  sex: ProgramSex;
-  seatsTaken: number;
-  seatsAvailable: number;
-  ageFrom: number;
-  ageTo: number;
+  program: GetParticipantProgramsByYear[0];
 };
 
-export const ProgramBox = ({
-  id,
-  name,
-  sex,
-  seatsAvailable,
-  seatsTaken,
-  ageFrom,
-  ageTo,
-}: ProgramBoxProps) => {
+export const ProgramBox = ({ program }: ProgramBoxProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { id: participantId } = useParams();
 
   const modalProgramId = searchParams.get('modalProgramId');
+
+  const { id, name, sex, seats, ageFrom, ageTo, participants } = program;
+
+  const seatsTaken =
+    seats -
+    participants.filter((p) => p.status === ParticipantsOnProgramsStatus.ACTIVE)
+      .length;
+
+  const isOnWaitingList =
+    participants.filter(
+      (p) =>
+        p.status === ParticipantsOnProgramsStatus.WAITING &&
+        participantId != null &&
+        p.participantId === +participantId,
+    ).length === 1;
+
+  const isActive =
+    participants.filter(
+      (p) =>
+        p.status === ParticipantsOnProgramsStatus.ACTIVE &&
+        participantId != null &&
+        p.participantId === +participantId,
+    ).length === 1;
+
+  const isInactive =
+    participants.filter(
+      (p) =>
+        p.status === ParticipantsOnProgramsStatus.INACTIVE &&
+        participantId != null &&
+        p.participantId === +participantId,
+    ).length === 1;
 
   return (
     <>
@@ -74,7 +95,7 @@ export const ProgramBox = ({
             Cupos disponibles:
           </Text>{' '}
           <Text as="span" fontSize="sm">
-            {seatsTaken} de {seatsAvailable}
+            {seatsTaken} de {seats}
           </Text>
           <br />
           <Text as="span" fontWeight="semibold" fontSize="sm">
@@ -83,6 +104,25 @@ export const ProgramBox = ({
           <Text as="span" fontSize="sm">
             {ageFrom} a {ageTo} años
           </Text>
+          {(isOnWaitingList || isActive || isInactive) && (
+            <HStack justifyContent="flex-end" mt={2} spacing={2}>
+              {isOnWaitingList && (
+                <Tag size="sm" variant="outline" colorScheme="teal">
+                  En Espera
+                </Tag>
+              )}
+              {isActive && (
+                <Tag size="sm" variant="solid" colorScheme="green">
+                  Activo
+                </Tag>
+              )}
+              {isInactive && (
+                <Tag size="sm" variant="solid" colorScheme="red">
+                  Inactivo
+                </Tag>
+              )}
+            </HStack>
+          )}
         </Container>
       </Box>
       <AddToProgramModal
