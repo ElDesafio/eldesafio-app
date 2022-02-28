@@ -1,32 +1,33 @@
 import {
+  Avatar,
   Box,
   Button,
-  Stack,
-  useColorModeValue,
-  Avatar,
+  Container,
   FormControl,
   HStack,
+  Stack,
   StackDivider,
   Text,
+  useColorModeValue,
   VStack,
-  Container,
-} from "@chakra-ui/react";
-import { HiCloudUpload } from "react-icons/hi";
-import { FieldGroup } from "~/components/FieldGroup";
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { HiCloudUpload } from 'react-icons/hi';
+import { useNavigate } from 'remix';
+import { ValidatedForm, withZod } from 'remix-validated-form';
+import * as z from 'zod';
 
-import { ValidatedForm, withZod } from "remix-validated-form";
-import { FormInput } from "~/components/Form/FormInput";
-import { FormSubmitButton } from "~/components/Form/FormSubmitButton";
-import * as z from "zod";
-import { FormStack } from "~/components/Form/FormStack";
-import { useState } from "react";
-import { FormSelect } from "~/components/Form/FormSelect";
-import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from ".prisma/client";
-import { FormCheckbox } from "~/components/Form/FormCheckbox";
-import { FormTextArea } from "../Form/FormTextArea";
-import { useNavigate } from "remix";
-import { schemaCheckbox } from "~/util/utils";
-import { FormAutocomplete } from "../Form/FormAutocomplete";
+import { FieldGroup } from '~/components/FieldGroup';
+import { FormCheckbox } from '~/components/Form/FormCheckbox';
+import { FormInput } from '~/components/Form/FormInput';
+import { FormSelect } from '~/components/Form/FormSelect';
+import { FormStack } from '~/components/Form/FormStack';
+import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
+import { schemaCheckbox } from '~/util/utils';
+
+import { FormAutocomplete } from '../Form/FormAutocomplete';
+import { FormTextArea } from '../Form/FormTextArea';
+import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from '.prisma/client';
 
 const participantSchema = z.object({
   // id: z.number(),
@@ -37,56 +38,56 @@ const participantSchema = z.object({
   // updatedAt: z.date(),
   // active: z.boolean(),
   // surveyBiographyId: z.number().nullable(),
-  firstName: z.string().nonempty("Nombre no puede estar vacío"),
-  lastName: z.string().nonempty("Apellido no puede estar vacío"),
-  birthday: z.string().nonempty("Fecha de nacimiento no puede estar vacía"),
-  dni: z.string().nonempty("DNI no puede estar vacío"),
+  firstName: z.string().nonempty('Nombre no puede estar vacío'),
+  lastName: z.string().nonempty('Apellido no puede estar vacío'),
+  birthday: z.string().nonempty('Fecha de nacimiento no puede estar vacía'),
+  dni: z.string().nonempty('DNI no puede estar vacío'),
   picture: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().url("La URL de la imagen no es válida").nullable()
+    (value) => (value === '' ? null : value),
+    z.string().url('La URL de la imagen no es válida').nullable(),
   ),
   sex: z.nativeEnum(Sex, {
     errorMap: (issue) => ({
-      message: "Sexo no puede estar vacío",
+      message: 'Sexo no puede estar vacío',
     }),
   }),
   address: z.string().nullable(),
   city: z.string().nullable(),
   neighborhood: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.nativeEnum(Neighborhood).nullable()
+    (value) => (value === '' ? null : value),
+    z.nativeEnum(Neighborhood).nullable(),
   ),
   email: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().email("No es un correo electrónico válido").nullable()
+    (value) => (value === '' ? null : value),
+    z.string().email('No es un correo electrónico válido').nullable(),
   ),
   medicalInsurance: z.string().nullable(),
   phone1: z.string().nullable(),
   phone1HasWhatsapp: schemaCheckbox,
   phone1BelongsTo: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.nativeEnum(PhoneBelongsTo).nullable()
+    (value) => (value === '' ? null : value),
+    z.nativeEnum(PhoneBelongsTo).nullable(),
   ),
   phone2: z.string().nullable(),
   phone2HasWhatsapp: schemaCheckbox,
   phone2BelongsTo: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.nativeEnum(PhoneBelongsTo).nullable()
+    (value) => (value === '' ? null : value),
+    z.nativeEnum(PhoneBelongsTo).nullable(),
   ),
   schoolId: z.preprocess(
-    (value) => (value === "" ? null : Number(value)),
-    z.number().positive().nullable()
+    (value) => (value === '' ? null : Number(value)),
+    z.number().positive().nullable(),
   ),
   notSchooled: schemaCheckbox,
   schoolYear: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.nativeEnum(SchoolYear).nullable()
+    (value) => (value === '' ? null : value),
+    z.nativeEnum(SchoolYear).nullable(),
   ),
   biography: z.string().nullable(),
   presentedHealthCertificate: schemaCheckbox,
   healthCertificateDate: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().nullable()
+    (value) => (value === '' ? null : value),
+    z.string().nullable(),
   ),
   presentedDNI: schemaCheckbox,
 });
@@ -101,7 +102,7 @@ export function ParticipantForm({
   schoolName?: string;
 }) {
   const [uploadedImage, setUploadedImage] = useState<string>(
-    defaultValues?.picture || ""
+    defaultValues?.picture || '',
   );
   let navigate = useNavigate();
 
@@ -109,12 +110,12 @@ export function ParticipantForm({
     <Box as="main" py="8" flex="1">
       <Container maxW="7xl" id="xxx">
         <Box
-          bg={useColorModeValue("white", "gray.700")}
+          bg={useColorModeValue('white', 'gray.700')}
           p="6"
           rounded="lg"
           shadow="base"
         >
-          <Box px={{ base: "4", md: "10" }} maxWidth="7xl">
+          <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
             <ValidatedForm
               validator={participantFormValidator}
               defaultValues={defaultValues}
@@ -124,7 +125,7 @@ export function ParticipantForm({
               <Stack spacing="4" divider={<StackDivider />}>
                 <FieldGroup title="Foto">
                   <Stack
-                    direction={{ base: "column", sm: "row" }}
+                    direction={{ base: 'column', sm: 'row' }}
                     spacing="6"
                     align="center"
                     width="full"
@@ -140,36 +141,36 @@ export function ParticipantForm({
                                 window as any
                               ).cloudinary?.createUploadWidget(
                                 {
-                                  cloudName: "eldesafio",
-                                  uploadPreset: "ed-preset",
-                                  sources: ["local", "camera"],
-                                  googleApiKey: "<image_search_google_api_key>",
+                                  cloudName: 'eldesafio',
+                                  uploadPreset: 'ed-preset',
+                                  sources: ['local', 'camera'],
+                                  googleApiKey: '<image_search_google_api_key>',
                                   showAdvancedOptions: false,
                                   cropping: true,
                                   croppingAspectRatio: 1,
                                   multiple: false,
-                                  defaultSource: "camera",
+                                  defaultSource: 'camera',
                                   showSkipCropButton: false,
                                   styles: {
                                     palette: {
-                                      window: "#F5F5F5",
-                                      sourceBg: "#FFFFFF",
-                                      windowBorder: "#90a0b3",
-                                      tabIcon: "#0094c7",
-                                      inactiveTabIcon: "#69778A",
-                                      menuIcons: "#0094C7",
-                                      link: "#53ad9d",
-                                      action: "#8F5DA5",
-                                      inProgress: "#0194c7",
-                                      complete: "#53ad9d",
-                                      error: "#c43737",
-                                      textDark: "#000000",
-                                      textLight: "#FFFFFF",
+                                      window: '#F5F5F5',
+                                      sourceBg: '#FFFFFF',
+                                      windowBorder: '#90a0b3',
+                                      tabIcon: '#0094c7',
+                                      inactiveTabIcon: '#69778A',
+                                      menuIcons: '#0094C7',
+                                      link: '#53ad9d',
+                                      action: '#8F5DA5',
+                                      inProgress: '#0194c7',
+                                      complete: '#53ad9d',
+                                      error: '#c43737',
+                                      textDark: '#000000',
+                                      textLight: '#FFFFFF',
                                     },
                                     fonts: {
                                       default: null,
                                       "'Poppins', sans-serif": {
-                                        url: "https://fonts.googleapis.com/css?family=Poppins",
+                                        url: 'https://fonts.googleapis.com/css?family=Poppins',
                                         active: true,
                                       },
                                     },
@@ -179,11 +180,11 @@ export function ParticipantForm({
                                   if (
                                     !error &&
                                     result &&
-                                    result.event === "success"
+                                    result.event === 'success'
                                   ) {
                                     setUploadedImage(result.info.secure_url);
                                   }
-                                }
+                                },
                               );
                               if (widget) {
                                 widget.open();
@@ -196,7 +197,7 @@ export function ParticipantForm({
                         <Button
                           variant="ghost"
                           colorScheme="red"
-                          onClick={() => setUploadedImage("")}
+                          onClick={() => setUploadedImage('')}
                         >
                           Borrar
                         </Button>
@@ -204,7 +205,7 @@ export function ParticipantForm({
                       <Text
                         fontSize="sm"
                         mt="3"
-                        color={useColorModeValue("gray.500", "whiteAlpha.600")}
+                        color={useColorModeValue('gray.500', 'whiteAlpha.600')}
                       >
                         Usa la webcam (recomendado) o sube una foto.
                       </Text>

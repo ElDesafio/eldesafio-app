@@ -1,12 +1,12 @@
+import type { SelectProps } from '@chakra-ui/react';
 import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Select,
-  SelectProps,
-} from "@chakra-ui/react";
-import { useField } from "remix-validated-form";
+} from '@chakra-ui/react';
+import { useField } from 'remix-validated-form';
 
 type FormSelectProps = {
   name: string;

@@ -3,11 +3,14 @@ module.exports = {
     browser: true,
     es2021: true,
     node: true,
+    'jest/globals': true,
   },
   extends: [
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
-    // 'standard',
+    'plugin:sonarjs/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
@@ -18,7 +21,22 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'simple-import-sort', 'prettier'],
+  plugins: [
+    'react',
+    '@typescript-eslint',
+    'sonarjs',
+    'unicorn',
+    'jest',
+    'simple-import-sort',
+    'prettier',
+  ],
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project: '.',
+      },
+    },
+  },
   rules: {
     'prettier/prettier': 2,
     'simple-import-sort/imports': 'error',
@@ -34,6 +52,9 @@ module.exports = {
         html: true,
       },
     ],
+    'no-duplicate-imports': 'off',
+    '@typescript-eslint/no-duplicate-imports': ['error'],
+    '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/no-unused-vars': [
       'warn',
@@ -52,5 +73,20 @@ module.exports = {
         },
       },
     ],
+    // "unicorn/no-fn-reference-in-iterator": "off",
+    // "unicorn/no-array-for-each": "off",
+    // "unicorn/no-null": "off",
+    // "unicorn/consistent-destructuring": "off",
+    // "unicorn/no-array-reduce": "off",
+    // "unicorn/prefer-spread": "off",
+    // "unicorn/no-array-callback-reference": "off",
+    // "unicorn/consistent-function-scoping": "off",
+    // "unicorn/no-useless-undefined": "off",
+    // "unicorn/prevent-abbreviations": [
+    //     "error",
+    //     {
+    //         allowList: { Param: true, Req: true, Res: true },
+    //     },
+    // ],
   },
 };

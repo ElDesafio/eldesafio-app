@@ -1,19 +1,17 @@
-import { Box, Container, Heading, useColorModeValue } from "@chakra-ui/react";
-import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
-import { validationError } from "remix-validated-form";
-import { db } from "~/services/db.server";
-import { authenticator } from "~/services/auth.server";
-import {
-  ParticipantForm,
-  participantFormValidator,
-} from "~/components/Participants/ParticipantsForm";
-import * as z from "zod";
+import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { redirect, useLoaderData } from 'remix';
+import { validationError } from 'remix-validated-form';
+import * as z from 'zod';
 
-import { Participant, Program } from ".prisma/client";
 import {
   ProgramForm,
   programFormValidator,
-} from "~/components/Program/ProgramForm";
+} from '~/components/Program/ProgramForm';
+import { authenticator } from '~/services/auth.server';
+import { db } from '~/services/db.server';
+
+import type { Program } from '.prisma/client';
 
 // LOADER
 export let loader: LoaderFunction = async ({ params }) => {
@@ -21,7 +19,7 @@ export let loader: LoaderFunction = async ({ params }) => {
 
   const program: Program | null = await db.program.findUnique({
     where: { id: +id },
-    include: { programDays: { orderBy: { day: "asc" } } },
+    include: { programDays: { orderBy: { day: 'asc' } } },
   });
   return program;
 };
@@ -31,11 +29,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
 
   const fieldValues = programFormValidator.validate(
-    Object.fromEntries(await request.formData())
+    Object.fromEntries(await request.formData()),
   );
   if (fieldValues.error) return validationError(fieldValues.error);
 
@@ -52,7 +50,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect("/programs");
+  return redirect('/programs');
 };
 
 export default function EditParticipant() {
@@ -60,7 +58,7 @@ export default function EditParticipant() {
   return (
     <>
       <Box
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue('white', 'gray.900')}
         pt="4"
         pb="4"
         shadow="sm"

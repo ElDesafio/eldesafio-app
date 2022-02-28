@@ -1,79 +1,80 @@
 import {
   Box,
   Button,
-  Stack,
-  useColorModeValue,
-  HStack,
-  StackDivider,
-  VStack,
   Container,
+  HStack,
   IconButton,
-} from "@chakra-ui/react";
-import { FieldGroup } from "~/components/FieldGroup";
+  Stack,
+  StackDivider,
+  useColorModeValue,
+  VStack,
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
+import { MdAdd } from 'react-icons/md';
+import { useNavigate } from 'remix';
+import { ValidatedForm, withZod } from 'remix-validated-form';
+import { v4 as uuid } from 'uuid';
+import * as z from 'zod';
 
-import { ValidatedForm, withZod } from "remix-validated-form";
-import { FormInput } from "~/components/Form/FormInput";
-import { FormSubmitButton } from "~/components/Form/FormSubmitButton";
-import * as z from "zod";
-import { FormStack } from "~/components/Form/FormStack";
-import { FormSelect } from "~/components/Form/FormSelect";
-import { ProgramSex, Weekdays } from ".prisma/client";
-import { FormCheckbox } from "~/components/Form/FormCheckbox";
-import { FormTextArea } from "../Form/FormTextArea";
-import { useNavigate } from "remix";
-import { schemaCheckbox } from "~/util/utils";
-import { FaTrashAlt } from "react-icons/fa";
-import { useState } from "react";
-import { v4 as uuid } from "uuid";
-import { MdAdd } from "react-icons/md";
+import { FieldGroup } from '~/components/FieldGroup';
+import { FormCheckbox } from '~/components/Form/FormCheckbox';
+import { FormInput } from '~/components/Form/FormInput';
+import { FormSelect } from '~/components/Form/FormSelect';
+import { FormStack } from '~/components/Form/FormStack';
+import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
+import { schemaCheckbox } from '~/util/utils';
+
+import { FormTextArea } from '../Form/FormTextArea';
+import { ProgramSex, Weekdays } from '.prisma/client';
 
 const programSchema = z.object({
-  name: z.string().nonempty("Nombre no puede estar vacío"),
+  name: z.string().nonempty('Nombre no puede estar vacío'),
   year: z.preprocess(
     (value) =>
-      typeof value === "string" && value.length > 0
+      typeof value === 'string' && value.length > 0
         ? parseInt(value)
         : undefined,
     z
-      .number({ required_error: "Año no puede estar vacío" })
+      .number({ required_error: 'Año no puede estar vacío' })
       .positive()
-      .min(2000)
+      .min(2000),
   ),
   sex: z.nativeEnum(ProgramSex, {
     errorMap: (issue) => ({
-      message: "Sexo no puede estar vacío",
+      message: 'Sexo no puede estar vacío',
     }),
   }),
   seats: z.preprocess(
     (value) =>
-      typeof value === "string" && value.length > 0
+      typeof value === 'string' && value.length > 0
         ? parseInt(value)
         : undefined,
     z
-      .number({ required_error: "Cupo no puede estar vacío" })
+      .number({ required_error: 'Cupo no puede estar vacío' })
       .positive()
-      .max(9999)
+      .max(9999),
   ),
   ageFrom: z.preprocess(
     (value) =>
-      typeof value === "string" && value.length > 0
+      typeof value === 'string' && value.length > 0
         ? parseInt(value)
         : undefined,
     z
-      .number({ required_error: "Edad Desde no puede estar vacío" })
+      .number({ required_error: 'Edad Desde no puede estar vacío' })
       .positive()
-      .max(120)
+      .max(120),
   ),
 
   ageTo: z.preprocess(
     (value) =>
-      typeof value === "string" && value.length > 0
+      typeof value === 'string' && value.length > 0
         ? parseInt(value)
         : undefined,
     z
-      .number({ required_error: "Edad Hasta no puede estar vacío" })
+      .number({ required_error: 'Edad Hasta no puede estar vacío' })
       .positive()
-      .max(120)
+      .max(120),
   ),
   ageByYear: schemaCheckbox,
   programDays: z
@@ -82,11 +83,11 @@ const programSchema = z.object({
       programId: z.number().optional(),
       day: z.nativeEnum(Weekdays, {
         errorMap: (issue) => ({
-          message: "Día no puede estar vacío",
+          message: 'Día no puede estar vacío',
         }),
       }),
-      fromTime: z.string().nonempty("Hora Inicio no puede estar vacío"),
-      toTime: z.string().nonempty("Hora Fin no puede estar vacío"),
+      fromTime: z.string().nonempty('Hora Inicio no puede estar vacío'),
+      toTime: z.string().nonempty('Hora Fin no puede estar vacío'),
     })
     .array(),
 });
@@ -104,19 +105,19 @@ export function ProgramForm({
   const [daysIds, setDaysIds] = useState<(string | number)[]>(
     defaultValues?.programDays?.length && defaultValues?.programDays?.length > 0
       ? defaultValues.programDays.map((day) => day.id || uuid())
-      : [uuid()]
+      : [uuid()],
   );
 
   return (
     <Box as="main" py="8" flex="1">
       <Container maxW="7xl" id="xxx">
         <Box
-          bg={useColorModeValue("white", "gray.700")}
+          bg={useColorModeValue('white', 'gray.700')}
           p="6"
           rounded="lg"
           shadow="base"
         >
-          <Box px={{ base: "4", md: "10" }} maxWidth="7xl">
+          <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
             <ValidatedForm
               validator={programFormValidator}
               defaultValues={defaultValues}
@@ -163,11 +164,11 @@ export function ProgramForm({
                         type="number"
                         maxWidth="120px"
                         rightElement={{
-                          pointerEvents: "none",
-                          color: "gray.500",
-                          fontSize: "0.8em",
+                          pointerEvents: 'none',
+                          color: 'gray.500',
+                          fontSize: '0.8em',
                           mr: 2,
-                          children: "años",
+                          children: 'años',
                         }}
                         isRequired
                       />
@@ -177,11 +178,11 @@ export function ProgramForm({
                         type="number"
                         maxWidth="120px"
                         rightElement={{
-                          pointerEvents: "none",
-                          color: "gray.500",
-                          fontSize: "0.8em",
+                          pointerEvents: 'none',
+                          color: 'gray.500',
+                          fontSize: '0.8em',
                           mr: 2,
-                          children: "años",
+                          children: 'años',
                         }}
                         isRequired
                       />
@@ -235,8 +236,8 @@ export function ProgramForm({
                           onClick={() =>
                             setDaysIds(
                               daysIds.filter(
-                                (dayId, index2) => index2 !== index
-                              )
+                                (dayId, index2) => index2 !== index,
+                              ),
                             )
                           }
                           icon={<FaTrashAlt />}

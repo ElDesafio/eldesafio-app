@@ -1,11 +1,6 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-  useLoaderData,
-} from 'remix';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -16,14 +11,13 @@ import {
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
-import { Participant, Prisma } from '.prisma/client';
+import type { Participant, Prisma } from '.prisma/client';
 
 async function getParticipant(id: number) {
-  const participant = await db.participant.findUnique({
+  return await db.participant.findUnique({
     where: { id: id },
     include: { school: true },
   });
-  return participant;
 }
 
 type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;

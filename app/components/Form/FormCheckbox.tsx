@@ -1,12 +1,12 @@
+import type { CheckboxProps } from '@chakra-ui/react';
 import {
   Checkbox,
-  CheckboxProps,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-} from "@chakra-ui/react";
-import { useField } from "remix-validated-form";
+} from '@chakra-ui/react';
+import { useField } from 'remix-validated-form';
 
 type FormCheckboxProps = {
   name: string;

@@ -1,19 +1,17 @@
+import type { InputElementProps, InputProps } from '@chakra-ui/react';
 import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input,
-  InputElementProps,
   InputGroup,
   InputLeftElement,
-  InputProps,
   InputRightElement,
   VisuallyHidden,
-  VisuallyHiddenInput,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useField } from "remix-validated-form";
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { useField } from 'remix-validated-form';
 
 type FormInputProps = {
   name: string;
@@ -38,7 +36,7 @@ export const FormInput = ({
 }: FormInputProps & InputProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
   const [value, setValue] = useState(
-    defaultValue == null ? undefined : defaultValue
+    defaultValue == null ? undefined : defaultValue,
   );
 
   const input = (

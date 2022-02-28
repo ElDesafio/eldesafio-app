@@ -5,17 +5,17 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { LoaderFunction } from '@remix-run/server-runtime';
+import type { LoaderFunction } from '@remix-run/server-runtime';
 import { Outlet, useLoaderData, useLocation, useResolvedPath } from 'remix';
 import { z } from 'zod';
 
 import { TabLink } from '~/components/TabLink';
 import { db } from '~/services/db.server';
 
-import { Prisma } from '.prisma/client';
+import type { Prisma } from '.prisma/client';
 
 async function getParticipant(id: number) {
-  const participant = await db.participant.findUnique({
+  return await db.participant.findUnique({
     where: { id: +id },
     select: {
       id: true,
@@ -23,7 +23,6 @@ async function getParticipant(id: number) {
       lastName: true,
     },
   });
-  return participant;
 }
 
 export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
@@ -31,9 +30,7 @@ export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
 export const loader: LoaderFunction = async ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const participant = await getParticipant(+id);
-
-  return participant;
+  return await getParticipant(+id);
 };
 
 export default function Participants() {
@@ -49,7 +46,7 @@ export default function Participants() {
           <Heading size="lg" mb="3">
             {participant.firstName} {participant.lastName}
           </Heading>
-          <Stack direction="row" spacing="4">
+          <Stack direction="row" spacing="4" overflowY="auto">
             <TabLink
               to={useResolvedPath('').pathname}
               aria-current={
@@ -73,7 +70,7 @@ export default function Participants() {
             <TabLink
               to="health"
               aria-current={
-                location.pathname === useResolvedPath('health').pathname
+                location.pathname.includes(useResolvedPath('health').pathname)
                   ? 'page'
                   : undefined
               }

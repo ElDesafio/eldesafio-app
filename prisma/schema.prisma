@@ -27,6 +27,8 @@ model User {
   programs                     UsersOnPrograms[]        @relation("UserOnProgramsByUser")
   createdSchools               School[]                 @relation("CreatedSchoolByUser")
   updatedSchools               School[]                 @relation("UpdatedSchoolByUser")
+  createdParticipantsHealth    ParticipantHealth[]      @relation("CreatedParticipantHealthByUser")
+  updatedParticipantsHealth    ParticipantHealth[]      @relation("UpdatedParticipantHealthByUser")
 }
 
 enum Sex {
@@ -101,6 +103,55 @@ model Participant {
   surveyBiographyId          Int?
   programs                   ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByParticipant")
   schoolId                   Int?
+  ParticipantHealth          ParticipantHealth?
+}
+
+enum BloodType {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  ZERO_POSITIVE
+  ZERO_NEGATIVE
+}
+
+enum FormAnswerOptions {
+  YES
+  NO
+  DKNA // Don't know or not answered
+}
+
+model ParticipantHealth {
+  participantId             Int               @id
+  participant               Participant       @relation(fields: [participantId], references: [id])
+  bloodType                 BloodType
+  isNormalPregnancy         FormAnswerOptions
+  hasCompleteVaccination    FormAnswerOptions
+  missingVaccines           String?
+  hasCongenitalHeartDisease FormAnswerOptions
+  hasHypertension           FormAnswerOptions
+  hasHeartMurmurs           FormAnswerOptions
+  hasArrhythmia             FormAnswerOptions
+  hasAllergy                FormAnswerOptions
+  allergyDetails            String?
+  hasFoodRestriction        FormAnswerOptions
+  foodRestrictionDetails    String?
+  hasChronicDisease         FormAnswerOptions
+  chronicDiseaseDetails     String?
+  isTakingMedication        FormAnswerOptions
+  takingMedicationDetails   String?
+  hasBeenHospitalized       FormAnswerOptions
+  hospitalizedDetails       String?
+  canDoPhysicalActivity     FormAnswerOptions
+  observations              String?
+  createdByUser             User              @relation("CreatedParticipantHealthByUser", fields: [createdBy], references: [id])
+  createdBy                 Int
+  updatedByUser             User              @relation("UpdatedParticipantHealthByUser", fields: [updatedBy], references: [id])
+  updatedBy                 Int
+  createdAt                 DateTime          @default(now()) @db.Timestamptz
+  updatedAt                 DateTime          @default(now()) @updatedAt @db.Timestamptz
 }
 
 model SurveyBiography {

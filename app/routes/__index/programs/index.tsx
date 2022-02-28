@@ -14,15 +14,15 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
-import { Link, LoaderFunction, useLoaderData } from 'remix';
+import type { LoaderFunction } from 'remix';
+import { Link, useLoaderData } from 'remix';
 
 import { db } from '~/services/db.server';
 
-import { Program } from '.prisma/client';
+import type { Program } from '.prisma/client';
 
-export const loader: LoaderFunction = async() => {
-  const programs = await db.program.findMany({ orderBy: { name: 'asc' } });
-  return programs;
+export const loader: LoaderFunction = async () => {
+  return await db.program.findMany({ orderBy: { name: 'asc' } });
 };
 
 export default function Programs() {
