@@ -23,7 +23,7 @@ import { FormInput } from '~/components/Form/FormInput';
 import { FormSelect } from '~/components/Form/FormSelect';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
-import { schemaCheckbox } from '~/util/utils';
+import { convertStringToNumberForZod, schemaCheckbox } from '~/util/utils';
 
 import { FormTextArea } from '../Form/FormTextArea';
 import { ProgramSex, Weekdays } from '.prisma/client';
@@ -31,10 +31,7 @@ import { ProgramSex, Weekdays } from '.prisma/client';
 const programSchema = z.object({
   name: z.string().nonempty('Nombre no puede estar vacío'),
   year: z.preprocess(
-    (value) =>
-      typeof value === 'string' && value.length > 0
-        ? parseInt(value)
-        : undefined,
+    convertStringToNumberForZod,
     z
       .number({ required_error: 'Año no puede estar vacío' })
       .positive()
@@ -46,20 +43,14 @@ const programSchema = z.object({
     }),
   }),
   seats: z.preprocess(
-    (value) =>
-      typeof value === 'string' && value.length > 0
-        ? parseInt(value)
-        : undefined,
+    convertStringToNumberForZod,
     z
       .number({ required_error: 'Cupo no puede estar vacío' })
       .positive()
       .max(9999),
   ),
   ageFrom: z.preprocess(
-    (value) =>
-      typeof value === 'string' && value.length > 0
-        ? parseInt(value)
-        : undefined,
+    convertStringToNumberForZod,
     z
       .number({ required_error: 'Edad Desde no puede estar vacío' })
       .positive()
@@ -67,10 +58,7 @@ const programSchema = z.object({
   ),
 
   ageTo: z.preprocess(
-    (value) =>
-      typeof value === 'string' && value.length > 0
-        ? parseInt(value)
-        : undefined,
+    convertStringToNumberForZod,
     z
       .number({ required_error: 'Edad Hasta no puede estar vacío' })
       .positive()

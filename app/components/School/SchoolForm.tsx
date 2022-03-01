@@ -1,51 +1,52 @@
 import {
   Box,
   Button,
-  Stack,
-  useColorModeValue,
-  HStack,
-  StackDivider,
-  VStack,
   Container,
-} from "@chakra-ui/react";
-import { FieldGroup } from "~/components/FieldGroup";
+  HStack,
+  Stack,
+  StackDivider,
+  useColorModeValue,
+  VStack,
+} from '@chakra-ui/react';
+import { useNavigate } from 'remix';
+import { ValidatedForm, withZod } from 'remix-validated-form';
+import * as z from 'zod';
 
-import { ValidatedForm, withZod } from "remix-validated-form";
-import { FormInput } from "~/components/Form/FormInput";
-import { FormSubmitButton } from "~/components/Form/FormSubmitButton";
-import * as z from "zod";
-import { FormStack } from "~/components/Form/FormStack";
-import { ProgramSex, Weekdays } from ".prisma/client";
-import { useNavigate } from "remix";
-import { schemaCheckbox } from "~/util/utils";
+import { FieldGroup } from '~/components/FieldGroup';
+import { FormInput } from '~/components/Form/FormInput';
+import { FormStack } from '~/components/Form/FormStack';
+import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
+import { schemaCheckbox } from '~/util/utils';
+
+import { ProgramSex, Weekdays } from '.prisma/client';
 
 const schoolSchema = z.object({
-  name: z.string().nonempty("Nombre no puede estar vacío"),
-  address: z.string().nonempty("Dirección no puede estar vacío"),
-  city: z.string().nonempty("Ciudad no puede estar vacío"),
+  name: z.string().nonempty('Nombre no puede estar vacío'),
+  address: z.string().nonempty('Dirección no puede estar vacío'),
+  city: z.string().nonempty('Ciudad no puede estar vacío'),
   email: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().email("No es un correo electrónico válido").nullable()
+    (value) => (value === '' ? null : value),
+    z.string().email('No es un correo electrónico válido').nullable(),
   ),
   phone: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().nullable()
+    (value) => (value === '' ? null : value),
+    z.string().nullable(),
   ),
   principalName: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().nullable()
+    (value) => (value === '' ? null : value),
+    z.string().nullable(),
   ),
   principalPhone: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().nullable()
+    (value) => (value === '' ? null : value),
+    z.string().nullable(),
   ),
   vicePrincipalName: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().nullable()
+    (value) => (value === '' ? null : value),
+    z.string().nullable(),
   ),
   vicePrincipalPhone: z.preprocess(
-    (value) => (value === "" ? null : value),
-    z.string().nullable()
+    (value) => (value === '' ? null : value),
+    z.string().nullable(),
   ),
 });
 
@@ -62,12 +63,12 @@ export function SchoolForm({
     <Box as="main" py="8" flex="1">
       <Container maxW="7xl" id="xxx">
         <Box
-          bg={useColorModeValue("white", "gray.700")}
+          bg={useColorModeValue('white', 'gray.700')}
           p="6"
           rounded="lg"
           shadow="base"
         >
-          <Box px={{ base: "4", md: "10" }} maxWidth="7xl">
+          <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
             <ValidatedForm
               validator={schoolFormValidator}
               defaultValues={defaultValues}

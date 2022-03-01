@@ -11,8 +11,7 @@ import {
   Td,
   Tr,
 } from '@chakra-ui/react';
-import { LoaderFunction } from '@remix-run/server-runtime';
-import { HiCloudUpload } from 'react-icons/hi';
+import type { LoaderFunction } from '@remix-run/server-runtime';
 import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
@@ -20,7 +19,7 @@ import styles from '~/css/participant-general.css';
 import { db } from '~/services/db.server';
 import { getAge, getFormattedDate } from '~/util/utils';
 
-import { Participant } from '.prisma/client';
+import type { Participant } from '.prisma/client';
 
 export function links() {
   return [
@@ -34,9 +33,7 @@ export function links() {
 export const loader: LoaderFunction = ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const participant = db.participant.findUnique({ where: { id: +id } });
-
-  return participant;
+  return db.participant.findUnique({ where: { id: +id } });
 };
 
 export default function ParticipantGeneral() {

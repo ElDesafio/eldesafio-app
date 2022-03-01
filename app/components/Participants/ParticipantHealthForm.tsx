@@ -256,6 +256,7 @@ export function ParticipantHealthForm({
                   name="isNormalPregnancy"
                   label="Embarazo normal"
                   redAnswer="no"
+                  isRequired
                 />
               </FormStack>
               <FormStack width="full">
@@ -263,6 +264,7 @@ export function ParticipantHealthForm({
                   name="hasCompleteVaccination"
                   label="¿Tiene todas las vacunas que corresponden por su edad?"
                   redAnswer="no"
+                  isRequired
                   onChange={(value) =>
                     setShowMissingVaccines(value === FormAnswerOptions.NO)
                   }
@@ -271,6 +273,7 @@ export function ParticipantHealthForm({
                   <FormInput
                     name="missingVaccines"
                     label="Anotar si alguna vacuna no se completó"
+                    isRequired
                   />
                 )}
               </FormStack>
@@ -283,11 +286,13 @@ export function ParticipantHealthForm({
                   name="hasCongenitalHeartDisease"
                   label="Cardiopatías congénitas"
                   redAnswer="yes"
+                  isRequired
                 />
                 <FormRadioGroup
                   name="hasHeartMurmurs"
                   label="Soplos"
                   redAnswer="yes"
+                  isRequired
                 />
               </FormStack>
               <FormStack width="full">
@@ -295,11 +300,13 @@ export function ParticipantHealthForm({
                   name="hasHypertension"
                   label="Hipertensión arterial"
                   redAnswer="yes"
+                  isRequired
                 />
                 <FormRadioGroup
                   name="hasArrhythmia"
                   label="Arritmias"
                   redAnswer="yes"
+                  isRequired
                 />
               </FormStack>
             </VStack>
@@ -311,6 +318,7 @@ export function ParticipantHealthForm({
                   name="hasAllergy"
                   label="¿Sufre de algún tipo de alergia?"
                   redAnswer="yes"
+                  isRequired
                   onChange={(value) =>
                     setShowAllergyDetails(value === FormAnswerOptions.YES)
                   }
@@ -319,6 +327,7 @@ export function ParticipantHealthForm({
                   <FormInput
                     name="allergyDetails"
                     label="Especificar tipo de alergia"
+                    isRequired
                   />
                 )}{' '}
               </FormStack>
@@ -327,6 +336,7 @@ export function ParticipantHealthForm({
                   name="hasFoodRestriction"
                   label="¿Tiene alguna restricción alimentaria?"
                   redAnswer="yes"
+                  isRequired
                   onChange={(value) =>
                     setShowFoodRestrictionDetails(
                       value === FormAnswerOptions.YES,
@@ -337,6 +347,7 @@ export function ParticipantHealthForm({
                   <FormInput
                     name="foodRestrictionDetails"
                     label="Especificar alimentos"
+                    isRequired
                   />
                 )}{' '}
               </FormStack>
@@ -349,6 +360,7 @@ export function ParticipantHealthForm({
                   name="hasChronicDisease"
                   label="¿Sufre alguna enfermedad crónica?"
                   redAnswer="yes"
+                  isRequired
                   onChange={(value) =>
                     setShowChronicDiseaseDetails(
                       value === FormAnswerOptions.YES,
@@ -359,6 +371,7 @@ export function ParticipantHealthForm({
                   <FormInput
                     name="chronicDiseaseDetails"
                     label="Especificar enfermedad"
+                    isRequired
                   />
                 )}{' '}
               </FormStack>
@@ -367,6 +380,7 @@ export function ParticipantHealthForm({
                   name="isTakingMedication"
                   label="Está tomando medicamentos"
                   redAnswer="yes"
+                  isRequired
                   onChange={(value) =>
                     setShowTakingMedicationDetails(
                       value === FormAnswerOptions.YES,
@@ -377,6 +391,7 @@ export function ParticipantHealthForm({
                   <FormInput
                     name="takingMedicationDetails"
                     label="Especificar nombres"
+                    isRequired
                   />
                 )}{' '}
               </FormStack>
@@ -385,6 +400,7 @@ export function ParticipantHealthForm({
                   name="hasBeenHospitalized"
                   label="Ha estado internado alguna vez"
                   redAnswer="yes"
+                  isRequired
                   onChange={(value) =>
                     setShowHospitalizedDetails(value === FormAnswerOptions.YES)
                   }
@@ -393,6 +409,7 @@ export function ParticipantHealthForm({
                   <FormInput
                     name="hospitalizedDetails"
                     label="Especificar motivo"
+                    isRequired
                   />
                 )}{' '}
               </FormStack>
@@ -401,6 +418,7 @@ export function ParticipantHealthForm({
                   name="canDoPhysicalActivity"
                   label="¿Cree Ud. que su hijo puede realizar actividad física?"
                   redAnswer="no"
+                  isRequired
                 />
               </FormStack>
             </VStack>

@@ -1,26 +1,29 @@
-import { Select } from "@chakra-ui/react";
-import { LoaderFunction, Outlet, useLoaderData, useSearchParams } from "remix";
-import { Flex, HStack, useColorModeValue as mode } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Select,
+  useColorModeValue as mode,
+} from '@chakra-ui/react';
+import { range } from 'lodash';
+import { DateTime } from 'luxon';
+import type { LoaderFunction } from 'remix';
+import { Outlet, useLoaderData, useSearchParams } from 'remix';
 
-import { Logo } from "~/components/Logo";
-import { MobileHamburgerMenu } from "~/components/MobileHamburgerMenu";
-import { useMobileMenuState } from "~/hooks/useMobileMenuState";
-import { User } from "~/models/user";
-import { authenticator } from "~/services/auth.server";
-import { NavMenu } from "~/components/NavMenu";
-import { Notification } from "~/components/Notification";
-import { ProfileDropdown } from "~/components/ProfileDropdown";
-import { range } from "lodash";
-import { DateTime } from "luxon";
-import { useSelectedYear } from "~/util/utils";
+import { Logo } from '~/components/Logo';
+import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
+import { NavMenu } from '~/components/NavMenu';
+import { ProfileDropdown } from '~/components/ProfileDropdown';
+import { useMobileMenuState } from '~/hooks/useMobileMenuState';
+import type { User } from '~/models/user';
+import { authenticator } from '~/services/auth.server';
+import { useSelectedYear } from '~/util/utils';
 
 type RouteData = { user: User };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+  return await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
   });
-  return user;
 };
 
 // Empty React component required by Remix
@@ -32,13 +35,13 @@ export default function Dashboard() {
   // use the user to render the UI of your private route
   const { isMenuOpen, toggle } = useMobileMenuState();
   const years = range(2015, DateTime.now().year + 1).map((year) =>
-    year.toString()
+    year.toString(),
   );
 
   return (
     <Flex
       direction="column"
-      bg={mode("gray.100", "gray.800")}
+      bg={mode('gray.100', 'gray.800')}
       height="auto"
       minHeight="100vh"
     >
@@ -49,7 +52,7 @@ export default function Dashboard() {
 
           {/* Desktop Logo placement */}
           <Logo
-            display={{ base: "none", lg: "block" }}
+            display={{ base: 'none', lg: 'block' }}
             flexShrink={0}
             h="16"
             marginEnd="12"
@@ -60,8 +63,8 @@ export default function Dashboard() {
 
           {/* Mobile Logo placement */}
           <Logo
-            flex={{ base: "1", lg: "0" }}
-            display={{ lg: "none" }}
+            flex={{ base: '1', lg: '0' }}
+            display={{ lg: 'none' }}
             flexShrink={0}
             h="16"
           />

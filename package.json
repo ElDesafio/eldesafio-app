@@ -12,6 +12,7 @@
     "start:dev": "cross-env NODE_ENV=development node server/index.js"
   },
   "dependencies": {
+    "@chakra-ui/pro-theme": "^0.0.40",
     "@chakra-ui/react": "^1.8.5",
     "@chakra-ui/system": "^1.11.1",
     "@emotion/react": "^11.8.1",

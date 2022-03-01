@@ -10,16 +10,8 @@ import {
 } from '~/components/Participants/ParticipantHealthForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-
-async function getParticipantHealth(id: number) {
-  return await db.participantHealth.findUnique({
-    where: { participantId: id },
-  });
-}
-
-type GetParticipantHealth = Prisma.PromiseReturnType<
-  typeof getParticipantHealth
->;
+import type { GetParticipantHealth } from '~/services/participants.service';
+import { getParticipantHealth } from '~/services/participants.service';
 
 // LOADER
 export const loader: LoaderFunction = async ({ params }) => {
@@ -58,7 +50,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect('/participants');
+  return redirect(`/participants/${id}/health`);
 };
 
 export default function ParticipantHealthEdit() {

@@ -14,7 +14,7 @@ import { useParams, useSearchParams } from 'remix';
 
 import { ProgramSexText } from '~/util/utils';
 
-import { GetParticipantProgramsByYear } from '../programs';
+import type { GetParticipantProgramsByYear } from '../programs';
 import { AddToProgramModal } from './AddToProgramModal';
 
 type ProgramBoxProps = {
@@ -83,7 +83,7 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
           </Button>
         </Flex>
         <Divider />
-        <Container spacing="6" py="2" px="4">
+        <Container py="2" px="4">
           <Text as="span" fontWeight="semibold" fontSize="sm">
             Sexo:
           </Text>{' '}
