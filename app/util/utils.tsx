@@ -76,12 +76,24 @@ export function getFormAnswerOptionName(
 ): React.ReactNode {
   switch (answer) {
     case FormAnswerOptions.YES: {
-      return <Text color={isRed ? 'red' : undefined}>Sí</Text>;
+      return (
+        <Text as="span" color={isRed ? 'red' : undefined}>
+          Sí
+        </Text>
+      );
     }
     case FormAnswerOptions.NO:
-      return <Text color={isRed ? 'red' : undefined}>No</Text>;
+      return (
+        <Text as="span" color={isRed ? 'red' : undefined}>
+          No
+        </Text>
+      );
     case FormAnswerOptions.DKNA:
-      return <Text color={isRed ? 'red' : undefined}>Ns/Nc</Text>;
+      return (
+        <Text as="span" color={isRed ? 'red' : undefined}>
+          Ns/Nc
+        </Text>
+      );
     default:
       throw new Error('Unknown form answer option');
   }
