@@ -77,10 +77,50 @@ export default function Participants() {
             >
               Datos Médicos
             </TabLink>
-            <TabLink href="#">Diario</TabLink>
-            <TabLink href="#">Biografía</TabLink>
-            <TabLink href="#">Cuestionario</TabLink>
-            <TabLink href="#">Familiares</TabLink>
+            <TabLink
+              to="diary"
+              aria-current={
+                location.pathname.includes(useResolvedPath('diary').pathname)
+                  ? 'page'
+                  : undefined
+              }
+            >
+              Diario
+            </TabLink>
+            <TabLink
+              to="biography"
+              aria-current={
+                location.pathname.includes(
+                  useResolvedPath('biography').pathname,
+                )
+                  ? 'page'
+                  : undefined
+              }
+            >
+              Biografía
+            </TabLink>
+            <TabLink
+              to="questionnaire"
+              aria-current={
+                location.pathname.includes(
+                  useResolvedPath('questionnaire').pathname,
+                )
+                  ? 'page'
+                  : undefined
+              }
+            >
+              Cuestionario
+            </TabLink>
+            <TabLink
+              to="family"
+              aria-current={
+                location.pathname.includes(useResolvedPath('family').pathname)
+                  ? 'page'
+                  : undefined
+              }
+            >
+              Familiares
+            </TabLink>
           </Stack>
         </Container>
       </Box>

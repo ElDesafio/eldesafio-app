@@ -3,11 +3,7 @@ import {
   Divider,
   Heading,
   Stack,
-  Table,
-  Tbody,
-  Td,
   Text,
-  Tr,
   VStack,
 } from '@chakra-ui/react';
 import type { LoaderFunction } from 'remix';
