@@ -1,9 +1,10 @@
-import { Button, Divider, Heading, Stack, Text } from '@chakra-ui/react';
+import { Button, Divider, Heading, Stack } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
+import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { db } from '~/services/db.server';
 
 export async function getParticipant(id: number) {
@@ -34,7 +35,10 @@ export default function ParticipantHealth() {
       </Heading>
       <Divider mb={3} />
       {participant?.biography ? (
-        <Text>{participant.biography}</Text>
+        <MarkdownEditor
+          initialContent={participant.biography}
+          editable={false}
+        />
       ) : (
         <p>No hay biografía para el participante</p>
       )}

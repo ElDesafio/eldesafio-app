@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ToolbarItemUnion } from '@remirror/react';
 import {
@@ -33,15 +34,21 @@ import {
   TrailingNodeExtension,
   UnderlineExtension,
 } from 'remirror/extensions';
+import { ClientOnly } from 'remix-utils';
 
 export default { title: 'Editors / Markdown' };
 
 export interface MarkdownEditorProps {
   placeholder?: string;
   initialContent?: string;
+  editable?: boolean;
 }
 
-const ResetStyles = styled.div`
+type ResetStylesProps = {
+  noEditable?: boolean;
+};
+
+const ResetStyles = styled.div<ResetStylesProps>`
   ol,
   ul {
     margin-block-start: 1em !important;
@@ -54,6 +61,7 @@ const ResetStyles = styled.div`
     border-width: 1px !important;
     box-shadow: none !important;
     border-radius: 6px !important;
+    overflow: hidden !important;
     &:focus {
       z-index: 1;
       border-color: #3182ce !important;
@@ -71,6 +79,13 @@ const ResetStyles = styled.div`
       background-color: rgb(49, 130, 206) !important;
     }
   }
+  ${({ noEditable }) =>
+    noEditable === true
+      ? `.ProseMirror {
+      padding: 0 !important;
+      border: 0 !important;
+    }`
+      : ''}
 `;
 
 /**
@@ -80,6 +95,7 @@ export const MarkdownEditor: FC<MarkdownEditorProps> = ({
   placeholder,
   initialContent,
   children,
+  editable = true,
 }) => {
   const extensions = useCallback(
     () => [
@@ -118,14 +134,27 @@ export const MarkdownEditor: FC<MarkdownEditorProps> = ({
   });
 
   return (
-    <ResetStyles>
+    <ResetStyles noEditable={!editable}>
       <AllStyledComponent>
         <ThemeProvider>
-          <Remirror manager={manager} autoFocus initialContent={initialContent}>
-            <Toolbar items={toolbarItems} refocusEditor label="Top Toolbar" />
-            <EditorComponent />
-            {children}
-          </Remirror>
+          <ClientOnly>
+            <Remirror
+              manager={manager}
+              autoFocus
+              initialContent={initialContent}
+              editable={editable}
+            >
+              {editable && (
+                <Toolbar
+                  items={toolbarItems}
+                  refocusEditor
+                  label="Top Toolbar"
+                />
+              )}
+              <EditorComponent />
+              {children}
+            </Remirror>
+          </ClientOnly>
         </ThemeProvider>
       </AllStyledComponent>
     </ResetStyles>

@@ -1,21 +1,13 @@
-import {
-  Button,
-  Divider,
-  Heading,
-  HStack,
-  Stack,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Button, HStack } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
-import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData, useNavigate } from 'remix';
-import { ValidatedForm, withZod } from 'remix-validated-form';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { json, redirect, useLoaderData, useNavigate } from 'remix';
+import { ValidatedForm, validationError, withZod } from 'remix-validated-form';
 import { z } from 'zod';
 
 import { FormRichTextEditor } from '~/components/Form/FormRichTextEditor';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
-import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
+import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
 export async function getParticipant(id: number) {
@@ -29,6 +21,11 @@ export async function getParticipant(id: number) {
 }
 
 export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
+const biographySchema = z.object({
+  biography: z.string().nonempty('La biografía no puede estar vacía'),
+});
+
+export const biographyValidator = withZod(biographySchema);
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -36,21 +33,56 @@ export const loader: LoaderFunction = async ({ params }) => {
   return await getParticipant(+id);
 };
 
-const biographySchema = z.object({
-  biography: z.string(),
-});
+// ACTION
+export const action: ActionFunction = async ({ request, params }) => {
+  const { id } = z.object({ id: z.string() }).parse(params);
 
-export const biographyValidator = withZod(biographySchema);
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
+
+  if (!user) throw json('Unauthorized', { status: 403 });
+
+  const formData = Object.fromEntries(await request.formData());
+
+  const fieldValues = biographyValidator.validate(formData);
+
+  if (fieldValues.error) return validationError(fieldValues.error);
+
+  const participant = await db.participant.update({
+    where: { id: +id },
+    data: {
+      biography: fieldValues.data.biography,
+    },
+  });
+
+  return redirect(`/participants/${id}/biography`);
+};
 
 export default function ParticipantHealth() {
   const participant = useLoaderData<GetParticipant>();
   let navigate = useNavigate();
 
+  const sample = `
+  # hello
+
+## sdsd
+
+### sdfgsdf
+
+*   sdfsdfdfdf
+
+*   sdfsdfsdf
+
+
+> sdfsdfsdf
+  `;
+
   return (
     <>
       <ValidatedForm
         validator={biographyValidator}
-        defaultValues={{ biography: participant?.biography || '' }}
+        defaultValues={{ biography: participant?.biography || sample }}
         method="post"
         noValidate
       >

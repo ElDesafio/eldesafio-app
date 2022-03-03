@@ -3,12 +3,12 @@ import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
-  FormLabel,
   Textarea,
 } from '@chakra-ui/react';
 import { useHelpers } from '@remirror/react';
 import { useField } from 'remix-validated-form';
-import Editor from 'rich-markdown-editor';
+
+import { MarkdownEditor } from '../MarkdownEditor/markdown-editor';
 
 type FormRichTextEditorProps = {
   name: string;
@@ -34,9 +34,15 @@ const HiddenTextArea = ({
   const { getMarkdown } = useHelpers(true);
 
   return (
-    <pre>
-      <code>{getMarkdown()}</code>
-    </pre>
+    <Textarea
+      id={name}
+      name={name}
+      onBlur={validate}
+      onChange={clearError}
+      value={getMarkdown()}
+      style={{ display: 'none' }}
+      {...rest}
+    />
   );
 };
 
@@ -50,10 +56,21 @@ export const FormRichTextEditor = ({
   const { validate, clearError, defaultValue, error } = useField(name);
 
   return (
-    // <FormControl isInvalid={!!error} isRequired={isRequired}>
-    <Editor />
-    //   {helperText && <FormHelperText>{helperText}</FormHelperText>}
-    //   {error && <FormErrorMessage>{error}</FormErrorMessage>}
-    // </FormControl>
+    <FormControl isInvalid={!!error} isRequired={isRequired}>
+      <MarkdownEditor
+        placeholder="Empieza a tipear..."
+        initialContent={defaultValue}
+        {...rest}
+      >
+        <HiddenTextArea
+          name={name}
+          validate={validate}
+          clearError={clearError}
+          defaultValue={defaultValue}
+        />
+      </MarkdownEditor>
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      {error && <FormErrorMessage>{error}</FormErrorMessage>}
+    </FormControl>
   );
 };
