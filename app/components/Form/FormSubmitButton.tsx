@@ -1,5 +1,5 @@
-import { Button } from "@chakra-ui/react";
-import { useIsSubmitting } from "remix-validated-form";
+import { Button } from '@chakra-ui/react';
+import { useIsSubmitting } from 'remix-validated-form';
 
 export const FormSubmitButton = () => {
   const isSubmitting = useIsSubmitting();
@@ -10,7 +10,7 @@ export const FormSubmitButton = () => {
       disabled={isSubmitting}
       isLoading={isSubmitting}
     >
-      {isSubmitting ? "Enviando..." : "Enviar"}
+      {isSubmitting ? 'Enviando...' : 'Enviar'}
     </Button>
   );
 };

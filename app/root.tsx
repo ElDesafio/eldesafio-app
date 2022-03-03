@@ -2,6 +2,7 @@ import { Box, ChakraProvider, Divider, Heading, Text } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
 import type React from 'react';
 import { useContext, useEffect } from 'react';
+import remirrorStyles from 'remirror/styles/all.css';
 import {
   Links,
   LiveReload,
@@ -19,6 +20,10 @@ type DocumentProps = {
   children: React.ReactNode;
   title?: string;
 };
+
+export function links() {
+  return [{ rel: 'stylesheet', href: remirrorStyles }];
+}
 
 const Document = withEmotionCache(
   ({ children, title = `El Desafio` }: DocumentProps, emotionCache) => {

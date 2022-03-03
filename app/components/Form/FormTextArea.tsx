@@ -1,12 +1,12 @@
+import type { TextareaProps } from '@chakra-ui/react';
 import {
-  Textarea,
-  TextareaProps,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-} from "@chakra-ui/react";
-import { useField } from "remix-validated-form";
+  Textarea,
+} from '@chakra-ui/react';
+import { useField } from 'remix-validated-form';
 
 type FormTextAreaProps = {
   name: string;
@@ -32,7 +32,6 @@ export const FormTextArea = ({
         onBlur={validate}
         onChange={clearError}
         defaultValue={defaultValue}
-        defaultChecked={defaultValue}
         {...rest}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}

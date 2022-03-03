@@ -14,7 +14,7 @@ import { db } from '~/services/db.server';
 
 import type { Prisma } from '.prisma/client';
 
-async function getParticipant(id: number) {
+export async function getParticipant(id: number) {
   return await db.participant.findUnique({
     where: { id: +id },
     select: {
@@ -33,7 +33,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   return await getParticipant(+id);
 };
 
-export default function Participants() {
+export default function Participant() {
   const participant = useLoaderData<GetParticipant>();
   const location = useLocation();
 
