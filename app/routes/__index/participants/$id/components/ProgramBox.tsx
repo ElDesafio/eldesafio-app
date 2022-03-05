@@ -90,7 +90,7 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
           {(isOnWaitingList || isInactive) && (
             <HStack justifyContent="flex-start" mt={2} spacing={2}>
               {isOnWaitingList && (
-                <Tag size="sm" variant="outline" colorScheme="teal">
+                <Tag size="sm" variant="outline" colorScheme="brand">
                   En Espera
                 </Tag>
               )}

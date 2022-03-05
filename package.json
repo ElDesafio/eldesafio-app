@@ -12,13 +12,11 @@
     "start:dev": "cross-env NODE_ENV=development node server/index.js"
   },
   "dependencies": {
-    "@chakra-ui/pro-theme": "^0.0.40",
     "@chakra-ui/react": "^1.8.6",
     "@chakra-ui/system": "^1.11.2",
     "@emotion/react": "^11.8.1",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.8.1",
-    "@fontsource/inter": "^4.5.4",
     "@prisma/client": "^3.10.0",
     "@remirror/pm": "^1.0.13",
     "@remirror/react": "^1.0.26",

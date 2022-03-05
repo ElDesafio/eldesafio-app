@@ -141,8 +141,6 @@ export default function ParticipantPrograms() {
     }
   }, []);
 
-  console.log(programs);
-
   return (
     <>
       <SimpleGrid minChildWidth="300px" spacing="6" alignItems="stretch">

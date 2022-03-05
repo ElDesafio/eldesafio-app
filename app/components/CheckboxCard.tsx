@@ -55,8 +55,6 @@ export const CheckboxCard = (props: CheckboxCardProps) => {
   const id = useId(undefined, 'checkbox-card');
   const styles = useStyleConfig('RadioCard', props);
 
-  console.log(getInputProps());
-
   return (
     <Box
       as="label"

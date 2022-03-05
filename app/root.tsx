@@ -1,6 +1,6 @@
 // import '@fontsource/inter/variable.css';
 
-import { theme } from '@chakra-ui/pro-theme';
+// import { theme } from '@chakra-ui/pro-theme';
 import {
   Box,
   ChakraProvider,
@@ -8,6 +8,7 @@ import {
   extendTheme,
   Heading,
   Text,
+  theme as chakraTheme,
 } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
 import type React from 'react';
@@ -22,6 +23,8 @@ import {
   ScrollRestoration,
   useCatch,
 } from 'remix';
+
+import { theme } from '~/lib/chakra-ui-pro-theme';
 
 import ClientStyleContext from './context.client';
 import ServerStyleContext from './context.server';
@@ -54,9 +57,10 @@ const Document = withEmotionCache(
       clientStyleData.reset();
     }, []);
 
+    // Theme is customized here: app/lib/chakra-ui-pro-theme/index.ts
     const myTheme = extendTheme(
       {
-        colors: { ...theme.colors, brand: theme.colors.blue },
+        colors: { ...chakraTheme.colors, brand: chakraTheme.colors.blue },
       },
       theme,
     );

@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { Form, useMatches, useParams } from 'remix';
+import { Form, useMatches, useParams, useTransition } from 'remix';
 
 import type { GetParticipant } from '../../$id';
 import { FormTypeAddToProgram } from '../programs';
@@ -35,6 +35,16 @@ export function RemoveFromProgramModal({
 
   if (!participant) throw new Error("Participant doesn't exist");
 
+  const transition = useTransition();
+
+  const isRemoving =
+    transition?.submission?.formData.get('type') ===
+    FormTypeAddToProgram.REMOVE;
+
+  const isAddingToWaitingList =
+    transition?.submission?.formData.get('type') ===
+    FormTypeAddToProgram.WAITING;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -59,9 +69,10 @@ export function RemoveFromProgramModal({
                 type="submit"
                 tabIndex={2}
                 size="sm"
-                colorScheme="teal"
+                colorScheme="brand"
                 variant="outline"
                 mr={3}
+                isLoading={isAddingToWaitingList}
               >
                 Agregar en Espera
               </Button>
@@ -83,7 +94,13 @@ export function RemoveFromProgramModal({
                   value={FormTypeAddToProgram.REMOVE}
                 />
                 <input name="programId" type="hidden" value={programId} />
-                <Button type="submit" tabIndex={1} size="sm" colorScheme="red">
+                <Button
+                  type="submit"
+                  tabIndex={1}
+                  size="sm"
+                  colorScheme="red"
+                  isLoading={isRemoving}
+                >
                   Dar de baja
                 </Button>
               </Form>
