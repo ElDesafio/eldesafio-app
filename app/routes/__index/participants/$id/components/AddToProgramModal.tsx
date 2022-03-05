@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Form, useMatches, useParams } from 'remix';
 
-import { GetParticipant } from '../../$id';
+import type { GetParticipant } from '../../$id';
 import { FormTypeAddToProgram } from '../programs';
 
 type AddToProgramModalProps = {
@@ -19,6 +19,7 @@ type AddToProgramModalProps = {
   onClose: () => void;
   programId: number;
   programName: string;
+  isOnWaitingList: boolean;
 };
 
 export function AddToProgramModal({
@@ -26,6 +27,7 @@ export function AddToProgramModal({
   onClose,
   programName,
   programId,
+  isOnWaitingList,
 }: AddToProgramModalProps) {
   const { id } = useParams();
 
@@ -47,24 +49,44 @@ export function AddToProgramModal({
 
         <ModalFooter>
           <Flex direction="row" justifyContent="space-between" width="100%">
-            <Form method="post" reloadDocument>
-              <input
-                name="type"
-                type="hidden"
-                value={FormTypeAddToProgram.WAITING}
-              />
-              <input name="programId" type="hidden" value={programId} />
-              <Button
-                type="submit"
-                tabIndex={2}
-                size="sm"
-                colorScheme="teal"
-                variant="outline"
-                mr={3}
-              >
-                Agregar en Espera
-              </Button>
-            </Form>
+            {isOnWaitingList ? (
+              <Form method="post">
+                <input
+                  name="type"
+                  type="hidden"
+                  value={FormTypeAddToProgram.REMOVE}
+                />
+                <input name="programId" type="hidden" value={programId} />
+                <Button
+                  type="submit"
+                  tabIndex={2}
+                  size="sm"
+                  colorScheme="red"
+                  mr={3}
+                >
+                  Quitar en Espera
+                </Button>
+              </Form>
+            ) : (
+              <Form method="post">
+                <input
+                  name="type"
+                  type="hidden"
+                  value={FormTypeAddToProgram.WAITING}
+                />
+                <input name="programId" type="hidden" value={programId} />
+                <Button
+                  type="submit"
+                  tabIndex={2}
+                  size="sm"
+                  colorScheme="teal"
+                  variant="outline"
+                  mr={3}
+                >
+                  Agregar en Espera
+                </Button>
+              </Form>
+            )}
             <Flex>
               <Button
                 tabIndex={3}
@@ -75,7 +97,7 @@ export function AddToProgramModal({
               >
                 Cerrar
               </Button>
-              <Form method="post" reloadDocument>
+              <Form method="post">
                 <input
                   name="type"
                   type="hidden"

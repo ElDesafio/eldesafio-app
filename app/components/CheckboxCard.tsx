@@ -13,34 +13,35 @@ import {
   useId,
   useStyleConfig,
 } from '@chakra-ui/react';
-import React from 'react';
+import type { ReactElement } from 'react';
+import { Children, cloneElement, isValidElement, useMemo } from 'react';
 
-// type CheckboxCardGroupProps = StackProps & UseCheckboxGroupProps;
+type CheckboxCardGroupProps = StackProps & UseCheckboxGroupProps;
 
-// export const CheckboxCardGroup = (props: CheckboxCardGroupProps) => {
-//   const { children, defaultValue, value, onChange, ...rest } = props;
-//   const { getCheckboxProps } = useCheckboxGroup({
-//     defaultValue,
-//     value,
-//     onChange,
-//   });
+export const CheckboxCardGroup = (props: CheckboxCardGroupProps) => {
+  const { children, defaultValue, value, onChange, ...rest } = props;
+  const { getCheckboxProps } = useCheckboxGroup({
+    defaultValue,
+    value,
+    onChange,
+  });
 
-//   const cards = React.useMemo(
-//     () =>
-//       React.Children.toArray(children)
-//         .filter<React.ReactElement<RadioCardProps>>(React.isValidElement)
-//         .map((card) => {
-//           return React.cloneElement(card, {
-//             checkboxProps: getCheckboxProps({
-//               value: card.props.value,
-//             }),
-//           });
-//         }),
-//     [children, getCheckboxProps],
-//   );
+  const cards = useMemo(
+    () =>
+      Children.toArray(children)
+        .filter<ReactElement<CheckboxCardProps>>(isValidElement)
+        .map((card) => {
+          return cloneElement(card, {
+            checkboxProps: getCheckboxProps({
+              value: card.props.value,
+            }),
+          });
+        }),
+    [children, getCheckboxProps],
+  );
 
-//   return <Stack {...rest}>{cards}</Stack>;
-// };
+  return <Stack {...rest}>{cards}</Stack>;
+};
 
 interface CheckboxCardProps extends BoxProps {
   value: string;
@@ -69,7 +70,7 @@ export const CheckboxCard = (props: CheckboxCardProps) => {
       }}
     >
       <input {...getInputProps()} aria-labelledby={id} />
-      <Box sx={styles} {...getCheckboxProps()} {...rest}>
+      <Box sx={styles} height="100%" {...getCheckboxProps()} {...rest}>
         <Stack direction="row">
           <Box flex="1">{children}</Box>
           <Checkbox

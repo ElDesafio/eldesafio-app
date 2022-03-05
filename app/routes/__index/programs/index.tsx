@@ -13,6 +13,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { DateTime } from 'luxon';
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
@@ -21,8 +22,16 @@ import { db } from '~/services/db.server';
 
 import type { Program } from '.prisma/client';
 
-export const loader: LoaderFunction = async () => {
-  return await db.program.findMany({ orderBy: { name: 'asc' } });
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const year = url.searchParams.get('year') ?? DateTime.now().year;
+
+  return await db.program.findMany({
+    where: {
+      year: +year,
+    },
+    orderBy: { name: 'asc' },
+  });
 };
 
 export default function Programs() {

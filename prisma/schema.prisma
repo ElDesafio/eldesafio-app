@@ -249,6 +249,8 @@ model ParticipantsOnPrograms {
   programId        Int
   participant      Participant                  @relation("ParticipantOnProgramsByParticipant", fields: [participantId], references: [id])
   participantId    Int
+  /// It's used to know was ever active so we can show/hide the "baja" label for those that were ever active
+  wasEverActive    Boolean                      @default(false)
   status           ParticipantsOnProgramsStatus @default(ACTIVE)
   waitingListOrder Int?
   createdAt        DateTime                     @default(now()) @db.Timestamptz

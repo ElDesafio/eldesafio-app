@@ -1,11 +1,10 @@
-import { SimpleGrid, Text } from '@chakra-ui/react';
+import { SimpleGrid } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import type { ActionFunction, LoaderFunction } from 'remix';
 import { json, useLoaderData, useSearchParams } from 'remix';
 import { z } from 'zod';
 
-import { CheckboxCard } from '~/components/CheckboxCard';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
@@ -15,6 +14,7 @@ import type { Prisma } from '.prisma/client';
 export enum FormTypeAddToProgram {
   ACTIVE = 'ACTIVE',
   WAITING = 'WAITING',
+  REMOVE = 'REMOVE',
 }
 
 async function getParticipantProgramsByYear(year: number) {
@@ -31,6 +31,7 @@ async function getParticipantProgramsByYear(year: number) {
           participantId: true,
           status: true,
           waitingListOrder: true,
+          wasEverActive: true,
         },
       },
     },
@@ -70,6 +71,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         },
         create: {
           status: 'ACTIVE',
+          wasEverActive: true,
           createdBy: user.id,
           updatedBy: user.id,
           programId: +programId,
@@ -77,6 +79,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         },
         update: {
           status: 'ACTIVE',
+          wasEverActive: true,
           updatedBy: user.id,
         },
       });
@@ -102,6 +105,20 @@ export const action: ActionFunction = async ({ request, params }) => {
         },
       });
     }
+    case FormTypeAddToProgram.REMOVE: {
+      return await db.participantsOnPrograms.update({
+        where: {
+          programId_participantId: {
+            programId: +programId,
+            participantId: +id,
+          },
+        },
+        data: {
+          status: 'INACTIVE',
+          updatedBy: user.id,
+        },
+      });
+    }
     default: {
       throw new Error('Form Type not supported');
     }
@@ -111,7 +128,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function ParticipantPrograms() {
   const programs = useLoaderData<GetParticipantProgramsByYear>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isChecked, setIsChecked] = useState(false);
 
   const modalProgramId = searchParams.get('modalProgramId');
 
@@ -125,22 +141,15 @@ export default function ParticipantPrograms() {
     }
   }, []);
 
+  console.log(programs);
+
   return (
-    <SimpleGrid minChildWidth="300px" spacing="6">
-      <CheckboxCard
-        value="1"
-        checkboxProps={{ onChange: (e) => console.log(e) }}
-      >
-        <Text color="emphasized" fontWeight="medium" fontSize="sm">
-          Option
-        </Text>
-        <Text color="muted" fontSize="sm">
-          Jelly biscuit muffin icing dessert powder macaroon.
-        </Text>
-      </CheckboxCard>
-      {programs.map((program) => (
-        <ProgramBox program={program} key={program.id} />
-      ))}
-    </SimpleGrid>
+    <>
+      <SimpleGrid minChildWidth="300px" spacing="6" alignItems="stretch">
+        {programs.map((program) => (
+          <ProgramBox program={program} key={program.id} />
+        ))}
+      </SimpleGrid>
+    </>
   );
 }

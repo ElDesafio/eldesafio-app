@@ -1,21 +1,13 @@
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Flex,
-  HStack,
-  Tag,
-  Text,
-  useColorModeValue as mode,
-} from '@chakra-ui/react';
+import { Container, Divider, HStack, Tag, Text } from '@chakra-ui/react';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
 import { useParams, useSearchParams } from 'remix';
 
+import { CheckboxCard } from '~/components/CheckboxCard';
 import { ProgramSexText } from '~/util/utils';
 
 import type { GetParticipantProgramsByYear } from '../programs';
 import { AddToProgramModal } from './AddToProgramModal';
+import { RemoveFromProgramModal } from './RemoveFromProgramModal';
 
 type ProgramBoxProps = {
   program: GetParticipantProgramsByYear[0];
@@ -25,7 +17,8 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { id: participantId } = useParams();
 
-  const modalProgramId = searchParams.get('modalProgramId');
+  const addToProgramId = searchParams.get('addToProgramId');
+  const removeFromProgramId = searchParams.get('removeFromProgramId');
 
   const { id, name, sex, seats, ageFrom, ageTo, participants } = program;
 
@@ -34,56 +27,46 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
     participants.filter((p) => p.status === ParticipantsOnProgramsStatus.ACTIVE)
       .length;
 
+  const participantOnProgram = participants.filter(
+    (p) => participantId != null && p.participantId === +participantId,
+  )[0];
+
   const isOnWaitingList =
-    participants.filter(
-      (p) =>
-        p.status === ParticipantsOnProgramsStatus.WAITING &&
-        participantId != null &&
-        p.participantId === +participantId,
-    ).length === 1;
+    participantOnProgram.status === ParticipantsOnProgramsStatus.WAITING;
 
   const isActive =
-    participants.filter(
-      (p) =>
-        p.status === ParticipantsOnProgramsStatus.ACTIVE &&
-        participantId != null &&
-        p.participantId === +participantId,
-    ).length === 1;
+    participantOnProgram.status === ParticipantsOnProgramsStatus.ACTIVE;
 
   const isInactive =
-    participants.filter(
-      (p) =>
-        p.status === ParticipantsOnProgramsStatus.INACTIVE &&
-        participantId != null &&
-        p.participantId === +participantId,
-    ).length === 1;
+    participantOnProgram.status === ParticipantsOnProgramsStatus.INACTIVE;
 
   return (
     <>
-      <Box
-        rounded={{ lg: 'lg' }}
-        bg={mode('white', 'gray.700')}
-        shadow="base"
-        overflow="hidden"
+      <CheckboxCard
+        key={program.id}
+        value={`${program.id}`} // This is not really used, but it's required for CheckboxCard
+        onClick={() => {
+          if (isActive) {
+            setSearchParams(
+              { removeFromProgramId: id.toString() },
+              { replace: false },
+            );
+          } else {
+            setSearchParams(
+              { addToProgramId: id.toString() },
+              { replace: false },
+            );
+          }
+        }}
+        checkboxProps={{
+          isChecked: isActive,
+        }}
       >
-        <Flex align="center" justify="space-between" px="4" py="2">
-          <Text as="h5" fontWeight="bold" fontSize="md" isTruncated>
+        <Container py="0" px="0">
+          <Text fontWeight="bold" fontSize="lg" isTruncated>
             {name}
           </Text>
-          <Button
-            size="xs"
-            onClick={() => {
-              setSearchParams(
-                { modalProgramId: id.toString() },
-                { replace: false },
-              );
-            }}
-          >
-            Agregar
-          </Button>
-        </Flex>
-        <Divider />
-        <Container py="2" px="4">
+          <Divider mb={2} />
           <Text as="span" fontWeight="semibold" fontSize="sm">
             Sexo:
           </Text>{' '}
@@ -104,29 +87,31 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
           <Text as="span" fontSize="sm">
             {ageFrom} a {ageTo} años
           </Text>
-          {(isOnWaitingList || isActive || isInactive) && (
-            <HStack justifyContent="flex-end" mt={2} spacing={2}>
+          {(isOnWaitingList || isInactive) && (
+            <HStack justifyContent="flex-start" mt={2} spacing={2}>
               {isOnWaitingList && (
                 <Tag size="sm" variant="outline" colorScheme="teal">
                   En Espera
                 </Tag>
               )}
-              {isActive && (
-                <Tag size="sm" variant="solid" colorScheme="green">
-                  Activo
-                </Tag>
-              )}
-              {isInactive && (
+              {isInactive && participantOnProgram.wasEverActive && (
                 <Tag size="sm" variant="solid" colorScheme="red">
-                  Inactivo
+                  Baja
                 </Tag>
               )}
             </HStack>
           )}
         </Container>
-      </Box>
+      </CheckboxCard>
       <AddToProgramModal
-        isOpen={modalProgramId === id.toString()}
+        isOpen={addToProgramId === id.toString()}
+        onClose={() => setSearchParams({}, { replace: false })}
+        programId={id}
+        programName={name}
+        isOnWaitingList={isOnWaitingList}
+      />
+      <RemoveFromProgramModal
+        isOpen={removeFromProgramId === id.toString()}
         onClose={() => setSearchParams({}, { replace: false })}
         programId={id}
         programName={name}
