@@ -54,7 +54,12 @@ const Document = withEmotionCache(
       clientStyleData.reset();
     }, []);
 
-    const myTheme = extendTheme({}, theme);
+    const myTheme = extendTheme(
+      {
+        colors: { ...theme.colors, brand: theme.colors.blue },
+      },
+      theme,
+    );
 
     return (
       <html lang="en">
