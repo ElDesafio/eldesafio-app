@@ -29,6 +29,8 @@ model User {
   updatedSchools               School[]                 @relation("UpdatedSchoolByUser")
   createdParticipantsHealth    ParticipantHealth[]      @relation("CreatedParticipantHealthByUser")
   updatedParticipantsHealth    ParticipantHealth[]      @relation("UpdatedParticipantHealthByUser")
+  createdSurveyBiography       SurveyBiography[]        @relation("CreatedSurveyBiographyByUser")
+  updatedSurveyBiography       SurveyBiography[]        @relation("UpdatedSurveyBiographyByUser")
 }
 
 enum Sex {
@@ -99,8 +101,7 @@ model Participant {
   updatedBy                  Int
   createdAt                  DateTime                 @default(now()) @db.Timestamptz
   updatedAt                  DateTime                 @default(now()) @updatedAt @db.Timestamptz
-  surveyBiography            SurveyBiography?         @relation(fields: [surveyBiographyId], references: [id])
-  surveyBiographyId          Int?
+  surveyBiography            SurveyBiography?
   programs                   ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByParticipant")
   schoolId                   Int?
   ParticipantHealth          ParticipantHealth?
@@ -155,27 +156,37 @@ model ParticipantHealth {
 }
 
 model SurveyBiography {
-  /// SurvayBiography id
-  id                  Int           @id @default(autoincrement())
+  participantId                 Int                @id
+  Participant                   Participant        @relation(fields: [participantId], references: [id])
   /// Who the participant lives with
-  livesWith           String
+  livesWith                     String
   /// Whether the participant changed school
-  changedSchool       Boolean       @default(false)
+  changedSchool                 FormAnswerOptions
   /// Whether the participant repeated the school year
-  repeatedYear        Boolean       @default(false)
+  reasonChangedSchool           String?
+  repeatedYear                  FormAnswerOptions
   /// How are they going in the school
-  schoolSituation     String
+  reasonRepeatedYear            String?
+  schoolSituation               String
   /// Why is the participant interested in participating in the programs?
-  programsInterest    String
+  programsInterest              String
   /// Whether participated in the programs before
-  participatedBefore  Boolean       @default(false)
+  participatedBefore            FormAnswerOptions
   /// Whether are they doing other activities besided El Desafio
-  otherActivities     Boolean       @default(false)
+  participatedBeforeDescription String?
+  finishedYear                  FormAnswerOptions?
+  otherActivities               FormAnswerOptions
+  otherActivitiesDescription    String?
   /// Personal description
-  personalDescription String
+  personalDescription           String
   /// Home Activities and typical day activities
-  homeActivities      String
-  Participant         Participant[]
+  homeActivities                String
+  createdByUser                 User               @relation("CreatedSurveyBiographyByUser", fields: [createdBy], references: [id])
+  createdBy                     Int
+  updatedByUser                 User               @relation("UpdatedSurveyBiographyByUser", fields: [updatedBy], references: [id])
+  updatedBy                     Int
+  createdAt                     DateTime           @default(now()) @db.Timestamptz
+  updatedAt                     DateTime           @default(now()) @updatedAt @db.Timestamptz
 }
 
 enum ProgramSex {

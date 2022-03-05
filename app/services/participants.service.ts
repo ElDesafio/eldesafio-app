@@ -11,3 +11,13 @@ export async function getParticipantHealth(id: number) {
 export type GetParticipantHealth = Prisma.PromiseReturnType<
   typeof getParticipantHealth
 >;
+
+export async function getParticipantBioSurvey(id: number) {
+  return await db.surveyBiography.findUnique({
+    where: { participantId: id },
+  });
+}
+
+export type GetParticipantBioSurvey = Prisma.PromiseReturnType<
+  typeof getParticipantBioSurvey
+>;

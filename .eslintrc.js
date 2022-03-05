@@ -55,7 +55,7 @@ module.exports = {
     'no-duplicate-imports': 'off',
     '@typescript-eslint/no-duplicate-imports': ['error'],
     '@typescript-eslint/consistent-type-imports': 'error',
-    '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/indent': ['off', 2],
     '@typescript-eslint/no-unused-vars': [
       'warn',
       { vars: 'all', args: 'after-used', ignoreRestSiblings: true },

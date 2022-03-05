@@ -100,10 +100,10 @@ export default function Participant() {
               Biografía
             </TabLink>
             <TabLink
-              to="questionnaire"
+              to="bio-survey"
               aria-current={
                 location.pathname.includes(
-                  useResolvedPath('questionnaire').pathname,
+                  useResolvedPath('bio-survey').pathname,
                 )
                   ? 'page'
                   : undefined
