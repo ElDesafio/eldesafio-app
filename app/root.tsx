@@ -1,6 +1,3 @@
-// import '@fontsource/inter/variable.css';
-
-// import { theme } from '@chakra-ui/pro-theme';
 import {
   Box,
   ChakraProvider,
@@ -11,6 +8,8 @@ import {
   theme as chakraTheme,
 } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
+import NProgress from 'nprogress';
+import nProgressStyles from 'nprogress/nprogress.css';
 import type React from 'react';
 import { useContext, useEffect } from 'react';
 import remirrorStyles from 'remirror/styles/all.css';
@@ -22,9 +21,11 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useTransition,
 } from 'remix';
 
 import { theme } from '~/lib/chakra-ui-pro-theme';
+import styles from '~/styles/styles.css';
 
 import ClientStyleContext from './context.client';
 import ServerStyleContext from './context.server';
@@ -35,13 +36,18 @@ type DocumentProps = {
 };
 
 export function links() {
-  return [{ rel: 'stylesheet', href: remirrorStyles }];
+  return [
+    { rel: 'stylesheet', href: remirrorStyles },
+    { rel: 'stylesheet', href: nProgressStyles },
+    { rel: 'stylesheet', href: styles },
+  ];
 }
 
 const Document = withEmotionCache(
   ({ children, title = `El Desafio` }: DocumentProps, emotionCache) => {
     const serverSyleData = useContext(ServerStyleContext);
     const clientStyleData = useContext(ClientStyleContext);
+    const transition = useTransition();
 
     // Only executed on client
     useEffect(() => {
@@ -56,6 +62,14 @@ const Document = withEmotionCache(
       // reset cache to reapply global styles
       clientStyleData.reset();
     }, []);
+
+    useEffect(() => {
+      // when the state is idle then we can to complete the progress bar
+      if (transition.state === 'idle') NProgress.done();
+      // and when it's something else it means it's either submitting a form or
+      // waiting for the loaders of the next location so we start it
+      else NProgress.start();
+    }, [transition.state]);
 
     // Theme is customized here: app/lib/chakra-ui-pro-theme/index.ts
     const myTheme = extendTheme(
