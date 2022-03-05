@@ -188,15 +188,15 @@ export default function ParticipantHealth() {
               </Text>
             </Stack>
           </VStack>
-          <Stack direction="row" mt={6} justifyContent="center" width="full">
-            <Link to={`edit`}>
-              <Button colorScheme="blue">Editar</Button>
-            </Link>
-          </Stack>
         </>
       ) : (
-        <p>No hay datos de salud</p>
+        <p>No hay datos biográficos</p>
       )}
+      <Stack direction="row" mt={6} justifyContent="center" width="full">
+        <Link to={`edit`}>
+          <Button colorScheme="blue">Editar</Button>
+        </Link>
+      </Stack>
     </div>
   );
 }

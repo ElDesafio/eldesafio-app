@@ -32,13 +32,13 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
   )[0];
 
   const isOnWaitingList =
-    participantOnProgram.status === ParticipantsOnProgramsStatus.WAITING;
+    participantOnProgram?.status === ParticipantsOnProgramsStatus.WAITING;
 
   const isActive =
-    participantOnProgram.status === ParticipantsOnProgramsStatus.ACTIVE;
+    participantOnProgram?.status === ParticipantsOnProgramsStatus.ACTIVE;
 
   const isInactive =
-    participantOnProgram.status === ParticipantsOnProgramsStatus.INACTIVE;
+    participantOnProgram?.status === ParticipantsOnProgramsStatus.INACTIVE;
 
   return (
     <>

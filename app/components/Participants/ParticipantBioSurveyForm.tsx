@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { FormAnswerOptions } from '@prisma/client';
 import { useState } from 'react';
-import { useNavigate } from 'remix';
+import { useNavigate, useTransition, useTransition } from 'remix';
 import { ValidatedForm, withZod } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -146,6 +146,9 @@ export function ParticipantBioSurveyForm({
   defaultValues?: Partial<z.infer<typeof participantBioSurveySchema>>;
 }) {
   let navigate = useNavigate();
+  const transition = useTransition();
+
+  const isSaving = transition.state === 'submitting';
 
   const [showReasonChangedSchool, setShowReasonChangedSchool] = useState(
     defaultValues?.changedSchool === FormAnswerOptions.YES,
@@ -318,10 +321,10 @@ export function ParticipantBioSurveyForm({
           </FieldGroup>
         </Stack>
         <HStack width="full" justifyContent="center" mt="8">
-          <FormSubmitButton />
           <Button variant="outline" onClick={() => navigate(-1)}>
             Cancelar
           </Button>
+          <FormSubmitButton isLoading={isSaving} />
         </HStack>
       </ValidatedForm>
     </Box>

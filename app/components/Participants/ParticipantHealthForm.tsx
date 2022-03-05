@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { BloodType, FormAnswerOptions } from '@prisma/client';
 import { useState } from 'react';
-import { useNavigate } from 'remix';
+import { useNavigate, useTransition } from 'remix';
 import { ValidatedForm, withZod } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -203,6 +203,9 @@ export function ParticipantHealthForm({
   defaultValues?: Partial<z.infer<typeof participantHealthSchema>>;
 }) {
   let navigate = useNavigate();
+  const transition = useTransition();
+
+  const isSaving = transition.state === 'submitting';
 
   const [showMissingVaccines, setShowMissingVaccines] = useState(
     defaultValues?.hasCompleteVaccination === FormAnswerOptions.NO,
@@ -432,10 +435,10 @@ export function ParticipantHealthForm({
           </FieldGroup>
         </Stack>
         <HStack width="full" justifyContent="center" mt="8">
-          <FormSubmitButton />
           <Button variant="outline" onClick={() => navigate(-1)}>
             Cancelar
           </Button>
+          <FormSubmitButton isLoading={isSaving} />
         </HStack>
       </ValidatedForm>
     </Box>

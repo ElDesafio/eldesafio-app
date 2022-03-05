@@ -1,7 +1,13 @@
 import { Button, HStack } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData, useNavigate } from 'remix';
+import {
+  json,
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useTransition,
+} from 'remix';
 import { ValidatedForm, validationError, withZod } from 'remix-validated-form';
 import { z } from 'zod';
 
@@ -62,36 +68,24 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function ParticipantHealth() {
   const participant = useLoaderData<GetParticipant>();
   let navigate = useNavigate();
+  const transition = useTransition();
 
-  const sample = `
-  # hello
-
-## sdsd
-
-### sdfgsdf
-
-*   sdfsdfdfdf
-
-*   sdfsdfsdf
-
-
-> sdfsdfsdf
-  `;
+  const isSaving = transition.state === 'submitting';
 
   return (
     <>
       <ValidatedForm
         validator={biographyValidator}
-        defaultValues={{ biography: participant?.biography || sample }}
+        defaultValues={{ biography: participant?.biography || '' }}
         method="post"
         noValidate
       >
         <FormRichTextEditor name="biography" />
         <HStack width="full" justifyContent="center" mt="8">
-          <FormSubmitButton />
           <Button variant="outline" onClick={() => navigate(-1)}>
             Cancelar
           </Button>
+          <FormSubmitButton isLoading={isSaving} />
         </HStack>
       </ValidatedForm>
     </>

@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
-import { useNavigate } from 'remix';
+import { useNavigate, useTransition } from 'remix';
 import { ValidatedForm, withZod } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -105,6 +105,10 @@ export function ParticipantForm({
     defaultValues?.picture || '',
   );
   let navigate = useNavigate();
+
+  const transition = useTransition();
+
+  const isSaving = transition.state === 'submitting';
 
   return (
     <Box as="main" py="8" flex="1">
@@ -393,10 +397,10 @@ export function ParticipantForm({
                 </FieldGroup>
               </Stack>
               <HStack width="full" justifyContent="center" mt="8">
-                <FormSubmitButton />
                 <Button variant="outline" onClick={() => navigate(-1)}>
                   Cancelar
                 </Button>
+                <FormSubmitButton isLoading={isSaving} />
               </HStack>
             </ValidatedForm>
           </Box>
