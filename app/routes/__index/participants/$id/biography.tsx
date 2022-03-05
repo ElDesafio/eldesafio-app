@@ -30,7 +30,7 @@ export default function ParticipantHealth() {
 
   return (
     <>
-      <Heading as="h3" size="md">
+      <Heading as="h3" size="sm">
         Biografía
       </Heading>
       <Divider mb={3} />

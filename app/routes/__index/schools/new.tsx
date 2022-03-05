@@ -1,19 +1,21 @@
-import { Box, Container, Heading, useColorModeValue } from "@chakra-ui/react";
-import { ActionFunction, json, redirect } from "remix";
-import { validationError } from "remix-validated-form";
-import { db } from "~/services/db.server";
-import { authenticator } from "~/services/auth.server";
+import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import type { ActionFunction } from 'remix';
+import { json, redirect } from 'remix';
+import { validationError } from 'remix-validated-form';
+
 import {
   SchoolForm,
   schoolFormValidator,
-} from "~/components/School/SchoolForm";
+} from '~/components/School/SchoolForm';
+import { authenticator } from '~/services/auth.server';
+import { db } from '~/services/db.server';
 
 export const action: ActionFunction = async ({ request }) => {
   let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
 
-  if (!user) throw json("Unauthorized", { status: 403 });
+  if (!user) throw json('Unauthorized', { status: 403 });
 
   const formData = Object.fromEntries(await request.formData());
 
@@ -29,20 +31,20 @@ export const action: ActionFunction = async ({ request }) => {
     },
   });
 
-  return redirect("/schools");
+  return redirect('/schools');
 };
 
 export default function NewProgram() {
   return (
     <>
       <Box
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue('white', 'gray.900')}
         pt="4"
         pb="4"
         shadow="sm"
       >
-        <Container maxW="7xl">
-          <Heading size="lg" mb="0">
+        <Container maxW="8xl">
+          <Heading size="md" mb="0">
             Crear Escuela
           </Heading>
         </Container>

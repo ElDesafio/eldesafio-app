@@ -41,9 +41,9 @@ export default function Participants() {
         pb="4"
         shadow="sm"
       >
-        <Container maxW="7xl">
+        <Container maxW="8xl">
           <Flex>
-            <Heading size="lg" mb="0">
+            <Heading size="md" mb="0">
               Participantes
             </Heading>
             <Spacer />
@@ -57,7 +57,7 @@ export default function Participants() {
       </Box>
 
       <Box as="main" py="8" flex="1">
-        <Container maxW="7xl">
+        <Container maxW="8xl">
           <Box
             bg={useColorModeValue('white', 'gray.700')}
             p="6"

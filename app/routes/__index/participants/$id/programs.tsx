@@ -1,20 +1,16 @@
-import { SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, Text } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
-import { useEffect } from 'react';
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  useLoaderData,
-  useSearchParams,
-} from 'remix';
+import { useEffect, useState } from 'react';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { json, useLoaderData, useSearchParams } from 'remix';
 import { z } from 'zod';
 
+import { CheckboxCard } from '~/components/CheckboxCard';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
 import { ProgramBox } from './components/ProgramBox';
-import { Prisma } from '.prisma/client';
+import type { Prisma } from '.prisma/client';
 
 export enum FormTypeAddToProgram {
   ACTIVE = 'ACTIVE',
@@ -48,8 +44,7 @@ export type GetParticipantProgramsByYear = Prisma.PromiseReturnType<
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const selectedYear = url.searchParams.get('year') ?? DateTime.now().year;
-  const programs = await getParticipantProgramsByYear(+selectedYear);
-  return programs;
+  return await getParticipantProgramsByYear(+selectedYear);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -116,6 +111,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function ParticipantPrograms() {
   const programs = useLoaderData<GetParticipantProgramsByYear>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isChecked, setIsChecked] = useState(false);
 
   const modalProgramId = searchParams.get('modalProgramId');
 
@@ -131,6 +127,17 @@ export default function ParticipantPrograms() {
 
   return (
     <SimpleGrid minChildWidth="300px" spacing="6">
+      <CheckboxCard
+        value="1"
+        checkboxProps={{ onChange: (e) => console.log(e) }}
+      >
+        <Text color="emphasized" fontWeight="medium" fontSize="sm">
+          Option
+        </Text>
+        <Text color="muted" fontSize="sm">
+          Jelly biscuit muffin icing dessert powder macaroon.
+        </Text>
+      </CheckboxCard>
       {programs.map((program) => (
         <ProgramBox program={program} key={program.id} />
       ))}

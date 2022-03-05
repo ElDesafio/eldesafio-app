@@ -1,11 +1,6 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-  useLoaderData,
-} from 'remix';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -16,10 +11,10 @@ import {
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
-import { School } from '.prisma/client';
+import type { School } from '.prisma/client';
 
 // LOADER
-export const loader: LoaderFunction = async({ params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const school: School | null = await db.school.findUnique({
@@ -29,7 +24,7 @@ export const loader: LoaderFunction = async({ params }) => {
 };
 
 // ACTION
-export const action: ActionFunction = async({ request, params }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -64,8 +59,8 @@ export default function EditParticipant() {
         pb="4"
         shadow="sm"
       >
-        <Container maxW="7xl">
-          <Heading size="lg" mb="0">
+        <Container maxW="8xl">
+          <Heading size="md" mb="0">
             Editar Escuela
           </Heading>
         </Container>

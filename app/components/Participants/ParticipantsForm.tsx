@@ -108,7 +108,7 @@ export function ParticipantForm({
 
   return (
     <Box as="main" py="8" flex="1">
-      <Container maxW="7xl" id="xxx">
+      <Container maxW="8xl" id="xxx">
         <Box
           bg={useColorModeValue('white', 'gray.700')}
           p="6"

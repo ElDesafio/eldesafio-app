@@ -1,20 +1,22 @@
-import { Box, Container, Heading, useColorModeValue } from "@chakra-ui/react";
-import { ActionFunction, redirect } from "remix";
-import { validationError, withZod } from "remix-validated-form";
-import { db } from "~/services/db.server";
-import { authenticator } from "~/services/auth.server";
+import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import type { ActionFunction } from 'remix';
+import { redirect } from 'remix';
+import { validationError, withZod } from 'remix-validated-form';
+
 import {
   ParticipantForm,
   participantFormValidator,
-} from "~/components/Participants/ParticipantsForm";
+} from '~/components/Participants/ParticipantsForm';
+import { authenticator } from '~/services/auth.server';
+import { db } from '~/services/db.server';
 
 export const action: ActionFunction = async ({ request }) => {
   let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: '/login',
   });
 
   const fieldValues = participantFormValidator.validate(
-    Object.fromEntries(await request.formData())
+    Object.fromEntries(await request.formData()),
   );
   if (fieldValues.error) return validationError(fieldValues.error);
 
@@ -45,20 +47,20 @@ export const action: ActionFunction = async ({ request }) => {
     },
   });
 
-  return redirect("/participants");
+  return redirect('/participants');
 };
 
 export default function NewParticipant() {
   return (
     <>
       <Box
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue('white', 'gray.900')}
         pt="4"
         pb="4"
         shadow="sm"
       >
-        <Container maxW="7xl">
-          <Heading size="lg" mb="0">
+        <Container maxW="8xl">
+          <Heading size="md" mb="0">
             Crear Participante
           </Heading>
         </Container>

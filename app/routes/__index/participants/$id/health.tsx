@@ -28,7 +28,7 @@ export default function ParticipantHealth() {
     <div>
       {participantHealth ? (
         <>
-          <Heading as="h3" size="md">
+          <Heading as="h3" size="sm">
             Antecedentes fisiológicos
           </Heading>
           <Divider mb={3} />
@@ -63,13 +63,13 @@ export default function ParticipantHealth() {
               )}
             </Text>
           </Stack>
-          <Heading as="h3" size="md" mt={6}>
+          <Heading as="h3" size="sm" mt={6}>
             Enfermedades padecidas
           </Heading>
           <Divider mb={3} />
           <Heading
             as="h5"
-            size="sm"
+            size="xs"
             mt={6}
             mb={3}
             textDecoration="underline"
@@ -129,7 +129,7 @@ export default function ParticipantHealth() {
           </VStack>
           <Heading
             as="h5"
-            size="sm"
+            size="xs"
             mt={6}
             mb={3}
             textDecoration="underline"
@@ -189,7 +189,7 @@ export default function ParticipantHealth() {
               </Stack>
             </Stack>
           </VStack>
-          <Heading as="h3" size="md" mt={6}>
+          <Heading as="h3" size="sm" mt={6}>
             Otras
           </Heading>
           <Divider mb={3} />
@@ -279,7 +279,7 @@ export default function ParticipantHealth() {
               </Text>
             </Stack>
           </VStack>
-          <Heading as="h3" size="md" mt={6}>
+          <Heading as="h3" size="sm" mt={6}>
             Observaciones
           </Heading>
           <Divider mb={3} />

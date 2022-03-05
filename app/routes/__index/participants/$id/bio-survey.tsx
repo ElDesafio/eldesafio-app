@@ -29,7 +29,7 @@ export default function ParticipantHealth() {
     <div>
       {participantBioSurvey ? (
         <>
-          <Heading as="h3" size="md">
+          <Heading as="h3" size="sm">
             Familia
           </Heading>
           <Divider mb={3} />
@@ -41,7 +41,7 @@ export default function ParticipantHealth() {
               </Text>
             </Stack>
           </Stack>
-          <Heading as="h3" size="md" mt={6}>
+          <Heading as="h3" size="sm" mt={6}>
             Escuela
           </Heading>
           <Divider mb={3} />
@@ -111,7 +111,7 @@ export default function ParticipantHealth() {
               </Stack>
             </Stack>
           </VStack>
-          <Heading as="h3" size="md" mt={6}>
+          <Heading as="h3" size="sm" mt={6}>
             El Desafío
           </Heading>
           <Divider mb={3} />
@@ -150,7 +150,7 @@ export default function ParticipantHealth() {
                 </Stack>
               )}
           </VStack>
-          <Heading as="h3" size="md" mt={6}>
+          <Heading as="h3" size="sm" mt={6}>
             Sobre el participante
           </Heading>
           <Divider mb={3} />

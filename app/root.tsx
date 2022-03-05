@@ -1,4 +1,14 @@
-import { Box, ChakraProvider, Divider, Heading, Text } from '@chakra-ui/react';
+// import '@fontsource/inter/variable.css';
+
+import { theme } from '@chakra-ui/pro-theme';
+import {
+  Box,
+  ChakraProvider,
+  Divider,
+  extendTheme,
+  Heading,
+  Text,
+} from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
 import type React from 'react';
 import { useContext, useEffect } from 'react';
@@ -44,6 +54,8 @@ const Document = withEmotionCache(
       clientStyleData.reset();
     }, []);
 
+    const myTheme = extendTheme({}, theme);
+
     return (
       <html lang="en">
         <head>
@@ -62,7 +74,7 @@ const Document = withEmotionCache(
           ))}
         </head>
         <body>
-          <ChakraProvider>
+          <ChakraProvider theme={myTheme}>
             {children}
             <ScrollRestoration />
             <Scripts />

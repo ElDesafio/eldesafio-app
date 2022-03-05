@@ -63,8 +63,8 @@ export default function EditParticipant() {
         pb="4"
         shadow="sm"
       >
-        <Container maxW="7xl">
-          <Heading size="lg" mb="0">
+        <Container maxW="8xl">
+          <Heading size="md" mb="0">
             Editar Programa
           </Heading>
         </Container>

@@ -14,15 +14,15 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
-import { Link, LoaderFunction, useLoaderData } from 'remix';
+import type { LoaderFunction } from 'remix';
+import { Link, useLoaderData } from 'remix';
 
 import { db } from '~/services/db.server';
 
-import { School } from '.prisma/client';
+import type { School } from '.prisma/client';
 
-export const loader: LoaderFunction = async() => {
-  const programs = await db.school.findMany();
-  return programs;
+export const loader: LoaderFunction = async () => {
+  return await db.school.findMany();
 };
 
 export default function Programs() {
@@ -35,9 +35,9 @@ export default function Programs() {
         pb="4"
         shadow="sm"
       >
-        <Container maxW="7xl">
+        <Container maxW="8xl">
           <Flex>
-            <Heading size="lg" mb="0">
+            <Heading size="md" mb="0">
               Escuelas
             </Heading>
             <Spacer />
@@ -51,7 +51,7 @@ export default function Programs() {
       </Box>
 
       <Box as="main" py="8" flex="1">
-        <Container maxW="7xl">
+        <Container maxW="8xl">
           <Box
             bg={useColorModeValue('white', 'gray.700')}
             p="6"

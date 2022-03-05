@@ -42,8 +42,8 @@ export default function Participant() {
   return (
     <>
       <Box bg={useColorModeValue('white', 'gray.900')} pt="8" shadow="sm">
-        <Container maxW="7xl">
-          <Heading size="lg" mb="3">
+        <Container maxW="8xl">
+          <Heading size="md" mb="3">
             {participant.firstName} {participant.lastName}
           </Heading>
           <Stack direction="row" spacing="4" overflowY="auto">
@@ -126,7 +126,7 @@ export default function Participant() {
       </Box>
 
       <Box as="main" py="8" flex="1">
-        <Container maxW="7xl">
+        <Container maxW="8xl">
           <Box
             bg={useColorModeValue('white', 'gray.700')}
             p="6"
