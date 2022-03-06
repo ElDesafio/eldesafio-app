@@ -7,9 +7,11 @@ import { z } from 'zod';
 
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { getAge } from '~/util/utils';
 
 import { ProgramBox } from './components/ProgramBox';
-import type { Prisma } from '.prisma/client';
+import type { Prisma, Sex } from '.prisma/client';
+import { ProgramSex } from '.prisma/client';
 
 export enum FormTypeAddToProgram {
   ACTIVE = 'ACTIVE',
@@ -17,10 +19,60 @@ export enum FormTypeAddToProgram {
   REMOVE = 'REMOVE',
 }
 
-async function getParticipantProgramsByYear(year: number) {
+async function getParticipantProgramsByYear(
+  year: number,
+  participantBirthday: string,
+  participantSex: Sex,
+) {
+  const ageAtJune30 = Math.floor(
+    DateTime.local(year, 6, 30).diff(
+      DateTime.fromISO(participantBirthday),
+      'years',
+    ).years,
+  );
+  const ageAtDec31 = Math.floor(
+    DateTime.local(year, 12, 31).diff(
+      DateTime.fromISO(participantBirthday),
+      'years',
+    ).years,
+  );
+
+  console.log('ageAtJune30', ageAtJune30);
+  console.log('ageAtDec31', ageAtDec31);
+
   return await db.program.findMany({
     where: {
       year: year,
+      AND: [
+        {
+          OR: [
+            {
+              sex: ProgramSex.ALL,
+            },
+            {
+              sex: participantSex,
+            },
+          ],
+        },
+        {
+          OR: [
+            {
+              AND: [
+                { ageFrom: { lte: ageAtDec31 } },
+                { ageTo: { gte: ageAtDec31 } },
+                { ageByYear: true },
+              ],
+            },
+            {
+              AND: [
+                { ageFrom: { lte: ageAtJune30 } },
+                { ageTo: { gte: ageAtJune30 } },
+                { ageByYear: false },
+              ],
+            },
+          ],
+        },
+      ],
     },
     orderBy: {
       name: 'asc',
@@ -42,10 +94,31 @@ export type GetParticipantProgramsByYear = Prisma.PromiseReturnType<
   typeof getParticipantProgramsByYear
 >;
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   const url = new URL(request.url);
   const selectedYear = url.searchParams.get('year') ?? DateTime.now().year;
-  return await getParticipantProgramsByYear(+selectedYear);
+  const { id } = z.object({ id: z.string() }).parse(params);
+
+  const participant = await db.participant.findUnique({
+    where: {
+      id: +id,
+    },
+    select: {
+      id: true,
+      birthday: true,
+      sex: true,
+    },
+  });
+
+  if (!participant) {
+    throw new Error("Couldn't get participant");
+  }
+
+  return await getParticipantProgramsByYear(
+    +selectedYear,
+    participant.birthday,
+    participant.sex,
+  );
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

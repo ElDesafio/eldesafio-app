@@ -36,7 +36,6 @@ model User {
 enum Sex {
   MALE
   FEMALE
-  OTHER
 }
 
 enum Neighborhood {

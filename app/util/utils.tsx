@@ -5,14 +5,18 @@ import type React from 'react';
 import { useSearchParams } from 'remix';
 import { z } from 'zod';
 
+export function getAge<T extends boolean>(
+  birthday: string,
+  asNumber?: T,
+): T extends true ? number : string;
 export function getAge(
   birthday: string,
   asNumber: boolean = false,
-): string | number {
+): number | string {
   const age = Math.floor(
     DateTime.now().diff(DateTime.fromISO(birthday), ['years']).years,
   );
-  return asNumber ? `${age} años` : age;
+  return asNumber ? (age as number) : (`${age} años` as string);
 }
 
 export function getFormattedDate(date: string): string {
