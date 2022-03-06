@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    "git-tag",
+    "all-contributors",
+    "first-time-contributor",
+    "released"
+  ],
+  "owner": "ElDesafio",
+  "repo": "eldesafio-app",
+  "name": "Lucas Curti",
+  "email": "lucas.curti@eldesafio.org"
+}
