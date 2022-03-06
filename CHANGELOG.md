@@ -1,3 +1,15 @@
+# v0.0.3 (Sun Mar 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Empty commit to trigger action (lucas@fetcher.ai)
+
+#### Authors: 1
+
+- lucascurti (lucas@fetcher.ai)
+
+---
+
 # v0.0.2 (Sun Mar 06 2022)
 
 #### ⚠️ Pushed to `main`
