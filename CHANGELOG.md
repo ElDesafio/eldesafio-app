@@ -1,3 +1,26 @@
+# v0.0.6 (Sun Mar 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- add patch-package to postinstall ([@lucascurti](https://github.com/lucascurti))
+- update express config to latest remix version ([@lucascurti](https://github.com/lucascurti))
+- move patches copy ([@lucascurti](https://github.com/lucascurti))
+- copy patches folder ([@lucascurti](https://github.com/lucascurti))
+- add patch-package ([@lucascurti](https://github.com/lucascurti))
+- update postinstall ([@lucascurti](https://github.com/lucascurti))
+- move postinstall ([@lucascurti](https://github.com/lucascurti))
+- patch sloppy ([@lucascurti](https://github.com/lucascurti))
+- add env for FLY_API_TOKEN ([@lucascurti](https://github.com/lucascurti))
+- fix action ([@lucascurti](https://github.com/lucascurti))
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add fly.io config ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.5 (Sun Mar 06 2022)
 
 #### ⚠️ Pushed to `main`
