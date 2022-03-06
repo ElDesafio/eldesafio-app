@@ -1,3 +1,15 @@
+# v0.0.4 (Sun Mar 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- fix for protected branch ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.3 (Sun Mar 06 2022)
 
 #### ⚠️ Pushed to `main`
