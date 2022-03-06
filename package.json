@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development remix build && run-p dev:*",
     "dev:node": "cross-env NODE_ENV=development nodemon ./build/index.js --watch ./build/index.js",
     "dev:remix": "cross-env NODE_ENV=development remix watch",
-    "postinstall": "remix setup node",
+    "postinstall": "remix setup node && patch-package",
     "start": "cross-env NODE_ENV=production node ./build/index.js"
   },
   "dependencies": {
