@@ -102,7 +102,7 @@ export default function EditParticipant() {
         shadow="sm"
       >
         <Container maxW="8xl">
-          <Heading size="md" mb="0">
+          <Heading size="lg" mb="0">
             Editar Participante
           </Heading>
         </Container>

@@ -43,7 +43,7 @@ export default function Participants() {
       >
         <Container maxW="8xl">
           <Flex>
-            <Heading size="md" mb="0">
+            <Heading size="lg" mb="0">
               Participantes
             </Heading>
             <Spacer />

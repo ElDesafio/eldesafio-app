@@ -60,7 +60,7 @@ export default function NewParticipant() {
         shadow="sm"
       >
         <Container maxW="8xl">
-          <Heading size="md" mb="0">
+          <Heading size="lg" mb="0">
             Crear Participante
           </Heading>
         </Container>

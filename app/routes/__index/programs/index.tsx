@@ -46,7 +46,7 @@ export default function Programs() {
       >
         <Container maxW="8xl">
           <Flex>
-            <Heading size="md" mb="0">
+            <Heading size="lg" mb="0">
               Programas
             </Heading>
             <Spacer />

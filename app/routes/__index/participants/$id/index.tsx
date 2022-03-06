@@ -41,7 +41,7 @@ export default function ParticipantGeneral() {
 
   return (
     <>
-      <Heading as="h3" size="xs">
+      <Heading as="h3" size="md">
         Datos Personales
       </Heading>
       <Divider mt="2" mb="8" />

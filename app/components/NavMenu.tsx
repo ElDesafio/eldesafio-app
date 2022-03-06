@@ -1,53 +1,54 @@
-import { Box, Flex, HStack } from "@chakra-ui/react";
+/* eslint-disable sonarjs/no-duplicate-string */
+import { Box, Flex, HStack } from '@chakra-ui/react';
+import { AiOutlineTeam } from 'react-icons/ai';
+import { FaSchool } from 'react-icons/fa';
 import {
-  MdSchool,
-  MdOutlineFamilyRestroom,
   MdAdminPanelSettings,
   MdGroup,
-} from "react-icons/md";
-import { FaSchool } from "react-icons/fa";
-import { AiOutlineTeam } from "react-icons/ai";
+  MdOutlineFamilyRestroom,
+  MdSchool,
+} from 'react-icons/md';
+import { useLocation } from 'remix';
 
-import { NavItem } from "./NavItem";
-import { useLocation } from "remix";
+import { NavItem } from './NavItem';
 
 const MobileNavMenu = (props: { isOpen?: boolean }) => {
   const location = useLocation();
   const navItems = [
     {
-      label: "Participantes",
-      to: "/participants",
-      active: location.pathname.startsWith("/participants"),
+      label: 'Participantes',
+      to: '/participants',
+      active: location.pathname.startsWith('/participants'),
       icon: <MdGroup />,
     },
     {
-      label: "Programas",
-      to: "/programs",
-      active: location.pathname.startsWith("/programs"),
+      label: 'Programas',
+      to: '/programs',
+      active: location.pathname.startsWith('/programs'),
       icon: <MdSchool />,
     },
     {
-      label: "Staff",
-      to: "/staff",
-      active: location.pathname.startsWith("/staff"),
+      label: 'Staff',
+      to: '/staff',
+      active: location.pathname.startsWith('/staff'),
       icon: <AiOutlineTeam />,
     },
     {
-      label: "Familiares",
-      to: "/family",
-      active: location.pathname.startsWith("/family"),
+      label: 'Familiares',
+      to: '/family',
+      active: location.pathname.startsWith('/family'),
       icon: <MdOutlineFamilyRestroom />,
     },
     {
-      label: "Escuelas",
-      to: "/schools",
-      active: location.pathname.startsWith("/schools"),
+      label: 'Escuelas',
+      to: '/schools',
+      active: location.pathname.startsWith('/schools'),
       icon: <FaSchool />,
     },
     {
-      label: "Admin",
-      to: "/admin",
-      active: location.pathname.includes("/admin"),
+      label: 'Admin',
+      to: '/admin',
+      active: location.pathname.includes('/admin'),
       icon: <MdAdminPanelSettings />,
     },
   ];
@@ -85,44 +86,44 @@ const DesktopNavMenu = () => {
   const location = useLocation();
   const navItems = [
     {
-      label: "Participantes",
-      to: "/participants",
-      active: location.pathname.startsWith("/participants"),
+      label: 'Participantes',
+      to: '/participants',
+      active: location.pathname.startsWith('/participants'),
       icon: <MdGroup />,
     },
     {
-      label: "Programas",
-      to: "/programs",
-      active: location.pathname.startsWith("/programs"),
+      label: 'Programas',
+      to: '/programs',
+      active: location.pathname.startsWith('/programs'),
       icon: <MdSchool />,
     },
     {
-      label: "Familiares",
-      to: "/family",
-      active: location.pathname.startsWith("/family"),
+      label: 'Familiares',
+      to: '/family',
+      active: location.pathname.startsWith('/family'),
       icon: <MdOutlineFamilyRestroom />,
     },
     {
-      label: "Escuelas",
-      to: "/schools",
-      active: location.pathname.startsWith("/schools"),
+      label: 'Escuelas',
+      to: '/schools',
+      active: location.pathname.startsWith('/schools'),
       icon: <FaSchool />,
     },
     {
-      label: "Staff",
-      to: "/staff",
-      active: location.pathname.startsWith("/staff"),
+      label: 'Staff',
+      to: '/staff',
+      active: location.pathname.startsWith('/staff'),
       icon: <AiOutlineTeam />,
     },
     {
-      label: "Admin",
-      to: "/admin",
-      active: location.pathname.startsWith("/admin"),
+      label: 'Admin',
+      to: '/admin',
+      active: location.pathname.startsWith('/admin'),
       icon: <MdAdminPanelSettings />,
     },
   ];
   return (
-    <HStack spacing="3" flex="1" display={{ base: "none", lg: "flex" }}>
+    <HStack spacing="3" flex="1" display={{ base: 'none', lg: 'flex' }}>
       {navItems.map((navItem) => (
         <NavItem.Desktop
           to={navItem.to}
