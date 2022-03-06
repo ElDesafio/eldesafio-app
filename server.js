@@ -22,6 +22,18 @@ app.use(
 // more aggressive with this caching.
 app.use(express.static('public/build', { maxAge: '1h' }));
 
+app.use(function (req, res, next) {
+  if (
+    process.env.NODE_ENV !== 'development' &&
+    req.get('X-Forwarded-Proto') == 'http'
+  ) {
+    // request was via http, so redirect to https
+    res.redirect('https://' + req.headers.host + req.url);
+  } else {
+    next();
+  }
+});
+
 app.use(morgan('tiny'));
 
 app.all(
