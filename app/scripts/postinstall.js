@@ -1,11 +1,11 @@
 const fs = require('fs');
 
-// File destination.txt will be created or overwritten by default.
-fs.copyFile(
-  'app//lib/sloppy/sloppy.js',
-  'node_modules/domino/lib/sloppy.js',
-  (err) => {
-    if (err) throw err;
-    console.log('sloppy.js was patched');
-  },
-);
+const copyFrom = 'app/lib/sloppy/sloppy.js';
+const copyTo = 'node_modules/domino/lib/sloppy.js';
+
+console.log('Copying: ', copyFrom, '->', copyTo);
+
+fs.copyFile(copyFrom, copyTo, (err) => {
+  if (err) throw err;
+  console.log('sloppy.js was patched');
+});
