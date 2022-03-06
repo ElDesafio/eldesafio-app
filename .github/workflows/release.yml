@@ -14,6 +14,11 @@ jobs:
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
+      - name: Unset header
+        # checkout@v2 adds a header that makes branch protection report errors
+        # because the Github action bot is not a collaborator on the repo
+        run: git config --local --unset http.https://github.com/.extraheader
+
       - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
