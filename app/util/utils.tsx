@@ -5,11 +5,14 @@ import type React from 'react';
 import { useSearchParams } from 'remix';
 import { z } from 'zod';
 
-export function getAge(birthday: string): string {
+export function getAge(
+  birthday: string,
+  asNumber: boolean = false,
+): string | number {
   const age = Math.floor(
     DateTime.now().diff(DateTime.fromISO(birthday), ['years']).years,
   );
-  return `${age} años`;
+  return asNumber ? `${age} años` : age;
 }
 
 export function getFormattedDate(date: string): string {
@@ -33,13 +36,6 @@ const emptyStringToUndefined = z.literal('').transform(() => undefined);
 export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
   return schema.optional().or(emptyStringToUndefined);
 }
-
-// https://github.com/colinhacks/zod/issues/372#issuecomment-826380330
-const schemaForType = function <T>() {
-  return function <S extends z.ZodType<T, any, any>>(arg: S) {
-    return arg;
-  };
-};
 
 export enum ProgramSexText {
   MALE = 'varón',
