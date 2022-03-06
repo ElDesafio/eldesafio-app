@@ -12,7 +12,7 @@ import {
 import { useState } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
-import { useNavigate } from 'remix';
+import { useNavigate, useTransition } from 'remix';
 import { ValidatedForm, withZod } from 'remix-validated-form';
 import { v4 as uuid } from 'uuid';
 import * as z from 'zod';
@@ -88,6 +88,10 @@ export function ProgramForm({
   defaultValues?: Partial<z.infer<typeof programSchema>>;
 }) {
   let navigate = useNavigate();
+
+  const transition = useTransition();
+
+  const isSaving = transition.state === 'submitting';
 
   // If the object has no `id` we use a random id. This is only so we can use it as a key
   const [daysIds, setDaysIds] = useState<(string | number)[]>(
@@ -247,7 +251,7 @@ export function ProgramForm({
                 </FieldGroup>
               </Stack>
               <HStack width="full" justifyContent="center" mt="8">
-                <FormSubmitButton />
+                <FormSubmitButton isLoading={isSaving} />
                 <Button variant="outline" onClick={() => navigate(-1)}>
                   Cancelar
                 </Button>
