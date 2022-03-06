@@ -24,6 +24,7 @@ import {
   useTransition,
 } from 'remix';
 
+import favicon from '~/assets/logo.png';
 import { theme } from '~/lib/chakra-ui-pro-theme';
 import styles from '~/styles/styles.css';
 
@@ -84,6 +85,7 @@ const Document = withEmotionCache(
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1" />
+          <link rel="icon" href={favicon} type="image/x-icon" />
           {title ? <title>{title}</title> : null}
           <Meta />
           <Links />
