@@ -1,3 +1,16 @@
+# v0.0.9 (Sun Mar 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add nodemon and favicon ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.8 (Sun Mar 06 2022)
 
 #### ⚠️ Pushed to `main`
