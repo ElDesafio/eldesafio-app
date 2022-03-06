@@ -7,7 +7,7 @@
     "build": "remix build",
     "watch": "remix watch",
     "dev": "npm-run-all --parallel watch start:dev",
-    "postinstall": "remix setup node && node app/postinstall.js",
+    "postinstall": "remix setup node && patch-package",
     "start": "cross-env NODE_ENV=production node server/index.js",
     "start:dev": "cross-env NODE_ENV=development node server/index.js"
   },
@@ -36,6 +36,7 @@
     "luxon": "2.3.1",
     "morgan": "1.10.0",
     "nprogress": "0.2.0",
+    "patch-package": "^6.4.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "4.3.1",
