@@ -1,3 +1,16 @@
+# v0.0.8 (Sun Mar 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- updated callbackURL for auth0 ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.7 (Sun Mar 06 2022)
 
 #### ⚠️ Pushed to `main`
