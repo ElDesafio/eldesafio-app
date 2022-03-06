@@ -1,3 +1,16 @@
+# v0.0.5 (Sun Mar 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- Empty commit to trigger action to test cache ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.4 (Sun Mar 06 2022)
 
 #### ⚠️ Pushed to `main`
