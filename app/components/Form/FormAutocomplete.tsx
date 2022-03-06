@@ -5,7 +5,14 @@ import {
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/react';
+import type {
+  GroupBase,
+  OptionBase,
+  PropsValue,
+  SingleValue,
+} from 'chakra-react-select';
 import { Select } from 'chakra-react-select';
+import type { FocusEventHandler } from 'react';
 import { useState } from 'react';
 import { useFetcher } from 'remix';
 import { useField } from 'remix-validated-form';
@@ -20,7 +27,10 @@ type FormSelectProps = {
   defaultSelectedLabel?: string;
 };
 
-type Option = { value: number; label: string };
+interface Option extends OptionBase {
+  label: string;
+  value: number;
+}
 
 export const FormAutocomplete = ({
   name,
@@ -72,16 +82,33 @@ export const FormAutocomplete = ({
       <input type="hidden" name={name} value={inputValue} />
       <Select
         id={name}
+        // @ts-ignore
         onBlur={validate}
+        selectedOptionStyle="check"
+        // @ts-ignore
         onChange={(option: Option) => {
           clearError();
-          setInputValue(option.value);
-          setValue(option);
+          if (option) {
+            setInputValue(option.value);
+            setValue(option);
+          }
         }}
         value={value}
         isLoading={isLoading}
         options={searchData}
         onInputChange={onInputChange}
+        chakraStyles={{
+          dropdownIndicator: (provided, state) => ({
+            ...provided,
+            bg: 'transparent',
+            px: 2,
+            cursor: 'inherit',
+          }),
+          indicatorSeparator: (provided) => ({
+            ...provided,
+            display: 'none',
+          }),
+        }}
         {...rest}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
