@@ -58,6 +58,7 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
             );
           }
         }}
+        maxWidth="400px"
         checkboxProps={{
           isChecked: isActive,
         }}

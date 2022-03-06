@@ -143,7 +143,7 @@ export default function ParticipantPrograms() {
 
   return (
     <>
-      <SimpleGrid minChildWidth="300px" spacing="6" alignItems="stretch">
+      <SimpleGrid minChildWidth="300px" spacing="6">
         {programs.map((program) => (
           <ProgramBox program={program} key={program.id} />
         ))}
