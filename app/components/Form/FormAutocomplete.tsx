@@ -1,14 +1,14 @@
+import type { SelectProps } from '@chakra-ui/react';
 import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  SelectProps,
-} from "@chakra-ui/react";
-import { Select } from "chakra-react-select";
-import { useState } from "react";
-import { useFetcher } from "remix";
-import { useField } from "remix-validated-form";
+} from '@chakra-ui/react';
+import { Select } from 'chakra-react-select';
+import { useState } from 'react';
+import { useFetcher } from 'remix';
+import { useField } from 'remix-validated-form';
 
 type FormSelectProps = {
   name: string;
@@ -16,7 +16,7 @@ type FormSelectProps = {
   isRequired?: boolean;
   helperText?: React.ReactNode;
   placeholder?: string;
-  searchFor: "school";
+  searchFor: 'school';
   defaultSelectedLabel?: string;
 };
 
@@ -33,7 +33,7 @@ export const FormAutocomplete = ({
 }: FormSelectProps & SelectProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
   const [inputValue, setInputValue] = useState<number | undefined>(
-    defaultValue
+    defaultValue,
   );
   const [value, setValue] = useState({
     value: defaultValue,
@@ -45,14 +45,15 @@ export const FormAutocomplete = ({
   let searchData: Option[];
   let isLoading: boolean = false;
 
+  // eslint-disable-next-line sonarjs/no-small-switch
   switch (searchFor) {
-    case "school": {
+    case 'school': {
       searchData =
         schoolsSearch.data?.map((school) => ({
           value: school.id,
           label: school.name,
         })) ?? [];
-      isLoading = schoolsSearch.state === "loading";
+      isLoading = schoolsSearch.state === 'loading';
       break;
     }
     default:
@@ -60,7 +61,7 @@ export const FormAutocomplete = ({
   }
 
   const onInputChange = (value: string) => {
-    if (searchFor === "school") {
+    if (searchFor === 'school') {
       return schoolsSearch.load(`/api/search/school?schoolName=${value}`);
     }
   };
@@ -68,7 +69,7 @@ export const FormAutocomplete = ({
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <input type="hidden" name={name} value={inputValue}></input>
+      <input type="hidden" name={name} value={inputValue} />
       <Select
         id={name}
         onBlur={validate}
