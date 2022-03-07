@@ -5,14 +5,8 @@ import {
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/react';
-import type {
-  GroupBase,
-  OptionBase,
-  PropsValue,
-  SingleValue,
-} from 'chakra-react-select';
+import type { OptionBase } from 'chakra-react-select';
 import { Select } from 'chakra-react-select';
-import type { FocusEventHandler } from 'react';
 import { useState } from 'react';
 import { useFetcher } from 'remix';
 import { useField } from 'remix-validated-form';

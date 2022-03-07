@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  chakra,
   Container,
   HStack,
   IconButton,
@@ -130,15 +131,17 @@ export function ProgramForm({
                         isRequired
                       />
                       <FormSelect
+                        instanceId="select-sex"
                         name="sex"
                         label="Sexo"
                         isRequired
                         placeholder="Seleccionar sexo"
-                      >
-                        <option value={ProgramSex.MALE}>Varones</option>
-                        <option value={ProgramSex.FEMALE}>Mujeres</option>
-                        <option value={ProgramSex.ALL}>Mixto</option>
-                      </FormSelect>
+                        options={[
+                          { label: 'Mujeres', value: ProgramSex.FEMALE },
+                          { label: 'Varones', value: ProgramSex.MALE },
+                          { label: 'Mixto', value: ProgramSex.ALL },
+                        ]}
+                      />
                     </FormStack>
                     <FormStack justifyContent="flex-start">
                       <FormInput
@@ -155,13 +158,16 @@ export function ProgramForm({
                         label="Edad desde"
                         type="number"
                         maxWidth="120px"
-                        rightElement={{
-                          pointerEvents: 'none',
-                          color: 'gray.500',
-                          fontSize: '0.8em',
-                          mr: 2,
-                          children: 'años',
-                        }}
+                        rightElement={
+                          <chakra.span
+                            pointerEvents="none"
+                            color="gray.500"
+                            fontSize="0.8em"
+                            mr={2}
+                          >
+                            años
+                          </chakra.span>
+                        }
                         isRequired
                       />
                       <FormInput
@@ -169,13 +175,16 @@ export function ProgramForm({
                         label="Edad hasta"
                         type="number"
                         maxWidth="120px"
-                        rightElement={{
-                          pointerEvents: 'none',
-                          color: 'gray.500',
-                          fontSize: '0.8em',
-                          mr: 2,
-                          children: 'años',
-                        }}
+                        rightElement={
+                          <chakra.span
+                            pointerEvents="none"
+                            color="gray.500"
+                            fontSize="0.8em"
+                            mr={2}
+                          >
+                            años
+                          </chakra.span>
+                        }
                         isRequired
                       />
                       <FormCheckbox
@@ -194,19 +203,21 @@ export function ProgramForm({
                     {daysIds.map((id, index) => (
                       <FormStack width="full" key={id}>
                         <FormSelect
+                          instanceId={`select-day-${id}`}
                           name={`programDays[${index}].day`}
                           label="Día"
                           isRequired
                           placeholder="Seleccionar día"
-                        >
-                          <option value={Weekdays.MONDAY}>Lunes</option>
-                          <option value={Weekdays.TUESDAY}>Martes</option>
-                          <option value={Weekdays.WEDNESDAY}>Miércoles</option>
-                          <option value={Weekdays.THURSDAY}>Jueves</option>
-                          <option value={Weekdays.FRIDAY}>Viernes</option>
-                          <option value={Weekdays.SATURDAY}>Sábado</option>
-                          <option value={Weekdays.SUNDAY}>Doming</option>
-                        </FormSelect>
+                          options={[
+                            { label: 'Lunes', value: Weekdays.MONDAY },
+                            { label: 'Martes', value: Weekdays.TUESDAY },
+                            { label: 'Miércoles', value: Weekdays.WEDNESDAY },
+                            { label: 'Jueves', value: Weekdays.THURSDAY },
+                            { label: 'Viernes', value: Weekdays.FRIDAY },
+                            { label: 'Sábado', value: Weekdays.SATURDAY },
+                            { label: 'Domingo', value: Weekdays.SUNDAY },
+                          ]}
+                        />
                         <FormInput
                           name={`programDays[${index}].fromTime`}
                           label="Hora Inicio"

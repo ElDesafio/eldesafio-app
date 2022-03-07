@@ -30,14 +30,6 @@ import { FormTextArea } from '../Form/FormTextArea';
 import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from '.prisma/client';
 
 const participantSchema = z.object({
-  // id: z.number(),
-  // medicalInsurance: z.string().nullable(),
-  // createdBy: z.number(),
-  // updatedBy: z.number(),
-  // createdAt: z.date(),
-  // updatedAt: z.date(),
-  // active: z.boolean(),
-  // surveyBiographyId: z.number().nullable(),
   firstName: z.string().nonempty('Nombre no puede estar vacío'),
   lastName: z.string().nonempty('Apellido no puede estar vacío'),
   birthday: z.string().nonempty('Fecha de nacimiento no puede estar vacía'),
@@ -228,15 +220,22 @@ export function ParticipantForm({
                       <FormInput name="firstName" label="Nombre" isRequired />
                       <FormInput name="lastName" label="Apellido" isRequired />
                       <FormSelect
+                        instanceId="select-sex"
                         name="sex"
                         label="Sexo"
                         placeholder="Seleccionar sexo"
+                        options={[
+                          {
+                            label: 'Varón',
+                            value: Sex.MALE,
+                          },
+                          {
+                            label: 'Mujer',
+                            value: Sex.FEMALE,
+                          },
+                        ]}
                         isRequired
-                      >
-                        <option value={Sex.MALE}>Varón</option>
-                        <option value={Sex.FEMALE}>Mujer</option>
-                        <option value={Sex.OTHER}>Otro</option>
-                      </FormSelect>
+                      />
                     </FormStack>
                     <FormStack width="full">
                       <FormInput
@@ -256,17 +255,29 @@ export function ParticipantForm({
                       <FormInput name="address" label="Dirección" />
                       <FormInput name="city" label="Ciudad" />
                       <FormSelect
+                        instanceId="select-neighborhood"
                         name="neighborhood"
                         label="Barrio"
                         placeholder="Seleccionar barrio"
-                      >
-                        <option value={Neighborhood.LA_LATA}>La Lata</option>
-                        <option value={Neighborhood.MORENO}>Moreno</option>
-                        <option value={Neighborhood.SAN_FRANCISQUITO}>
-                          San Francisquito
-                        </option>
-                        <option value={Neighborhood.OTHER}>Otro</option>
-                      </FormSelect>
+                        options={[
+                          {
+                            label: 'La Lata',
+                            value: Neighborhood.LA_LATA,
+                          },
+                          {
+                            label: 'Moreno',
+                            value: Neighborhood.MORENO,
+                          },
+                          {
+                            label: 'San Francisquito',
+                            value: Neighborhood.SAN_FRANCISQUITO,
+                          },
+                          {
+                            label: 'Otro',
+                            value: Neighborhood.OTHER,
+                          },
+                        ]}
+                      />
                     </FormStack>
                     <FormStack width="full">
                       <FormInput
@@ -287,17 +298,29 @@ export function ParticipantForm({
                         Whatsapp
                       </FormCheckbox>
                       <FormSelect
+                        instanceId="select-phone1belongsTo"
                         name="phone1BelongsTo"
                         label="Pertenece a"
-                        placeholder="Seleccionar a quien pertenece"
-                      >
-                        <option value={PhoneBelongsTo.SELF}>
-                          Participante
-                        </option>
-                        <option value={PhoneBelongsTo.MOTHER}>Madre</option>
-                        <option value={PhoneBelongsTo.FATHER}>Padre</option>
-                        <option value={PhoneBelongsTo.TUTOR}>Tutor/Otro</option>
-                      </FormSelect>
+                        placeholder="Seleccionar..."
+                        options={[
+                          {
+                            label: 'Participante',
+                            value: PhoneBelongsTo.SELF,
+                          },
+                          {
+                            label: 'Madre',
+                            value: PhoneBelongsTo.MOTHER,
+                          },
+                          {
+                            label: 'Padre',
+                            value: PhoneBelongsTo.FATHER,
+                          },
+                          {
+                            label: 'Tutor/Otro',
+                            value: PhoneBelongsTo.TUTOR,
+                          },
+                        ]}
+                      />
                     </FormStack>
                     <FormStack width="full">
                       <FormInput name="phone2" label="Teléfono 2" />
@@ -311,17 +334,29 @@ export function ParticipantForm({
                         Whatsapp
                       </FormCheckbox>
                       <FormSelect
+                        instanceId="select-phone2belongsTo"
                         name="phone2BelongsTo"
                         label="Pertenece a"
-                        placeholder="Seleccionar a quien pertenece"
-                      >
-                        <option value={PhoneBelongsTo.SELF}>
-                          Participante
-                        </option>
-                        <option value={PhoneBelongsTo.MOTHER}>Madre</option>
-                        <option value={PhoneBelongsTo.FATHER}>Padre</option>
-                        <option value={PhoneBelongsTo.TUTOR}>Tutor/Otro</option>
-                      </FormSelect>
+                        placeholder="Seleccionar..."
+                        options={[
+                          {
+                            label: 'Participante',
+                            value: PhoneBelongsTo.SELF,
+                          },
+                          {
+                            label: 'Madre',
+                            value: PhoneBelongsTo.MOTHER,
+                          },
+                          {
+                            label: 'Padre',
+                            value: PhoneBelongsTo.FATHER,
+                          },
+                          {
+                            label: 'Tutor/Otro',
+                            value: PhoneBelongsTo.TUTOR,
+                          },
+                        ]}
+                      />
                     </FormStack>
                   </VStack>
                 </FieldGroup>
@@ -344,27 +379,61 @@ export function ParticipantForm({
                         placeholder="Buscar..."
                       />
                       <FormSelect
+                        instanceId="select-schoolyear"
                         name="schoolYear"
                         label="Grado/Año"
                         placeholder="Seleccionar grado/año"
-                      >
-                        <optgroup label="Grado">
-                          <option value={SchoolYear.GRADE_1}>1º grado</option>
-                          <option value={SchoolYear.GRADE_2}>2º grado</option>
-                          <option value={SchoolYear.GRADE_3}>3º grado</option>
-                          <option value={SchoolYear.GRADE_4}>4º grado</option>
-                          <option value={SchoolYear.GRADE_5}>5º grado</option>
-                          <option value={SchoolYear.GRADE_6}>6º grado</option>
-                          <option value={SchoolYear.GRADE_7}>7º grado</option>
-                        </optgroup>
-                        <optgroup label="Año">
-                          <option value={SchoolYear.YEAR_1}>1º año</option>
-                          <option value={SchoolYear.YEAR_2}>2º año</option>
-                          <option value={SchoolYear.YEAR_3}>3º año</option>
-                          <option value={SchoolYear.YEAR_4}>4º año</option>
-                          <option value={SchoolYear.YEAR_5}>5º año</option>
-                        </optgroup>
-                      </FormSelect>
+                        options={[
+                          {
+                            label: '1º grado',
+                            value: SchoolYear.GRADE_1,
+                          },
+                          {
+                            label: '2º grado',
+                            value: SchoolYear.GRADE_2,
+                          },
+                          {
+                            label: '3º grado',
+                            value: SchoolYear.GRADE_3,
+                          },
+                          {
+                            label: '4º grado',
+                            value: SchoolYear.GRADE_4,
+                          },
+                          {
+                            label: '5º grado',
+                            value: SchoolYear.GRADE_5,
+                          },
+                          {
+                            label: '6º grado',
+                            value: SchoolYear.GRADE_6,
+                          },
+                          {
+                            label: '7º grado',
+                            value: SchoolYear.GRADE_7,
+                          },
+                          {
+                            label: '1º año',
+                            value: SchoolYear.YEAR_1,
+                          },
+                          {
+                            label: '2º año',
+                            value: SchoolYear.YEAR_2,
+                          },
+                          {
+                            label: '3º año',
+                            value: SchoolYear.YEAR_3,
+                          },
+                          {
+                            label: '4º año',
+                            value: SchoolYear.YEAR_4,
+                          },
+                          {
+                            label: '5º año',
+                            value: SchoolYear.YEAR_5,
+                          },
+                        ]}
+                      />
                     </FormStack>
                   </VStack>
                 </FieldGroup>

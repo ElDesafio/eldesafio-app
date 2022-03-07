@@ -11,5 +11,5 @@ module.exports = {
   // serverBuildDirectory: 'server/build',
   // devServerPort: 8002,
   // ignoredRouteFiles: ['.*'],
-  // sourcemap: true,
+  sourcemap: true,
 };

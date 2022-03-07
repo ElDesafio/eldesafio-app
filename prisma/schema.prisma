@@ -22,7 +22,19 @@ model User {
   id                           Int                      @id @default(autoincrement())
   status                       UserStatus               @default(value: INVITED)
   email                        String                   @unique
-  name                         String
+  firstName                    String
+  lastName                     String
+  birthday                     String?
+  city                         String?
+  address                      String?
+  picture                      String?
+  phone1                       String?
+  phone2                       String?
+  twitter                      String?
+  facebook                     String?
+  linkedin                     String?
+  skype                        String?
+  biography                    String?
   createdAt                    DateTime                 @default(now()) @db.Timestamptz
   updatedAt                    DateTime                 @default(now()) @updatedAt @db.Timestamptz
   createdParticipants          Participant[]            @relation("CreatedParticipantByUser")
@@ -38,6 +50,22 @@ model User {
   updatedParticipantsHealth    ParticipantHealth[]      @relation("UpdatedParticipantHealthByUser")
   createdSurveyBiography       SurveyBiography[]        @relation("CreatedSurveyBiographyByUser")
   updatedSurveyBiography       SurveyBiography[]        @relation("UpdatedSurveyBiographyByUser")
+  roles                        UserRoles[]
+}
+
+enum Roles {
+  ADMIN
+  MENTOR
+  FACILITATOR
+  FACILITATOR_VOLUNTEER
+}
+
+model UserRoles {
+  userId Int
+  user   User  @relation(fields: [userId], references: [id])
+  role   Roles
+
+  @@id([userId, role])
 }
 
 enum Sex {

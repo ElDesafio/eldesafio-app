@@ -239,20 +239,22 @@ export function ParticipantHealthForm({
             <VStack width="full" spacing="6" alignItems="flex-start">
               <FormStack width={{ base: '100%', md: '30%' }}>
                 <FormSelect
+                  instanceId="select-bloodtype"
                   name="bloodType"
                   label="Grupo sanguíneo"
                   isRequired
                   placeholder="Grupo sanguíneo..."
-                >
-                  <option value={BloodType.A_POSITIVE}>A+</option>
-                  <option value={BloodType.A_NEGATIVE}>A-</option>
-                  <option value={BloodType.B_POSITIVE}>B+</option>
-                  <option value={BloodType.B_NEGATIVE}>B+</option>
-                  <option value={BloodType.AB_POSITIVE}>AB+</option>
-                  <option value={BloodType.AB_NEGATIVE}>AB+</option>
-                  <option value={BloodType.ZERO_POSITIVE}>0+</option>
-                  <option value={BloodType.ZERO_NEGATIVE}>0+</option>
-                </FormSelect>
+                  options={[
+                    { value: BloodType.A_POSITIVE, label: 'A+' },
+                    { value: BloodType.A_NEGATIVE, label: 'A-' },
+                    { value: BloodType.B_POSITIVE, label: 'B+' },
+                    { value: BloodType.B_NEGATIVE, label: 'B+' },
+                    { value: BloodType.AB_POSITIVE, label: 'AB+' },
+                    { value: BloodType.AB_NEGATIVE, label: 'AB+' },
+                    { value: BloodType.ZERO_POSITIVE, label: '0+' },
+                    { value: BloodType.ZERO_NEGATIVE, label: '0+' },
+                  ]}
+                />
               </FormStack>
               <FormStack width="full">
                 <FormRadioGroup

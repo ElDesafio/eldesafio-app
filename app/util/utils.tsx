@@ -1,5 +1,5 @@
 import { Text } from '@chakra-ui/react';
-import { BloodType, FormAnswerOptions } from '@prisma/client';
+import { BloodType, FormAnswerOptions, Roles } from '@prisma/client';
 import { DateTime } from 'luxon';
 import type React from 'react';
 import { useSearchParams } from 'remix';
@@ -67,6 +67,35 @@ export function getBloodTypeName(bloodType: BloodType) {
       return '0+';
     default:
       throw new Error('Unknown blood type');
+  }
+}
+
+export function getUserRoleName(role: Roles, short: boolean = false) {
+  if (short) {
+    switch (role) {
+      case Roles.ADMIN:
+        return 'Admin';
+      case Roles.FACILITATOR:
+        return 'Facilitador';
+      case Roles.FACILITATOR_VOLUNTEER:
+        return 'Voluntario';
+      case Roles.MENTOR:
+        return 'Mentor';
+      default:
+        throw new Error('Unknown role');
+    }
+  }
+  switch (role) {
+    case Roles.ADMIN:
+      return 'Administrador';
+    case Roles.FACILITATOR:
+      return 'Facilitador';
+    case Roles.FACILITATOR_VOLUNTEER:
+      return 'Facilitador Voluntario';
+    case Roles.MENTOR:
+      return 'Mentor';
+    default:
+      throw new Error('Unknown role');
   }
 }
 

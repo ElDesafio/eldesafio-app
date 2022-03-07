@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { Textarea } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import type { ToolbarItemUnion } from '@remirror/react';
 import {
@@ -137,23 +137,25 @@ export const MarkdownEditor: FC<MarkdownEditorProps> = ({
     <ResetStyles noEditable={!editable}>
       <AllStyledComponent>
         <ThemeProvider>
-          <ClientOnly>
-            <Remirror
-              manager={manager}
-              autoFocus
-              initialContent={initialContent}
-              editable={editable}
-            >
-              {editable && (
-                <Toolbar
-                  items={toolbarItems}
-                  refocusEditor
-                  label="Top Toolbar"
-                />
-              )}
-              <EditorComponent />
-              {children}
-            </Remirror>
+          <ClientOnly fallback={<Textarea />}>
+            {() => (
+              <Remirror
+                manager={manager}
+                autoFocus
+                initialContent={initialContent}
+                editable={editable}
+              >
+                {editable && (
+                  <Toolbar
+                    items={toolbarItems}
+                    refocusEditor
+                    label="Top Toolbar"
+                  />
+                )}
+                <EditorComponent />
+                {children}
+              </Remirror>
+            )}
           </ClientOnly>
         </ThemeProvider>
       </AllStyledComponent>

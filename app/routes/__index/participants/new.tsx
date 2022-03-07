@@ -1,7 +1,7 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { ActionFunction } from 'remix';
-import { redirect } from 'remix';
-import { validationError, withZod } from 'remix-validated-form';
+import { json, redirect } from 'remix';
+import { validationError } from 'remix-validated-form';
 
 import {
   ParticipantForm,
@@ -14,6 +14,8 @@ export const action: ActionFunction = async ({ request }) => {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
+
+  if (!user) throw json('Unauthorized', { status: 403 });
 
   const fieldValues = participantFormValidator.validate(
     Object.fromEntries(await request.formData()),
