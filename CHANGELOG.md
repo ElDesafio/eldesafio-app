@@ -1,3 +1,18 @@
+# v0.0.11 (Mon Mar 07 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- create user ([@lucascurti](https://github.com/lucascurti))
+- update schema ([@lucascurti](https://github.com/lucascurti))
+- add loading ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.10 (Sun Mar 06 2022)
 
 #### ⚠️ Pushed to `main`
