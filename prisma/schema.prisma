@@ -12,8 +12,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserStatus {
+  INVITED
+  ACTIVE
+  INACTIVE
+}
+
 model User {
   id                           Int                      @id @default(autoincrement())
+  status                       UserStatus               @default(value: INVITED)
   email                        String                   @unique
   name                         String
   createdAt                    DateTime                 @default(now()) @db.Timestamptz
@@ -67,9 +74,14 @@ enum SchoolYear {
   YEAR_5
 }
 
+enum ParticipantYearStatus {
+  ACTIVE
+  INACTIVE
+  WAITING
+}
+
 model Participant {
   id                         Int                      @id @default(autoincrement())
-  active                     Boolean                  @default(false)
   firstName                  String
   lastName                   String
   birthday                   String
@@ -104,6 +116,16 @@ model Participant {
   programs                   ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByParticipant")
   schoolId                   Int?
   ParticipantHealth          ParticipantHealth?
+  ParticipantStatus          ParticipantStatus[]
+}
+
+model ParticipantStatus {
+  year          Int
+  participantId Int
+  status        ParticipantYearStatus
+  participant   Participant           @relation(fields: [participantId], references: [id])
+
+  @@id([year, participantId])
 }
 
 enum BloodType {
