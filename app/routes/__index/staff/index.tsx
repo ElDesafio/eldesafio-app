@@ -43,7 +43,7 @@ export const loader: LoaderFunction = async () => {
 
 export default function Participants() {
   const users = useLoaderData<GetUsers>();
-  console.log(users);
+
   return (
     <>
       <Box

@@ -37,9 +37,6 @@ async function getParticipantProgramsByYear(
     ).years,
   );
 
-  console.log('ageAtJune30', ageAtJune30);
-  console.log('ageAtDec31', ageAtDec31);
-
   return await db.program.findMany({
     where: {
       year: year,
