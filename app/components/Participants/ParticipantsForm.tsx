@@ -373,6 +373,7 @@ export function ParticipantForm({
                     <FormStack width="full">
                       <FormAutocomplete
                         searchFor="school"
+                        instanceId="select-school"
                         defaultSelectedLabel={schoolName}
                         name="schoolId"
                         label="Nombre Escuela"

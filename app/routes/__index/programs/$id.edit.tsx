@@ -53,7 +53,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect('/programs');
 };
 
-export default function EditParticipant() {
+export default function EditProgram() {
   const program = useLoaderData<Program>();
   return (
     <>

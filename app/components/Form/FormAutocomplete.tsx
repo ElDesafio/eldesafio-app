@@ -19,6 +19,7 @@ type FormSelectProps = {
   placeholder?: string;
   searchFor: 'school';
   defaultSelectedLabel?: string;
+  instanceId?: string;
 };
 
 interface Option extends OptionBase {
@@ -33,6 +34,7 @@ export const FormAutocomplete = ({
   helperText,
   searchFor,
   defaultSelectedLabel,
+  instanceId,
   ...rest
 }: FormSelectProps & SelectProps) => {
   const { validate, clearError, defaultValue, error } = useField(name);
@@ -73,9 +75,10 @@ export const FormAutocomplete = ({
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <input type="hidden" name={name} value={inputValue} />
+      <input type="hidden" name={name} value={inputValue ?? ''} />
       <Select
         id={name}
+        instanceId={instanceId}
         // @ts-ignore
         onBlur={validate}
         selectedOptionStyle="check"

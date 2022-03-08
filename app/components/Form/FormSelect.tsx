@@ -8,7 +8,12 @@ import type { GroupBase } from 'chakra-react-select';
 import { Select } from 'chakra-react-select';
 import { useField } from 'remix-validated-form';
 
-type FormSelectProps<Option> = {
+type BaseOption = {
+  label: string;
+  value: string | number;
+};
+
+type FormSelectProps<Option extends BaseOption> = {
   name: string;
   label: string;
   isRequired?: boolean;
@@ -19,7 +24,7 @@ type FormSelectProps<Option> = {
   instanceId?: string;
 };
 
-export function FormSelect<Option>({
+export function FormSelect<Option extends BaseOption>({
   name,
   label,
   isRequired,
@@ -30,6 +35,20 @@ export function FormSelect<Option>({
   ...rest
 }: FormSelectProps<Option>) {
   const { validate, clearError, defaultValue, error } = useField(name);
+
+  const cleanDefaultValue = defaultValue
+    ? options.filter((option) => {
+        if (typeof defaultValue === 'string' && 'value' in option) {
+          const defaultValuesArray = defaultValue
+            .split(',')
+            .map((value) =>
+              typeof value === 'string' ? value : Number(value),
+            );
+          return defaultValuesArray.includes(option.value);
+        }
+      })
+    : defaultValue;
+
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
@@ -43,7 +62,7 @@ export function FormSelect<Option>({
         // @ts-ignore
         onBlur={validate}
         onChange={clearError}
-        defaultValue={defaultValue}
+        defaultValue={cleanDefaultValue}
         chakraStyles={{
           dropdownIndicator: (provided, state) => ({
             ...provided,
