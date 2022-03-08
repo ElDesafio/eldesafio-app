@@ -1,28 +1,36 @@
+import type { UseMenuButtonProps } from '@chakra-ui/react';
 import {
   Avatar,
   Box,
+  Button,
+  chakra,
   Flex,
   HStack,
   Menu,
   MenuItem,
   MenuList,
   Text,
-  useMenuButton,
-  UseMenuButtonProps,
   useColorModeValue as mode,
-} from '@chakra-ui/react'
-import * as React from 'react'
+  useMenuButton,
+} from '@chakra-ui/react';
+import type { User } from '@prisma/client';
+import * as React from 'react';
+import { Form } from 'remix';
 
-const UserAvatar = () => (
-  <Avatar
-    size="sm"
-    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    name="Manny Brooke"
-  />
-)
+const UserAvatar = ({
+  picture,
+  name,
+}: {
+  picture: string | null;
+  name: string;
+}) => <Avatar size="sm" src={picture} name={name} />;
 
-const ProfileMenuButton = (props: UseMenuButtonProps) => {
-  const buttonProps = useMenuButton(props)
+type ProfileMenuButtonProps = UseMenuButtonProps & {
+  user: User;
+};
+
+const ProfileMenuButton = ({ user, ...rest }: ProfileMenuButtonProps) => {
+  const buttonProps = useMenuButton(rest);
   return (
     <Flex
       {...buttonProps}
@@ -33,30 +41,49 @@ const ProfileMenuButton = (props: UseMenuButtonProps) => {
       _focus={{ shadow: 'outline' }}
     >
       <Box srOnly>Open user menu</Box>
-      <UserAvatar />
+      <UserAvatar
+        name={`${user.firstName} ${user.lastName}`}
+        picture={user.picture}
+      />
     </Flex>
-  )
-}
+  );
+};
 
-export const ProfileDropdown = () => (
-  <Menu>
-    <ProfileMenuButton />
-    <MenuList rounded="md" shadow="lg" py="1" color={mode('gray.600', 'inherit')} fontSize="sm">
-      <HStack px="3" py="4">
-        <UserAvatar />
-        <Box lineHeight="1">
-          <Text fontWeight="semibold">Manny Broke</Text>
-          <Text mt="1" fontSize="xs" color="gray.500">
-            manny@chakra-ui.com
-          </Text>
-        </Box>
-      </HStack>
-      <MenuItem fontWeight="medium">Your Profile</MenuItem>
-      <MenuItem fontWeight="medium">Feedback & Support</MenuItem>
-      <MenuItem fontWeight="medium">Account Settings</MenuItem>
-      <MenuItem fontWeight="medium" color={mode('red.500', 'red.300')}>
-        Sign out
-      </MenuItem>
-    </MenuList>
-  </Menu>
-)
+export const ProfileDropdown = ({ user }: { user: User }) => {
+  console.log('user in dropdown', user);
+  return (
+    <Menu>
+      <ProfileMenuButton user={user} />
+      <MenuList
+        rounded="md"
+        shadow="lg"
+        py="1"
+        color={mode('gray.600', 'inherit')}
+        fontSize="sm"
+      >
+        <HStack px="3" py="4">
+          <UserAvatar
+            name={`${user.firstName} ${user.lastName}`}
+            picture={user.picture}
+          />
+          <Box lineHeight="1">
+            <Text fontWeight="semibold">
+              {user.firstName} {user.lastName}
+            </Text>
+            <Text mt="1" fontSize="xs" color="gray.500">
+              {user.email}
+            </Text>
+          </Box>
+        </HStack>
+        <MenuItem fontWeight="medium">Editar Perfil</MenuItem>
+        <MenuItem fontWeight="medium" color={mode('red.500', 'red.300')}>
+          <Form method="post" action="/logout">
+            <chakra.span as={'button'} fontWeight="medium">
+              Cerrar Sesión
+            </chakra.span>
+          </Form>
+        </MenuItem>
+      </MenuList>
+    </Menu>
+  );
+};

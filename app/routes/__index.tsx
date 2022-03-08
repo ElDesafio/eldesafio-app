@@ -4,6 +4,7 @@ import {
   Select,
   useColorModeValue as mode,
 } from '@chakra-ui/react';
+import type { User } from '@prisma/client';
 import { range } from 'lodash';
 import { DateTime } from 'luxon';
 import type { LoaderFunction } from 'remix';
@@ -14,23 +15,24 @@ import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
 import { NavMenu } from '~/components/NavMenu';
 import { ProfileDropdown } from '~/components/ProfileDropdown';
 import { useMobileMenuState } from '~/hooks/useMobileMenuState';
-import type { User } from '~/models/user';
 import { authenticator } from '~/services/auth.server';
 import { useSelectedYear } from '~/util/utils';
 
-type RouteData = { user: User };
-
 export let loader: LoaderFunction = async ({ request }) => {
-  return await authenticator.isAuthenticated(request, {
+  const user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
+  console.log(user);
+  return user;
 };
 
 // Empty React component required by Remix
 export default function Dashboard() {
-  let { user } = useLoaderData<RouteData>();
+  let user = useLoaderData<User>();
   let [, setSearchParams] = useSearchParams();
   let selectedYear = useSelectedYear();
+
+  console.log(user);
 
   // use the user to render the UI of your private route
   const { isMenuOpen, toggle } = useMobileMenuState();
@@ -91,7 +93,7 @@ export default function Dashboard() {
               ))}
             </Select>
 
-            <ProfileDropdown />
+            <ProfileDropdown user={user} />
           </HStack>
         </Flex>
       </Flex>
