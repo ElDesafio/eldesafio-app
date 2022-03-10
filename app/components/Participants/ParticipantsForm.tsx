@@ -11,6 +11,7 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from '@prisma/client';
 import { useState } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
 import { useNavigate, useTransition } from 'remix';
@@ -27,7 +28,6 @@ import { schemaCheckbox } from '~/util/utils';
 
 import { FormAutocomplete } from '../Form/FormAutocomplete';
 import { FormTextArea } from '../Form/FormTextArea';
-import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from '.prisma/client';
 
 const participantSchema = z.object({
   firstName: z.string().nonempty('Nombre no puede estar vacío'),

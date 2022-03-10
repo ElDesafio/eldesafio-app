@@ -11,6 +11,7 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import { Roles } from '@prisma/client';
 import { useState } from 'react';
 import { FaFacebookF, FaLinkedinIn, FaSkype, FaTwitter } from 'react-icons/fa';
 import { HiCloudUpload } from 'react-icons/hi';
@@ -26,7 +27,6 @@ import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
 import { getUserRoleName } from '~/util/utils';
 
 import { FormRichTextEditor } from '../Form/FormRichTextEditor';
-import { Roles } from '.prisma/client';
 
 const zStringOptional = z.preprocess(
   (value) => (value === '' ? null : value),

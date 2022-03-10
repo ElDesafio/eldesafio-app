@@ -11,15 +11,14 @@ import {
   Td,
   Tr,
 } from '@chakra-ui/react';
+import type { Participant } from '@prisma/client';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
-import styles from '~/css/participant-general.css';
 import { db } from '~/services/db.server';
+import styles from '~/styles/participant-general.css';
 import { getAge, getFormattedDate } from '~/util/utils';
-
-import type { Participant } from '.prisma/client';
 
 export function links() {
   return [

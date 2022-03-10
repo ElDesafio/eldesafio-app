@@ -5,7 +5,7 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { LoaderFunction } from '@remix-run/server-runtime';
+import type { LoaderFunction } from 'remix';
 import { Outlet, useLoaderData, useLocation, useResolvedPath } from 'remix';
 import { z } from 'zod';
 
