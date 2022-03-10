@@ -17,7 +17,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { Prisma, UserStatus } from '@prisma/client';
+import type { UserStatus } from '@prisma/client';
 import { Roles } from '@prisma/client';
 import { MdEdit } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
@@ -25,9 +25,16 @@ import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
-import { db } from '~/services/db.server';
+import { authenticator } from '~/services/auth.server';
+import type { GetUser } from '~/services/users.service';
+import { getLoggedInUser, getUser } from '~/services/users.service';
 import styles from '~/styles/user-general.css';
-import { getAge, getFormattedDate, getUserRoleName } from '~/util/utils';
+import {
+  getAge,
+  getFormattedDate,
+  getUserRoleName,
+  isAdmin,
+} from '~/util/utils';
 
 export function links() {
   return [
@@ -36,15 +43,6 @@ export function links() {
       href: styles,
     },
   ];
-}
-
-export async function getUser(id: number) {
-  return await db.user.findUnique({
-    where: { id },
-    include: {
-      roles: true,
-    },
-  });
 }
 
 function userStatusHelper(status: UserStatus) {
@@ -64,16 +62,27 @@ function userStatusHelper(status: UserStatus) {
   }
 }
 
-export type GetUser = Prisma.PromiseReturnType<typeof getUser>;
-
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
+  let authUser = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
-  return await getUser(Number(id));
+  const user = await getUser(Number(id));
+  const loggedinUser = await getLoggedInUser(authUser.id);
+
+  if (!loggedinUser) {
+    throw new Error('User not found');
+  }
+
+  const isLoggedinUserAdmin = isAdmin(loggedinUser);
+
+  return { user, isLoggedinUserAdmin };
 };
 
 export default function UserGeneral() {
-  const user = useLoaderData<GetUser>();
+  const { user, isLoggedinUserAdmin } =
+    useLoaderData<{ user: GetUser; isLoggedinUserAdmin: boolean }>();
 
   if (!user) {
     throw new Error("User doesn't exist");
@@ -93,11 +102,13 @@ export default function UserGeneral() {
               {user.firstName} {user.lastName}
             </Heading>
             <Spacer />
-            <Link to="edit">
-              <Button leftIcon={<MdEdit />} colorScheme="blue">
-                Editar
-              </Button>
-            </Link>
+            {isLoggedinUserAdmin && (
+              <Link to="edit">
+                <Button leftIcon={<MdEdit />} colorScheme="blue">
+                  Editar
+                </Button>
+              </Link>
+            )}
           </Flex>
         </Container>
       </Box>
@@ -231,12 +242,13 @@ export default function UserGeneral() {
                   <Avatar size="2xl" src={user.picture || undefined} />
                   <Box>
                     <HStack spacing="5">
-                      <Button
-                        variant={userStatusHelper(user.status).variant}
+                      <Tag
+                        size="lg"
+                        variant="solid"
                         colorScheme={userStatusHelper(user.status).colorScheme}
                       >
                         {userStatusHelper(user.status).label}
-                      </Button>
+                      </Tag>
                     </HStack>
                   </Box>
                 </Stack>

@@ -11,7 +11,7 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import { Roles } from '@prisma/client';
+import { Roles, UserStatus } from '@prisma/client';
 import { useState } from 'react';
 import { FaFacebookF, FaLinkedinIn, FaSkype, FaTwitter } from 'react-icons/fa';
 import { HiCloudUpload } from 'react-icons/hi';
@@ -24,7 +24,7 @@ import { FormInput } from '~/components/Form/FormInput';
 import { FormSelect } from '~/components/Form/FormSelect';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
-import { getUserRoleName } from '~/util/utils';
+import { getUserRoleName, getUserStatusName } from '~/util/utils';
 
 import { FormRichTextEditor } from '../Form/FormRichTextEditor';
 
@@ -36,6 +36,11 @@ const zStringOptional = z.preprocess(
 const userSchema = z.object({
   firstName: z.string().nonempty('Nombre no puede estar vacío'),
   lastName: z.string().nonempty('Apellido no puede estar vacío'),
+  status: z.nativeEnum(UserStatus, {
+    errorMap: () => ({
+      message: 'Status no puede estar vacío',
+    }),
+  }),
   email: z
     .string()
     .email('El correo no es válido')
@@ -69,6 +74,9 @@ export function UserForm({
 }) {
   const [uploadedImage, setUploadedImage] = useState<string>(
     defaultValues?.picture || '',
+  );
+  const [status, setStatus] = useState(
+    defaultValues?.status || UserStatus.INACTIVE,
   );
   let navigate = useNavigate();
 
@@ -188,6 +196,40 @@ export function UserForm({
                     </Box>
                   </Stack>
                 </FieldGroup>
+                <FieldGroup title="Status">
+                  <FormStack width="full" maxWidth="400px">
+                    <FormSelect
+                      instanceId="status-select"
+                      helperText="Los usuarios inactivos no pueden acceder a la app. Los invitados son usuarios que todavía no accedieron a la app."
+                      name="status"
+                      label="Status"
+                      placeholder="Seleccionar rol(es)"
+                      onChange={(option) => setStatus((option as any).value)}
+                      color={
+                        status === UserStatus.ACTIVE
+                          ? 'blue'
+                          : status === UserStatus.INACTIVE
+                          ? 'red'
+                          : 'gray'
+                      }
+                      options={[
+                        {
+                          label: 'Activo',
+                          value: UserStatus.ACTIVE,
+                        },
+                        {
+                          label: 'Inactivo',
+                          value: UserStatus.INACTIVE,
+                        },
+                        {
+                          label: 'Invitado',
+                          value: UserStatus.INVITED,
+                        },
+                      ]}
+                    />
+                  </FormStack>
+                </FieldGroup>
+
                 <FieldGroup title="Datos Personales">
                   <VStack width="full" spacing="6">
                     <FormStack width="full">

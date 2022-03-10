@@ -28,8 +28,13 @@ authenticator.use(
     // should return the user instance
     async ({ email }: { email: string }) => {
       const user = await db.user.findUnique({ where: { email } });
-      console.log(user);
       if (!user) throw new AuthorizationError('User not found');
+      if (user.status === 'INVITED') {
+        await db.user.update({
+          where: { id: user.id },
+          data: { status: 'ACTIVE' },
+        });
+      }
       return user;
     },
   ),

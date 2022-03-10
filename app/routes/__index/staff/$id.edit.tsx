@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect('/staff');
+  return redirect(`/staff/${id}`);
 };
 
 type UserWithRoles = User & {

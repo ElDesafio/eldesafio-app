@@ -1,4 +1,5 @@
 import { Text } from '@chakra-ui/react';
+import type { User, UserRoles, UserStatus } from '@prisma/client';
 import { BloodType, FormAnswerOptions, Roles } from '@prisma/client';
 import { DateTime } from 'luxon';
 import type React from 'react';
@@ -70,6 +71,20 @@ export function getBloodTypeName(bloodType: BloodType) {
   }
 }
 
+export function getUserStatusName(status: UserStatus) {
+  switch (status) {
+    case 'ACTIVE':
+      return 'Activo';
+    case 'INACTIVE':
+      return 'Inactivo';
+    case 'INVITED':
+      return 'Invitado';
+
+    default:
+      throw new Error('Unknown status');
+  }
+}
+
 export function getUserRoleName(role: Roles, short: boolean = false) {
   if (short) {
     switch (role) {
@@ -132,4 +147,32 @@ export function convertStringToNumberForZod(value: unknown) {
   return typeof value === 'string' && value.length > 0
     ? parseInt(value)
     : undefined;
+}
+
+type UserForRoleCheck = Partial<User> & { roles: UserRoles[] };
+
+function checkUserAndRolesExist(user: UserForRoleCheck) {
+  if (!user) {
+    throw new Error('User is undefined. Did you forget to pass it?');
+  }
+  if (!user.roles) {
+    throw new Error("User doesn't have any roles");
+  }
+}
+
+export function isAdmin(user: UserForRoleCheck) {
+  checkUserAndRolesExist(user);
+  return user?.roles?.some((role) => role.role === Roles.ADMIN);
+}
+export function isFacilitator(user: UserForRoleCheck) {
+  checkUserAndRolesExist(user);
+  return user?.roles?.some((role) => role.role === Roles.FACILITATOR);
+}
+export function isFacilitatorVolunteer(user: UserForRoleCheck) {
+  checkUserAndRolesExist(user);
+  return user?.roles?.some((role) => role.role === Roles.FACILITATOR_VOLUNTEER);
+}
+export function isMentor(user: UserForRoleCheck) {
+  checkUserAndRolesExist(user);
+  return user?.roles?.some((role) => role.role === Roles.MENTOR);
 }

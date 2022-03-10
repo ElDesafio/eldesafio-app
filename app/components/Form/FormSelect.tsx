@@ -4,7 +4,12 @@ import {
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/react';
-import type { GroupBase } from 'chakra-react-select';
+import type {
+  ActionMeta,
+  GroupBase,
+  MultiValue,
+  SingleValue,
+} from 'chakra-react-select';
 import { Select } from 'chakra-react-select';
 import { useField } from 'remix-validated-form';
 
@@ -22,6 +27,11 @@ type FormSelectProps<Option extends BaseOption> = {
   isMulti?: boolean;
   options: Option[];
   instanceId?: string;
+  color?: 'red' | 'blue' | 'green' | 'yellow' | 'orange' | 'purple' | 'gray';
+  onChange?: (
+    newValue: SingleValue<Option> | MultiValue<Option>,
+    actionMeta: ActionMeta<Option>,
+  ) => void;
 };
 
 export function FormSelect<Option extends BaseOption>({
@@ -32,6 +42,8 @@ export function FormSelect<Option extends BaseOption>({
   options,
   isMulti = false,
   instanceId,
+  onChange,
+  color,
   ...rest
 }: FormSelectProps<Option>) {
   const { validate, clearError, defaultValue, error } = useField(name);
@@ -49,6 +61,27 @@ export function FormSelect<Option extends BaseOption>({
       })
     : defaultValue;
 
+  let controlBg: string | undefined;
+  let controlColor: string | undefined;
+
+  switch (color) {
+    case 'red':
+      controlBg = 'red.500';
+      controlColor = 'white';
+      break;
+    case 'blue':
+      controlBg = 'blue.500';
+      controlColor = 'white';
+      break;
+    case 'gray':
+      controlBg = 'gray.500';
+      controlColor = 'white';
+    default:
+      controlBg = undefined;
+      controlColor = undefined;
+      break;
+  }
+
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
@@ -61,10 +94,18 @@ export function FormSelect<Option extends BaseOption>({
         options={options}
         // @ts-ignore
         onBlur={validate}
-        onChange={clearError}
+        onChange={(newValue, actionMeta) => {
+          clearError();
+          onChange?.(newValue, actionMeta);
+        }}
         defaultValue={cleanDefaultValue}
         chakraStyles={{
-          dropdownIndicator: (provided, state) => ({
+          control: (provided) => ({
+            ...provided,
+            bg: controlBg,
+            color: controlColor,
+          }),
+          dropdownIndicator: (provided) => ({
             ...provided,
             bg: 'transparent',
             px: 2,
