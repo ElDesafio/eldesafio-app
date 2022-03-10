@@ -2,9 +2,9 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
     COOKIE_SECRET: string;
-    AUTH0_DOMAIN: string;
-    AUTH0_CLIENT_ID: string;
-    AUTH0_CLIENT_SECRET: string;
+    MAGIC_LINK_SECRET: string;
+    SENDGRID_API_KEY: string;
+    SENDGRID_TEMPLATE_MAGIC_LINK: string;
     BASE_URL: string;
   }
 }

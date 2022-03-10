@@ -1,9 +1,10 @@
 import {
-  Box,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   ChakraProvider,
-  Divider,
   extendTheme,
-  Heading,
   Text,
   theme as chakraTheme,
 } from '@chakra-ui/react';
@@ -75,7 +76,14 @@ const Document = withEmotionCache(
     // Theme is customized here: app/lib/chakra-ui-pro-theme/index.ts
     const myTheme = extendTheme(
       {
-        colors: { ...chakraTheme.colors, brand: chakraTheme.colors.blue },
+        colors: {
+          ...chakraTheme.colors,
+          'bg-surface': {
+            default: 'white',
+            _dark: 'gray.800',
+          },
+          brand: chakraTheme.colors.blue,
+        },
       },
       theme,
     );
@@ -128,15 +136,21 @@ export function ErrorBoundary({ error }: { error: Error }) {
 
   return (
     <Document title="Error!">
-      <Box>
-        <Heading as="h1">There was an error</Heading>
-        <Text>{error.message}</Text>
-        <Divider />
-        <Text>
-          Hey, developer, you should replace this with what you want your users
-          to see.
-        </Text>
-      </Box>
+      <Alert
+        status="error"
+        variant="subtle"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        height="200px"
+      >
+        <AlertIcon boxSize="40px" mr={0} />
+        <AlertTitle mt={4} mb={1} fontSize="lg">
+          Error
+        </AlertTitle>
+        <AlertDescription maxWidth="sm">{error.message}</AlertDescription>
+      </Alert>
     </Document>
   );
 }
@@ -149,17 +163,13 @@ export function CatchBoundary() {
     case 401:
       message = (
         <Text>
-          Oops! Looks like you tried to visit a page that you do not have access
-          to.
+          Oops! Estás tratando de acceder a una página a la cual no tenés
+          acceso.
         </Text>
       );
       break;
     case 404:
-      message = (
-        <Text>
-          Oops! Looks like you tried to visit a page that does not exist.
-        </Text>
-      );
+      message = <Text>Oops! La pagina que estás buscando no existe.</Text>;
       break;
 
     default:
@@ -168,10 +178,21 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} - ${caught.statusText}`}>
-      <Heading as="h1">
-        {caught.status}: {caught.statusText}
-      </Heading>
-      {message}
+      <Alert
+        status="error"
+        variant="subtle"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        height="200px"
+      >
+        <AlertIcon boxSize="40px" mr={0} />
+        <AlertTitle mt={4} mb={1} fontSize="lg">
+          {caught.status}: {caught.statusText}
+        </AlertTitle>
+        <AlertDescription maxWidth="sm">{message}</AlertDescription>
+      </Alert>
     </Document>
   );
 }

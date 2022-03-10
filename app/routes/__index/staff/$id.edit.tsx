@@ -5,10 +5,6 @@ import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import * as z from 'zod';
 
-import {
-  ParticipantForm,
-  participantFormValidator,
-} from '~/components/Participants/ParticipantsForm';
 import { UserForm, userFormValidator } from '~/components/Users/UsersForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';

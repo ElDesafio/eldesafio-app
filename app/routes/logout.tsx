@@ -5,12 +5,8 @@ import { destroySession, getSession } from '~/services/session.server';
 
 export let action: ActionFunction = async ({ request }) => {
   const session = await getSession(request.headers.get('Cookie'));
-  const logoutURL = new URL(`https://${process.env.AUTH0_DOMAIN}/v2/logout`);
 
-  logoutURL.searchParams.set('client_id', process.env.AUTH0_CLIENT_ID);
-  logoutURL.searchParams.set('returnTo', process.env.BASE_URL);
-
-  return redirect(logoutURL.toString(), {
+  return redirect('/login', {
     headers: {
       'Set-Cookie': await destroySession(session),
     },

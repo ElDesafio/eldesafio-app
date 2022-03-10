@@ -4,11 +4,12 @@ import {
   Select,
   useColorModeValue as mode,
 } from '@chakra-ui/react';
-import type { User } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { range } from 'lodash';
 import { DateTime } from 'luxon';
 import type { LoaderFunction } from 'remix';
 import { Outlet, useLoaderData, useSearchParams } from 'remix';
+import { z } from 'zod';
 
 import { Logo } from '~/components/Logo';
 import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
@@ -16,29 +17,37 @@ import { NavMenu } from '~/components/NavMenu';
 import { ProfileDropdown } from '~/components/ProfileDropdown';
 import { useMobileMenuState } from '~/hooks/useMobileMenuState';
 import { authenticator } from '~/services/auth.server';
+import { db } from '~/services/db.server';
 import { useSelectedYear } from '~/util/utils';
 
-export let loader: LoaderFunction = async ({ request }) => {
-  const user = await authenticator.isAuthenticated(request, {
+function getUser(id: number) {
+  return db.user.findUnique({ where: { id } });
+}
+
+type GetUser = Prisma.PromiseReturnType<typeof getUser>;
+
+export let loader: LoaderFunction = async ({ request, params }) => {
+  await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
-  console.log(user);
-  return user;
+  const { id } = z.object({ id: z.string() }).parse(params);
+
+  return await getUser(+id);
 };
 
 // Empty React component required by Remix
 export default function Dashboard() {
-  let user = useLoaderData<User>();
+  let user = useLoaderData<GetUser>();
   let [, setSearchParams] = useSearchParams();
   let selectedYear = useSelectedYear();
-
-  console.log(user);
 
   // use the user to render the UI of your private route
   const { isMenuOpen, toggle } = useMobileMenuState();
   const years = range(2015, DateTime.now().year + 1).map((year) =>
     year.toString(),
   );
+
+  if (!user) throw new Error('User not found');
 
   return (
     <Flex

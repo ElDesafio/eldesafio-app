@@ -2,7 +2,6 @@ import type { UseMenuButtonProps } from '@chakra-ui/react';
 import {
   Avatar,
   Box,
-  Button,
   chakra,
   Flex,
   HStack,
@@ -14,7 +13,6 @@ import {
   useMenuButton,
 } from '@chakra-ui/react';
 import type { User } from '@prisma/client';
-import * as React from 'react';
 import { Form } from 'remix';
 
 const UserAvatar = ({
@@ -23,7 +21,7 @@ const UserAvatar = ({
 }: {
   picture: string | null;
   name: string;
-}) => <Avatar size="sm" src={picture} name={name} />;
+}) => <Avatar size="sm" src={picture ?? undefined} name={name} />;
 
 type ProfileMenuButtonProps = UseMenuButtonProps & {
   user: User;
@@ -50,7 +48,6 @@ const ProfileMenuButton = ({ user, ...rest }: ProfileMenuButtonProps) => {
 };
 
 export const ProfileDropdown = ({ user }: { user: User }) => {
-  console.log('user in dropdown', user);
   return (
     <Menu>
       <ProfileMenuButton user={user} />
