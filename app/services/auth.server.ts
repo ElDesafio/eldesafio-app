@@ -22,6 +22,7 @@ authenticator.use(
       sendEmail: sendMagicLinkEmail,
       secret,
       callbackURL: `/auth/magic-link/callback`,
+      validateSessionMagicLink: true,
     },
     // In the verify callback you will only receive the email address and you
     // should return the user instance

@@ -9,7 +9,6 @@ import { range } from 'lodash';
 import { DateTime } from 'luxon';
 import type { LoaderFunction } from 'remix';
 import { Outlet, useLoaderData, useSearchParams } from 'remix';
-import { z } from 'zod';
 
 import { Logo } from '~/components/Logo';
 import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
@@ -26,13 +25,12 @@ function getUser(id: number) {
 
 type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
-export let loader: LoaderFunction = async ({ request, params }) => {
-  await authenticator.isAuthenticated(request, {
+export let loader: LoaderFunction = async ({ request }) => {
+  const user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
-  const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getUser(+id);
+  return await getUser(user.id);
 };
 
 // Empty React component required by Remix
