@@ -45,12 +45,12 @@ const MobileNavMenu = (props: { isOpen?: boolean }) => {
       active: location.pathname.startsWith('/schools'),
       icon: <FaSchool />,
     },
-    {
-      label: 'Admin',
-      to: '/admin',
-      active: location.pathname.includes('/admin'),
-      icon: <MdAdminPanelSettings />,
-    },
+    // {
+    //   label: 'Admin',
+    //   to: '/admin',
+    //   active: location.pathname.includes('/admin'),
+    //   icon: <MdAdminPanelSettings />,
+    // },
   ];
 
   const { isOpen } = props;
@@ -115,12 +115,12 @@ const DesktopNavMenu = () => {
       active: location.pathname.startsWith('/staff'),
       icon: <AiOutlineTeam />,
     },
-    {
-      label: 'Admin',
-      to: '/admin',
-      active: location.pathname.startsWith('/admin'),
-      icon: <MdAdminPanelSettings />,
-    },
+    // {
+    //   label: 'Admin',
+    //   to: '/admin',
+    //   active: location.pathname.startsWith('/admin'),
+    //   icon: <MdAdminPanelSettings />,
+    // },
   ];
   return (
     <HStack spacing="3" flex="1" display={{ base: 'none', lg: 'flex' }}>
