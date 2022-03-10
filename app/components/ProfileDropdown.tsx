@@ -2,6 +2,7 @@ import type { UseMenuButtonProps } from '@chakra-ui/react';
 import {
   Avatar,
   Box,
+  Button,
   chakra,
   Flex,
   HStack,
@@ -32,7 +33,8 @@ const ProfileMenuButton = ({ user, ...rest }: ProfileMenuButtonProps) => {
   return (
     <Flex
       {...buttonProps}
-      as="button"
+      as="div"
+      cursor="pointer"
       flexShrink={0}
       rounded="full"
       outline="0"
@@ -52,6 +54,7 @@ export const ProfileDropdown = ({ user }: { user: User }) => {
     <Menu>
       <ProfileMenuButton user={user} />
       <MenuList
+        as="div"
         rounded="md"
         shadow="lg"
         py="1"
@@ -72,10 +75,12 @@ export const ProfileDropdown = ({ user }: { user: User }) => {
             </Text>
           </Box>
         </HStack>
-        <MenuItem fontWeight="medium">Editar Perfil</MenuItem>
-        <MenuItem fontWeight="medium" color={mode('red.500', 'red.300')}>
+        <MenuItem as="a" cursor="pointer" fontWeight="medium">
+          Editar Perfil
+        </MenuItem>
+        <MenuItem as="a" fontWeight="medium" color={mode('red.500', 'red.300')}>
           <Form method="post" action="/logout">
-            <chakra.span as={'button'} fontWeight="medium">
+            <chakra.span as="button" fontWeight="medium">
               Cerrar Sesión
             </chakra.span>
           </Form>
