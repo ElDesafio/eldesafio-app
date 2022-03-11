@@ -56,11 +56,7 @@ export default function ParticipantGeneral() {
           flex="1"
           order={{ base: 2, lg: 1 }}
         >
-          <Table
-            className="participant-general-table"
-            variant="simple"
-            size="sm"
-          >
+          <Table className="participant-general-table" variant="simple">
             <Tbody>
               <Tr>
                 <Td width="" fontWeight="600">
@@ -86,11 +82,7 @@ export default function ParticipantGeneral() {
               </Tr>
             </Tbody>
           </Table>
-          <Table
-            className="participant-general-table"
-            variant="simple"
-            size="sm"
-          >
+          <Table className="participant-general-table" variant="simple">
             <Tbody>
               <Tr>
                 <Td fontWeight="600">Dirección:</Td>

@@ -141,7 +141,6 @@ export const MarkdownEditor: FC<MarkdownEditorProps> = ({
             {() => (
               <Remirror
                 manager={manager}
-                autoFocus
                 initialContent={initialContent}
                 editable={editable}
               >

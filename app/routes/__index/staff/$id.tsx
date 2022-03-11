@@ -138,11 +138,7 @@ export default function UserGeneral() {
                   flex="1"
                   order={{ base: 2, lg: 1 }}
                 >
-                  <Table
-                    className="user-general-table"
-                    variant="simple"
-                    size="sm"
-                  >
+                  <Table className="user-general-table" variant="simple">
                     <Tbody>
                       <Tr>
                         <Td fontWeight="600">Email:</Td>
@@ -200,11 +196,7 @@ export default function UserGeneral() {
                       </Tr>
                     </Tbody>
                   </Table>
-                  <Table
-                    className="user-general-table"
-                    variant="simple"
-                    size="sm"
-                  >
+                  <Table className="user-general-table" variant="simple">
                     <Tbody>
                       <Tr>
                         <Td fontWeight="600">Dirección:</Td>
