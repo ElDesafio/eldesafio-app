@@ -18,6 +18,7 @@ export async function getLoggedInUser(id: number) {
     where: { id },
     select: {
       id: true,
+      status: true,
       firstName: true,
       lastName: true,
       roles: true,
