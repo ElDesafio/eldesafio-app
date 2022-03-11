@@ -29,8 +29,9 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const url = new URL(request.url);
   const magicLinkSent = url.searchParams.get('magicLinkSent');
+  const error = url.searchParams.get('error');
 
-  return json({ magicLinkSent: !!magicLinkSent });
+  return json({ magicLinkSent: !!magicLinkSent, error });
 };
 
 export let action: ActionFunction = async ({ request }) => {
@@ -63,7 +64,8 @@ export let action: ActionFunction = async ({ request }) => {
 };
 
 export default function Login() {
-  let { magicLinkSent } = useLoaderData<{ magicLinkSent: boolean }>();
+  let { magicLinkSent, error } =
+    useLoaderData<{ magicLinkSent: boolean; error: string | undefined }>();
   let response = useActionData<{ message: string }>();
   let [searchParams, setSearchParams] = useSearchParams();
 
@@ -105,8 +107,8 @@ export default function Login() {
                       searchParams.get('magicLinkSent');
                     if (!!magicLinkSentValueParam) {
                       searchParams.delete('magicLinkSent');
-                      setSearchParams(searchParams, { replace: false });
                     }
+                    setSearchParams(searchParams, { replace: false });
                   }}
                 />
                 <Button type="submit" colorScheme="blue" isLoading={isSaving}>
@@ -125,6 +127,14 @@ export default function Login() {
             <Alert status="error">
               <AlertIcon />
               No existe un usuario con ese correo
+            </Alert>
+          )}
+          {error === 'magic-link' && (
+            <Alert status="error">
+              <AlertIcon />
+              Ocurrió un error. Probá abriendo el link del correo en el mismo
+              navegador desde donde lo solicitaste o volvé a solicitar un nuevo
+              correo.
             </Alert>
           )}
           <Stack spacing="0.5" align="center">
