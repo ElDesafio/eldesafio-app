@@ -46,11 +46,15 @@ export let action: ActionFunction = async ({ request }) => {
     },
   });
 
-  console.log('user', user);
-
   if (!user) {
     return json({
       message: 'user not found',
+    });
+  }
+
+  if (user.status === 'INACTIVE') {
+    return json({
+      message: 'user deactivated',
     });
   }
 
@@ -142,7 +146,8 @@ export default function Login() {
               nuevo.
             </Alert>
           )}
-          {error?.message === 'User is inactive' && (
+          {(error?.message === 'User is inactive' ||
+            response?.message === 'user deactivated') && (
             <Alert status="error">
               <AlertIcon />
               Tu cuenta está desactivada y ya no podés acceder a la app.

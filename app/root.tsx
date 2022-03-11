@@ -65,9 +65,9 @@ const Document = withEmotionCache(
 
     useEffect(() => {
       if (!socket) return;
-      socket.on('confirmation', (data) => {
-        console.log(data);
-      });
+      // socket.on('confirmation', (data) => {
+      //   console.log(data);
+      // });
     }, [socket]);
 
     // Only executed on client

@@ -3,6 +3,7 @@ import type { Prisma, Roles, User } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from 'remix';
 import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
+import type { Socket } from 'socket.io-client';
 import * as z from 'zod';
 
 import { UserForm, userFormValidator } from '~/components/Users/UsersForm';
@@ -26,7 +27,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request, params, context }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -66,6 +67,12 @@ export const action: ActionFunction = async ({ request, params }) => {
       },
     },
   });
+
+  if (updatedUser.status === 'INACTIVE') {
+    (context.socket as Socket).emit('user-deactivated', {
+      userId: updatedUser.id,
+    });
+  }
 
   return redirect(`/staff/${id}`);
 };

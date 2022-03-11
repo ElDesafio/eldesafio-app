@@ -9,7 +9,7 @@ import { range } from 'lodash';
 import { DateTime } from 'luxon';
 import { useEffect } from 'react';
 import type { LoaderFunction } from 'remix';
-import { Outlet, useLoaderData, useSearchParams } from 'remix';
+import { Outlet, useLoaderData, useNavigate, useSearchParams } from 'remix';
 
 import { Logo } from '~/components/Logo';
 import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
@@ -41,15 +41,16 @@ export default function Dashboard() {
   let [, setSearchParams] = useSearchParams();
   let selectedYear = useSelectedYear();
   const socket = useSocket();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!socket) return;
 
-    socket.on('event', (data) => {
-      console.log(data);
+    socket.on('user-deactivated', (data) => {
+      if (data?.userId === user?.id) {
+        navigate('/logout');
+      }
     });
-
-    socket.emit('event', 'ping');
   }, [socket]);
 
   // use the user to render the UI of your private route
