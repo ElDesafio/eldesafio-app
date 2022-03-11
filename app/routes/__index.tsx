@@ -7,6 +7,7 @@ import {
 import type { Prisma } from '@prisma/client';
 import { range } from 'lodash';
 import { DateTime } from 'luxon';
+import { useEffect } from 'react';
 import type { LoaderFunction } from 'remix';
 import { Outlet, useLoaderData, useSearchParams } from 'remix';
 
@@ -17,6 +18,7 @@ import { ProfileDropdown } from '~/components/ProfileDropdown';
 import { useMobileMenuState } from '~/hooks/useMobileMenuState';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { useSocket } from '~/socketContext';
 import { useSelectedYear } from '~/util/utils';
 
 function getUser(id: number) {
@@ -38,6 +40,17 @@ export default function Dashboard() {
   let user = useLoaderData<GetUser>();
   let [, setSearchParams] = useSearchParams();
   let selectedYear = useSelectedYear();
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('event', (data) => {
+      console.log(data);
+    });
+
+    socket.emit('event', 'ping');
+  }, [socket]);
 
   // use the user to render the UI of your private route
   const { isMenuOpen, toggle } = useMobileMenuState();

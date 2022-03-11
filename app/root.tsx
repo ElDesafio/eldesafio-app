@@ -12,7 +12,7 @@ import { withEmotionCache } from '@emotion/react';
 import NProgress from 'nprogress';
 import nProgressStyles from 'nprogress/nprogress.css';
 import type React from 'react';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import remirrorStyles from 'remirror/styles/all.css';
 import {
   Links,
@@ -24,6 +24,8 @@ import {
   useCatch,
   useTransition,
 } from 'remix';
+import type { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 
 import favicon from '~/assets/logo.png';
 import { theme } from '~/lib/chakra-ui-pro-theme';
@@ -31,6 +33,7 @@ import styles from '~/styles/styles.css';
 
 import ClientStyleContext from './context.client';
 import ServerStyleContext from './context.server';
+import { SocketProvider } from './socketContext';
 
 type DocumentProps = {
   children: React.ReactNode;
@@ -50,6 +53,22 @@ const Document = withEmotionCache(
     const serverSyleData = useContext(ServerStyleContext);
     const clientStyleData = useContext(ClientStyleContext);
     const transition = useTransition();
+    const [socket, setSocket] = useState<Socket>();
+
+    useEffect(() => {
+      const socket = io();
+      setSocket(socket);
+      return () => {
+        socket.close();
+      };
+    }, []);
+
+    useEffect(() => {
+      if (!socket) return;
+      socket.on('confirmation', (data) => {
+        console.log(data);
+      });
+    }, [socket]);
 
     // Only executed on client
     useEffect(() => {
@@ -107,12 +126,14 @@ const Document = withEmotionCache(
           ))}
         </head>
         <body>
-          <ChakraProvider theme={myTheme}>
-            {children}
-            <ScrollRestoration />
-            <Scripts />
-            {process.env.NODE_ENV === 'development' && <LiveReload />}
-          </ChakraProvider>
+          <SocketProvider socket={socket}>
+            <ChakraProvider theme={myTheme}>
+              {children}
+              <ScrollRestoration />
+              <Scripts />
+              {process.env.NODE_ENV === 'development' && <LiveReload />}
+            </ChakraProvider>
+          </SocketProvider>
           <script
             src="https://upload-widget.cloudinary.com/global/all.js"
             type="text/javascript"
