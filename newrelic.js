@@ -30,6 +30,18 @@ exports.config = {
      */
     enabled: true,
   },
+  browser_monitoring: {
+    enabled: true,
+  },
+  error_collector: {
+    enabled: true,
+  },
+  transaction_tracer: {
+    enabled: true,
+  },
+  transaction_events: {
+    enabled: true,
+  },
   logging: {
     /**
      * Level at which to log. 'trace' is most useful to New Relic when diagnosing
