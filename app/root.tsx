@@ -126,11 +126,13 @@ const Document = withEmotionCache(
               dangerouslySetInnerHTML={{ __html: css }}
             />
           ))}
-          <script
-            dangerouslySetInnerHTML={{
-              __html: newrelic,
-            }}
-          />
+          {process.env.NODE_ENV !== 'development' && (
+            <script
+              dangerouslySetInnerHTML={{
+                __html: newrelic,
+              }}
+            />
+          )}
         </head>
 
         <body>
