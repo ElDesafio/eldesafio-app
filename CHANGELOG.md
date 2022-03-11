@@ -1,3 +1,15 @@
+# v0.3.0 (Fri Mar 11 2022)
+
+#### 🚀 Enhancement
+
+- add new relic settings [#45](https://github.com/ElDesafio/eldesafio-app/pull/45) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.2.0 (Fri Mar 11 2022)
 
 #### 🚀 Enhancement
