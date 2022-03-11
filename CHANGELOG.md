@@ -1,3 +1,25 @@
+# v0.0.13 (Fri Mar 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add metronome ([@lucascurti](https://github.com/lucascurti))
+- logout user when deactivated ([@lucascurti](https://github.com/lucascurti))
+- socket working ([@lucascurti](https://github.com/lucascurti))
+- improve security ([@lucascurti](https://github.com/lucascurti))
+- set maxAge to 30 days ([@lucascurti](https://github.com/lucascurti))
+- add error for magic links ([@lucascurti](https://github.com/lucascurti))
+- add user status ([@lucascurti](https://github.com/lucascurti))
+- add user view ([@lucascurti](https://github.com/lucascurti))
+- fix user menu ([@lucascurti](https://github.com/lucascurti))
+- disable admin menu ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.12 (Thu Mar 10 2022)
 
 #### ⚠️ Pushed to `main`
