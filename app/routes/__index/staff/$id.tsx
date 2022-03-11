@@ -236,7 +236,7 @@ export default function UserGeneral() {
                     <HStack spacing="5">
                       <Tag
                         size="lg"
-                        variant="solid"
+                        variant={userStatusHelper(user.status).variant}
                         colorScheme={userStatusHelper(user.status).colorScheme}
                       >
                         {userStatusHelper(user.status).label}

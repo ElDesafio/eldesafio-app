@@ -77,7 +77,7 @@ export default function Dashboard() {
           <Logo
             display={{ base: 'none', lg: 'block' }}
             flexShrink={0}
-            h="16"
+            h="10"
             marginEnd="12"
           />
 
@@ -89,7 +89,7 @@ export default function Dashboard() {
             flex={{ base: '1', lg: '0' }}
             display={{ lg: 'none' }}
             flexShrink={0}
-            h="16"
+            h="10"
           />
 
           <HStack spacing="3">
