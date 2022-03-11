@@ -1,3 +1,16 @@
+# v0.3.4 (Fri Mar 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- fix logo and user tag ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.3.3 (Fri Mar 11 2022)
 
 #### ⚠️ Pushed to `main`
