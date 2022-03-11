@@ -1,3 +1,15 @@
+# v0.1.0 (Fri Mar 11 2022)
+
+#### 🚀 Enhancement
+
+- fix font size in participant and user info [#41](https://github.com/ElDesafio/eldesafio-app/pull/41) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.13 (Fri Mar 11 2022)
 
 #### ⚠️ Pushed to `main`
