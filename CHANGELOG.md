@@ -1,3 +1,20 @@
+# v0.0.12 (Thu Mar 10 2022)
+
+#### ⚠️ Pushed to `main`
+
+- add validateSessionMagicLink ([@lucascurti](https://github.com/lucascurti))
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add magic link login ([@lucascurti](https://github.com/lucascurti))
+- add user logout ([@lucascurti](https://github.com/lucascurti))
+- edit user ([@lucascurti](https://github.com/lucascurti))
+- remove console.log ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.11 (Mon Mar 07 2022)
 
 #### ⚠️ Pushed to `main`
