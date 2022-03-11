@@ -29,12 +29,12 @@ import io from 'socket.io-client';
 
 import favicon from '~/assets/logo.png';
 import { theme } from '~/lib/chakra-ui-pro-theme';
+import { newrelic } from '~/lib/newrelic';
 import styles from '~/styles/styles.css';
 
 import ClientStyleContext from './context.client';
 import ServerStyleContext from './context.server';
 import { SocketProvider } from './socketContext';
-
 type DocumentProps = {
   children: React.ReactNode;
   title?: string;
@@ -45,6 +45,8 @@ export function links() {
     { rel: 'stylesheet', href: remirrorStyles },
     { rel: 'stylesheet', href: nProgressStyles },
     { rel: 'stylesheet', href: styles },
+    { rel: 'stylesheet', href: styles },
+    { type: 'text/javascript', src: './lib/newrelic.js' },
   ];
 }
 
@@ -124,7 +126,13 @@ const Document = withEmotionCache(
               dangerouslySetInnerHTML={{ __html: css }}
             />
           ))}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: newrelic,
+            }}
+          />
         </head>
+
         <body>
           <SocketProvider socket={socket}>
             <ChakraProvider theme={myTheme}>
