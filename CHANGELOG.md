@@ -1,3 +1,20 @@
+# v0.4.0 (Sat Mar 12 2022)
+
+#### 🚀 Enhancement
+
+- update progress bar [#52](https://github.com/ElDesafio/eldesafio-app/pull/52) ([@lucascurti](https://github.com/lucascurti))
+
+#### ⚠️ Pushed to `main`
+
+- update package lock ([@lucascurti](https://github.com/lucascurti))
+- add all contributors ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.3.5 (Sat Mar 12 2022)
 
 #### ⚠️ Pushed to `main`
