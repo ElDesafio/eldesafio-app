@@ -1,3 +1,15 @@
+# v0.6.2 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- test release notes ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.6.1 (Sat Mar 12 2022)
 
 #### ⚠️ Pushed to `main`
