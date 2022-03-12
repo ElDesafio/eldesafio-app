@@ -58,6 +58,7 @@
     "@auto-it/all-contributors": "^10.34.1",
     "@auto-it/first-time-contributor": "^10.34.1",
     "@auto-it/git-tag": "^10.34.1",
+    "@auto-it/pr-body-labels": "^10.34.1",
     "@auto-it/slack": "^10.34.1",
     "@remix-run/dev": "1.2.3",
     "@types/flat": "5.0.2",

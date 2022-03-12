@@ -5,6 +5,9 @@
     "first-time-contributor",
     "released",
     [
+      "pr-body-labels"
+    ],
+    [
       "slack",
       {
         "atTarget": "here"
