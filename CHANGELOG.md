@@ -1,3 +1,19 @@
+# v0.6.0 (Sat Mar 12 2022)
+
+#### 🚀 Enhancement
+
+- add auto slack [#55](https://github.com/ElDesafio/eldesafio-app/pull/55) ([@lucascurti](https://github.com/lucascurti))
+
+#### ⚠️ Pushed to `main`
+
+- add "auth": "app" ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.5.3 (Sat Mar 12 2022)
 
 #### ⚠️ Pushed to `main`
