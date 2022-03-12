@@ -7,10 +7,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
       - uses: act10ns/slack@v1
         with:
           status: starting
+          channel: '#app-deploy'
           message: Starting Deploy to Fly.io...
         if: always()
       - uses: actions/checkout@v2
