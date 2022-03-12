@@ -1,3 +1,15 @@
+# v0.5.1 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- add env variable ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.5.0 (Sat Mar 12 2022)
 
 #### 🚀 Enhancement
