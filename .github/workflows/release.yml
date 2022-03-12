@@ -10,12 +10,6 @@ jobs:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
-      - uses: act10ns/slack@v1
-        with:
-          status: starting
-          channel: '#app-deploy'
-          message: Starting Deploy to Fly.io...
-        if: always()
       - uses: actions/checkout@v2
       - name: Prepare repository
         run: git fetch --unshallow --tags
