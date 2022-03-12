@@ -97,7 +97,7 @@ export default function Login() {
       >
         <Stack spacing="8">
           <Stack spacing="6" align="center">
-            <Logo />
+            <Logo color="blue" />
             <Stack spacing="3" textAlign="center">
               <Heading size="md">Accedé a tu cuenta</Heading>
               {/* <Text color="muted">Start making your dreams come true</Text> */}
