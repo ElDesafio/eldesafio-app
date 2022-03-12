@@ -9,8 +9,6 @@ import {
   theme as chakraTheme,
 } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
-import NProgress from 'nprogress';
-import nProgressStyles from 'nprogress/nprogress.css';
 import type React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import remirrorStyles from 'remirror/styles/all.css';
@@ -24,6 +22,7 @@ import {
   useCatch,
   useTransition,
 } from 'remix';
+import { ClientOnly } from 'remix-utils';
 import type { Socket } from 'socket.io-client';
 import io from 'socket.io-client';
 
@@ -32,6 +31,7 @@ import { theme } from '~/lib/chakra-ui-pro-theme';
 import { newrelic } from '~/lib/newrelic';
 import styles from '~/styles/styles.css';
 
+import { ProgressBar } from './components/ProgressBar';
 import ClientStyleContext from './context.client';
 import ServerStyleContext from './context.server';
 import { SocketProvider } from './socketContext';
@@ -43,7 +43,6 @@ type DocumentProps = {
 export function links() {
   return [
     { rel: 'stylesheet', href: remirrorStyles },
-    { rel: 'stylesheet', href: nProgressStyles },
     { rel: 'stylesheet', href: styles },
     { rel: 'stylesheet', href: styles },
     { type: 'text/javascript', src: './lib/newrelic.js' },
@@ -51,11 +50,13 @@ export function links() {
 }
 
 const Document = withEmotionCache(
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   ({ children, title = `El Desafio` }: DocumentProps, emotionCache) => {
     const serverSyleData = useContext(ServerStyleContext);
     const clientStyleData = useContext(ClientStyleContext);
     const transition = useTransition();
     const [socket, setSocket] = useState<Socket>();
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     useEffect(() => {
       const socket = io();
@@ -88,10 +89,10 @@ const Document = withEmotionCache(
 
     useEffect(() => {
       // when the state is idle then we can to complete the progress bar
-      if (transition.state === 'idle') NProgress.done();
+      if (transition.state === 'idle') setIsTransitioning(false);
       // and when it's something else it means it's either submitting a form or
       // waiting for the loaders of the next location so we start it
-      else NProgress.start();
+      else setIsTransitioning(true);
     }, [transition.state]);
 
     // Theme is customized here: app/lib/chakra-ui-pro-theme/index.ts
@@ -142,6 +143,9 @@ const Document = withEmotionCache(
               <ScrollRestoration />
               <Scripts />
               {process.env.NODE_ENV === 'development' && <LiveReload />}
+              <ClientOnly>
+                {() => <ProgressBar isAnimating={isTransitioning} />}
+              </ClientOnly>
             </ChakraProvider>
           </SocketProvider>
           <script
