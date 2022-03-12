@@ -3,7 +3,18 @@
     "git-tag",
     "all-contributors",
     "first-time-contributor",
-    "released"
+    "released",
+    [
+      "slack",
+      {
+        "username": "El Desafio Bot",
+        "iconUrl": "https://avatars.slack-edge.com/2022-03-12/3243388292017_25e33755cab0c1ff5cde_48.png",
+        "atTarget": "here",
+        "channels": [
+          "app-changelog"
+        ]
+      }
+    ]
   ],
   "owner": "ElDesafio",
   "repo": "eldesafio-app",
