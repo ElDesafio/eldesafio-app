@@ -1,3 +1,16 @@
+# v0.5.3 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- remove initial slack message ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.5.2 (Sat Mar 12 2022)
 
 #### ⚠️ Pushed to `main`
