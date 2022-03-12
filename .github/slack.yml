@@ -1,3 +1,6 @@
+username: El Desafio Bot
+icon_url: https://avatars.slack-edge.com/2022-03-12/3243388292017_25e33755cab0c1ff5cde_48.png
+
 pretext: Triggered via {{eventName}} by {{actor}} {{or action "action"}} {{ref}} `{{diffRef}}`
 # title: GitHub Actions
 # title_link: https://support.github.com
