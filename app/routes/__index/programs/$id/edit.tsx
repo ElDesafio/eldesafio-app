@@ -20,10 +20,33 @@ export let loader: LoaderFunction = async ({ params }) => {
 
   const program = await getProgram({ id: Number(id) });
 
+  if (!program) {
+    throw new Response('Not Found', {
+      status: 404,
+    });
+  }
+
   const facilitators = await getFacilitators({});
   const volunteers = await getVolunteers({});
 
-  return { program, facilitators, volunteers };
+  const facilitatorsIds = program.educators
+    .filter((educator) => educator && educator.isFacilitator)
+    .map((educator) => educator.userId);
+  const volunteersIds = program.educators
+    .filter((educator) => educator && !educator.isFacilitator)
+    .map((educator) => educator.userId);
+
+  //These are used for the default value of the form
+  const facilitatorsIdsString = facilitatorsIds.join(',');
+  const volunteersIdsString = volunteersIds.join(',');
+
+  return {
+    program,
+    facilitators,
+    volunteers,
+    facilitatorsIdsString,
+    volunteersIdsString,
+  };
 };
 
 //ACTION
@@ -75,36 +98,30 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function EditProgram() {
-  const { program, facilitators, volunteers } = useLoaderData<{
+  const {
+    program,
+    facilitators,
+    volunteers,
+    facilitatorsIdsString,
+    volunteersIdsString,
+  } = useLoaderData<{
     program: Exclude<GetProgram, 'participants'>;
     facilitators: GetFacilitators;
     volunteers: GetVolunteers;
+    facilitatorsIdsString: string;
+    volunteersIdsString: string;
   }>();
 
   if (!program) {
     throw new Error('Program not found');
   }
 
-  let facilitatorsIds = '';
-  let volunteersIds = '';
-
-  if (program.educators) {
-    facilitatorsIds = program.educators
-      .filter((educator) => educator && educator.isFacilitator)
-      .map((educator) => educator.userId)
-      .join(',');
-    volunteersIds = program.educators
-      .filter((educator) => educator && !educator.isFacilitator)
-      .map((educator) => educator.userId)
-      .join(',');
-  }
-
   return (
     <ProgramForm
       defaultValues={{
         ...program,
-        facilitators: facilitatorsIds,
-        volunteers: volunteersIds,
+        facilitators: facilitatorsIdsString,
+        volunteers: volunteersIdsString,
       }}
       facilitators={facilitators}
       volunteers={volunteers}

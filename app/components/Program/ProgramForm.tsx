@@ -9,7 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { ProgramSex, Weekdays } from '@prisma/client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
 import { useNavigate, useTransition } from 'remix';
@@ -102,6 +102,23 @@ export function ProgramForm({
   volunteers,
 }: ProgramFormProps) {
   let navigate = useNavigate();
+  const [cleanFacilitators, setCleanFacilitators] = useState(facilitators);
+  const [cleanVolunteers, setCleanVolunteers] = useState(volunteers);
+  const [selectedFacilitatorsIds, setSelectedFacilitatorsIds] = useState(
+    defaultValues?.facilitators?.split(',').map(Number) ?? [],
+  );
+  const [selectedVolunteersIds, setSelectedVolunteersIds] = useState(
+    defaultValues?.volunteers?.split(',').map(Number) ?? [],
+  );
+
+  useEffect(() => {
+    setCleanFacilitators(
+      facilitators.filter((f) => !selectedVolunteersIds.includes(f.id)),
+    );
+    setCleanVolunteers(
+      volunteers.filter((v) => !selectedFacilitatorsIds.includes(v.id)),
+    );
+  }, [selectedFacilitatorsIds, selectedVolunteersIds]);
 
   const transition = useTransition();
 
@@ -237,17 +254,20 @@ export function ProgramForm({
                     isRequired
                     step="1800" // 30 min
                   />
-                  <IconButton
-                    alignSelf="flex-end"
-                    colorScheme="blue"
-                    aria-label="Search database"
-                    onClick={() =>
-                      setDaysIds(
-                        daysIds.filter((dayId, index2) => index2 !== index),
-                      )
-                    }
-                    icon={<FaTrashAlt />}
-                  />
+                  {daysIds.length > 1 && (
+                    <IconButton
+                      alignSelf="flex-end"
+                      colorScheme="red"
+                      variant="ghost"
+                      aria-label="Delete day"
+                      onClick={() =>
+                        setDaysIds(
+                          daysIds.filter((dayId, index2) => index2 !== index),
+                        )
+                      }
+                      icon={<FaTrashAlt />}
+                    />
+                  )}
                 </FormStack>
               ))}
               <Button
@@ -268,7 +288,14 @@ export function ProgramForm({
                 label="Facilitador(es)"
                 isMulti
                 placeholder="Seleccionar facilitador..."
-                options={facilitators.map((facilitator) => ({
+                onChange={(newValue) => {
+                  if (!newValue) return;
+
+                  if (Array.isArray(newValue)) {
+                    setSelectedFacilitatorsIds(newValue.map((v) => v.value));
+                  }
+                }}
+                options={cleanFacilitators.map((facilitator) => ({
                   label: `${facilitator.firstName} ${facilitator.lastName}`,
                   value: facilitator.id,
                 }))}
@@ -279,7 +306,14 @@ export function ProgramForm({
                 label="Voluntario(s)"
                 isMulti
                 placeholder="Seleccionar voluntario..."
-                options={volunteers.map((volunteer) => ({
+                onChange={(newValue) => {
+                  if (!newValue) return;
+
+                  if (Array.isArray(newValue)) {
+                    setSelectedVolunteersIds(newValue.map((v) => v.value));
+                  }
+                }}
+                options={cleanVolunteers.map((volunteer) => ({
                   label: `${volunteer.firstName} ${volunteer.lastName}`,
                   value: volunteer.id,
                 }))}
