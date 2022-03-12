@@ -1,3 +1,15 @@
+# v0.5.0 (Sat Mar 12 2022)
+
+#### 🚀 Enhancement
+
+- add slack notification [#54](https://github.com/ElDesafio/eldesafio-app/pull/54) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.4.0 (Sat Mar 12 2022)
 
 #### 🚀 Enhancement
