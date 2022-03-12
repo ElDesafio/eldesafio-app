@@ -43,8 +43,8 @@ export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
 }
 
 export enum ProgramSexText {
-  MALE = 'varón',
-  FEMALE = 'mujer',
+  MALE = 'varones',
+  FEMALE = 'mujeres',
   ALL = 'mixto',
 }
 

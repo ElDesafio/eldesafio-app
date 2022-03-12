@@ -10,18 +10,21 @@ import {
 } from '~/components/Program/ProgramForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-
-import type { Program } from '.prisma/client';
+import type { GetProgram } from '~/services/programs.service';
+import { getProgram } from '~/services/programs.service';
+import type { GetFacilitators, GetVolunteers } from '~/services/users.service';
+import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
 export let loader: LoaderFunction = async ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const program: Program | null = await db.program.findUnique({
-    where: { id: +id },
-    include: { programDays: { orderBy: { day: 'asc' } } },
-  });
-  return program;
+  const program = await getProgram({ id: Number(id) });
+
+  const facilitators = await getFacilitators({});
+  const volunteers = await getVolunteers({});
+
+  return { program, facilitators, volunteers };
 };
 
 //ACTION
@@ -37,7 +40,22 @@ export const action: ActionFunction = async ({ request, params }) => {
   );
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const { programDays, ...rest } = fieldValues.data;
+  const { programDays, facilitators, volunteers, ...rest } = fieldValues.data;
+
+  const facilitatorsArray =
+    typeof facilitators === 'string'
+      ? facilitators.split(',').map((id) => ({
+          userId: Number(id),
+          isFacilitator: true,
+        }))
+      : [];
+  const volunteersArray =
+    typeof volunteers === 'string'
+      ? volunteers.split(',').map((id) => ({
+          userId: Number(id),
+          isFacilitator: false,
+        }))
+      : [];
 
   const program = await db.program.update({
     where: { id: +id },
@@ -47,14 +65,41 @@ export const action: ActionFunction = async ({ request, params }) => {
         deleteMany: {},
         create: programDays,
       },
+      educators: {
+        deleteMany: {},
+        create: [...facilitatorsArray, ...volunteersArray],
+      },
     },
   });
 
-  return redirect('/programs');
+  return redirect(`/programs/${id}`);
 };
 
 export default function EditProgram() {
-  const program = useLoaderData<Program>();
+  const { program, facilitators, volunteers } = useLoaderData<{
+    program: Exclude<GetProgram, 'participants'>;
+    facilitators: GetFacilitators;
+    volunteers: GetVolunteers;
+  }>();
+
+  if (!program) {
+    throw new Error('Program not found');
+  }
+
+  let facilitatorsIds = '';
+  let volunteersIds = '';
+
+  if (program.educators) {
+    facilitatorsIds = program.educators
+      .filter((educator) => educator && educator.isFacilitator)
+      .map((educator) => educator.userId)
+      .join(',');
+    volunteersIds = program.educators
+      .filter((educator) => educator && !educator.isFacilitator)
+      .map((educator) => educator.userId)
+      .join(',');
+  }
+
   return (
     <>
       <Box
@@ -70,7 +115,15 @@ export default function EditProgram() {
         </Container>
       </Box>
 
-      <ProgramForm defaultValues={program} />
+      <ProgramForm
+        defaultValues={{
+          ...program,
+          facilitators: facilitatorsIds,
+          volunteers: volunteersIds,
+        }}
+        facilitators={facilitators}
+        volunteers={volunteers}
+      />
     </>
   );
 }

@@ -10,6 +10,7 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import { ProgramSex, Weekdays } from '@prisma/client';
 import { useState } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
@@ -24,10 +25,10 @@ import { FormInput } from '~/components/Form/FormInput';
 import { FormSelect } from '~/components/Form/FormSelect';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
+import type { GetProgram } from '~/services/programs.service';
 import { convertStringToNumberForZod, schemaCheckbox } from '~/util/utils';
 
 import { FormTextArea } from '../Form/FormTextArea';
-import { ProgramSex, Weekdays } from '.prisma/client';
 
 const programSchema = z.object({
   name: z.string().nonempty('Nombre no puede estar vacío'),
@@ -79,15 +80,29 @@ const programSchema = z.object({
       toTime: z.string().nonempty('Hora Fin no puede estar vacío'),
     })
     .array(),
+  facilitators: z.preprocess(
+    (value) => (value === '' ? null : value),
+    z.string().nullable().optional(),
+  ),
+  volunteers: z.preprocess(
+    (value) => (value === '' ? null : value),
+    z.string().nullable().optional(),
+  ),
 });
 
 export const programFormValidator = withZod(programSchema);
 
+type ProgramFormProps = {
+  defaultValues?: Partial<z.infer<typeof programSchema>>;
+  facilitators: Exclude<GetProgram, null>['educators'][0]['user'][];
+  volunteers: Exclude<GetProgram, null>['educators'][0]['user'][];
+};
+
 export function ProgramForm({
   defaultValues,
-}: {
-  defaultValues?: Partial<z.infer<typeof programSchema>>;
-}) {
+  facilitators,
+  volunteers,
+}: ProgramFormProps) {
   let navigate = useNavigate();
 
   const transition = useTransition();
@@ -257,15 +272,42 @@ export function ProgramForm({
                     </Button>
                   </VStack>
                 </FieldGroup>
+                <FieldGroup title="Facilitadores">
+                  <FormStack width="full">
+                    <FormSelect
+                      instanceId="facilitators-select"
+                      name="facilitators"
+                      label="Facilitador(es)"
+                      isMulti
+                      placeholder="Seleccionar facilitador..."
+                      options={facilitators.map((facilitator) => ({
+                        label: `${facilitator.firstName} ${facilitator.lastName}`,
+                        value: facilitator.id,
+                      }))}
+                    />
+                    <FormSelect
+                      instanceId="volunteers-select"
+                      name="volunteers"
+                      label="Voluntario(s)"
+                      isMulti
+                      placeholder="Seleccionar voluntario..."
+                      options={volunteers.map((volunteer) => ({
+                        label: `${volunteer.firstName} ${volunteer.lastName}`,
+                        value: volunteer.id,
+                      }))}
+                    />
+                  </FormStack>
+                </FieldGroup>
+
                 <FieldGroup title="Resultados">
                   <FormTextArea name="description" rows={5} />
                 </FieldGroup>
               </Stack>
               <HStack width="full" justifyContent="center" mt="8">
-                <FormSubmitButton isLoading={isSaving} />
                 <Button variant="outline" onClick={() => navigate(-1)}>
                   Cancelar
                 </Button>
+                <FormSubmitButton isLoading={isSaving} />
               </HStack>
             </ValidatedForm>
           </Box>

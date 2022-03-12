@@ -104,11 +104,13 @@ export default function Participants() {
                           <Avatar size="md" src={user.picture || undefined} />
                         </Box>
                         <Box>
-                          <Box fontSize="sm" fontWeight="medium">
-                            <ChakraLink as={Link} to={`${user.id}`}>
-                              {user.firstName} {user.lastName}
-                            </ChakraLink>
-                          </Box>
+                          <ChakraLink
+                            as={Link}
+                            to={`${user.id}`}
+                            fontWeight="medium"
+                          >
+                            {user.firstName} {user.lastName}
+                          </ChakraLink>
                           <Box fontSize="sm" color="gray.500">
                             {user.email}
                           </Box>

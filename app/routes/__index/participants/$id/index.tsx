@@ -17,17 +17,7 @@ import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { db } from '~/services/db.server';
-import styles from '~/styles/participant-general.css';
 import { getAge, getFormattedDate } from '~/util/utils';
-
-export function links() {
-  return [
-    {
-      rel: 'stylesheet',
-      href: styles,
-    },
-  ];
-}
 
 export const loader: LoaderFunction = ({ params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -56,7 +46,7 @@ export default function ParticipantGeneral() {
           flex="1"
           order={{ base: 2, lg: 1 }}
         >
-          <Table className="participant-general-table" variant="simple">
+          <Table className="general-info-table" variant="simple">
             <Tbody>
               <Tr>
                 <Td width="" fontWeight="600">
@@ -82,7 +72,7 @@ export default function ParticipantGeneral() {
               </Tr>
             </Tbody>
           </Table>
-          <Table className="participant-general-table" variant="simple">
+          <Table className="general-info-table" variant="simple">
             <Tbody>
               <Tr>
                 <Td fontWeight="600">Dirección:</Td>
