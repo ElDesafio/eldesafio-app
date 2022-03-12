@@ -1,5 +1,5 @@
 import { Text } from '@chakra-ui/react';
-import type { User, UserRoles, UserStatus } from '@prisma/client';
+import type { User, UserRoles, UserStatus, Weekdays } from '@prisma/client';
 import { BloodType, FormAnswerOptions, Roles } from '@prisma/client';
 import { DateTime } from 'luxon';
 import type React from 'react';
@@ -46,6 +46,27 @@ export enum ProgramSexText {
   MALE = 'varones',
   FEMALE = 'mujeres',
   ALL = 'mixto',
+}
+
+export function getDayByName(name: Weekdays) {
+  switch (name) {
+    case 'MONDAY':
+      return 'Lunes';
+    case 'TUESDAY':
+      return 'Martes';
+    case 'WEDNESDAY':
+      return 'Miércoles';
+    case 'THURSDAY':
+      return 'Jueves';
+    case 'FRIDAY':
+      return 'Viernes';
+    case 'SATURDAY':
+      return 'Sábado';
+    case 'SUNDAY':
+      return 'Domingo';
+    default:
+      throw new Error('Unknown day');
+  }
 }
 
 export function getBloodTypeName(bloodType: BloodType) {

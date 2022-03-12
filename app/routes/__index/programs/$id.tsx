@@ -25,7 +25,7 @@ import { authenticator } from '~/services/auth.server';
 import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
-import { isAdmin } from '~/util/utils';
+import { getDayByName, isAdmin, ProgramSexText } from '~/util/utils';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -175,7 +175,7 @@ export default function ProgramGeneral() {
                         <Td width="" fontWeight="600">
                           Sexo:
                         </Td>
-                        <Td>{program.sex}</Td>
+                        <Td>{ProgramSexText[program.sex]}</Td>
                       </Tr>
                       <Tr>
                         <Td fontWeight="600">Día y hora:</Td>
@@ -183,7 +183,8 @@ export default function ProgramGeneral() {
                           {program.programDays.map((day) => (
                             <div key={day.id}>
                               <span>
-                                {day.day} de {day.fromTime} a {day.toTime}
+                                {getDayByName(day.day)} de {day.fromTime} a{' '}
+                                {day.toTime}
                               </span>
                               <br />
                             </div>
