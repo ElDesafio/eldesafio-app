@@ -41,9 +41,9 @@ export default function Participant() {
 
   return (
     <>
-      <Box bg={useColorModeValue('white', 'gray.900')} pt="8" shadow="sm">
+      <Box bg={useColorModeValue('white', 'gray.900')} shadow="sm">
         <Container maxW="8xl">
-          <Heading size="lg" mb="3">
+          <Heading size="lg" pt="4" pb="0">
             {participant.firstName} {participant.lastName}
           </Heading>
           <Stack direction="row" spacing="4" overflowY="auto">

@@ -9,6 +9,11 @@ export async function getProgram({
   id: number;
   includeParticipants?: boolean;
 }) {
+  // TODO: Fix this. Right now the flag is ignored.
+  const participants = includeParticipants
+    ? { include: { participant: true } }
+    : false;
+
   return await db.program.findUnique({
     where: { id },
     include: {
@@ -24,7 +29,11 @@ export async function getProgram({
           },
         },
       },
-      participants: includeParticipants,
+      participants: {
+        include: {
+          participant: { select: { firstName: true, lastName: true } },
+        },
+      },
       createdByUser: true,
       updatedByUser: true,
     },

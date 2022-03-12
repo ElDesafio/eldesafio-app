@@ -1,4 +1,3 @@
-import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { ActionFunction, LoaderFunction } from 'remix';
 import { redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
@@ -101,29 +100,14 @@ export default function EditProgram() {
   }
 
   return (
-    <>
-      <Box
-        bg={useColorModeValue('white', 'gray.900')}
-        pt="4"
-        pb="4"
-        shadow="sm"
-      >
-        <Container maxW="8xl">
-          <Heading size="lg" mb="0">
-            Editar Programa
-          </Heading>
-        </Container>
-      </Box>
-
-      <ProgramForm
-        defaultValues={{
-          ...program,
-          facilitators: facilitatorsIds,
-          volunteers: volunteersIds,
-        }}
-        facilitators={facilitators}
-        volunteers={volunteers}
-      />
-    </>
+    <ProgramForm
+      defaultValues={{
+        ...program,
+        facilitators: facilitatorsIds,
+        volunteers: volunteersIds,
+      }}
+      facilitators={facilitators}
+      volunteers={volunteers}
+    />
   );
 }

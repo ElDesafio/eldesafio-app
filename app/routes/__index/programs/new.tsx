@@ -70,8 +70,18 @@ export default function NewProgram() {
           </Heading>
         </Container>
       </Box>
-
-      <ProgramForm facilitators={facilitators} volunteers={volunteers} />
+      <Box as="main" py="8" flex="1">
+        <Container maxW="8xl" id="xxx">
+          <Box
+            bg={useColorModeValue('white', 'gray.700')}
+            p="6"
+            rounded="lg"
+            shadow="base"
+          >
+            <ProgramForm facilitators={facilitators} volunteers={volunteers} />
+          </Box>
+        </Container>
+      </Box>
     </>
   );
 }

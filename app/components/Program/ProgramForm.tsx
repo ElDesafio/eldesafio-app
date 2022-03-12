@@ -2,12 +2,10 @@ import {
   Box,
   Button,
   chakra,
-  Container,
   HStack,
   IconButton,
   Stack,
   StackDivider,
-  useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
 import { ProgramSex, Weekdays } from '@prisma/client';
@@ -117,202 +115,189 @@ export function ProgramForm({
   );
 
   return (
-    <Box as="main" py="8" flex="1">
-      <Container maxW="8xl" id="xxx">
-        <Box
-          bg={useColorModeValue('white', 'gray.700')}
-          p="6"
-          rounded="lg"
-          shadow="base"
-        >
-          <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
-            <ValidatedForm
-              validator={programFormValidator}
-              defaultValues={defaultValues}
-              method="post"
-              noValidate
-            >
-              <Stack spacing="4" divider={<StackDivider />}>
-                <FieldGroup title="Datos Básicos">
-                  <VStack width="full" spacing="6" alignItems="flex-start">
-                    <FormStack width="full">
-                      <FormInput name="name" label="Nombre" isRequired />
-                      <FormInput
-                        name="year"
-                        label="Año"
-                        type="number"
-                        maxWidth="100px"
-                        min="2000"
-                        isRequired
-                      />
-                      <FormSelect
-                        instanceId="select-sex"
-                        name="sex"
-                        label="Sexo"
-                        isRequired
-                        placeholder="Seleccionar sexo"
-                        options={[
-                          { label: 'Mujeres', value: ProgramSex.FEMALE },
-                          { label: 'Varones', value: ProgramSex.MALE },
-                          { label: 'Mixto', value: ProgramSex.ALL },
-                        ]}
-                      />
-                    </FormStack>
-                    <FormStack justifyContent="flex-start">
-                      <FormInput
-                        name="seats"
-                        label="Cupo"
-                        type="number"
-                        maxWidth="100px"
-                        max="9999"
-                        min="0"
-                        isRequired
-                      />
-                      <FormInput
-                        name="ageFrom"
-                        label="Edad desde"
-                        type="number"
-                        maxWidth="120px"
-                        rightElement={
-                          <chakra.span
-                            pointerEvents="none"
-                            color="gray.500"
-                            fontSize="0.8em"
-                            mr={2}
-                          >
-                            años
-                          </chakra.span>
-                        }
-                        isRequired
-                      />
-                      <FormInput
-                        name="ageTo"
-                        label="Edad hasta"
-                        type="number"
-                        maxWidth="120px"
-                        rightElement={
-                          <chakra.span
-                            pointerEvents="none"
-                            color="gray.500"
-                            fontSize="0.8em"
-                            mr={2}
-                          >
-                            años
-                          </chakra.span>
-                        }
-                        isRequired
-                      />
-                      <FormCheckbox
-                        name="ageByYear"
-                        label="Edad x año"
-                        value="true"
-                        helperText="Calcular edad del programa basándose solamente en el año de nacimiento"
-                      >
-                        Edad x año
-                      </FormCheckbox>
-                    </FormStack>
-                  </VStack>
-                </FieldGroup>
-                <FieldGroup title="Días de clase">
-                  <VStack width="full" spacing="6" alignItems="flex-start">
-                    {daysIds.map((id, index) => (
-                      <FormStack width="full" key={id}>
-                        <FormSelect
-                          instanceId={`select-day-${id}`}
-                          name={`programDays[${index}].day`}
-                          label="Día"
-                          isRequired
-                          placeholder="Seleccionar día"
-                          options={[
-                            { label: 'Lunes', value: Weekdays.MONDAY },
-                            { label: 'Martes', value: Weekdays.TUESDAY },
-                            { label: 'Miércoles', value: Weekdays.WEDNESDAY },
-                            { label: 'Jueves', value: Weekdays.THURSDAY },
-                            { label: 'Viernes', value: Weekdays.FRIDAY },
-                            { label: 'Sábado', value: Weekdays.SATURDAY },
-                            { label: 'Domingo', value: Weekdays.SUNDAY },
-                          ]}
-                        />
-                        <FormInput
-                          name={`programDays[${index}].fromTime`}
-                          label="Hora Inicio"
-                          type="time"
-                          isRequired
-                          step="1800" // 30 min
-                        />
-                        <FormInput
-                          name={`programDays[${index}].toTime`}
-                          label="Hora Fin"
-                          type="time"
-                          isRequired
-                          step="1800" // 30 min
-                        />
-                        <IconButton
-                          alignSelf="flex-end"
-                          colorScheme="blue"
-                          aria-label="Search database"
-                          onClick={() =>
-                            setDaysIds(
-                              daysIds.filter(
-                                (dayId, index2) => index2 !== index,
-                              ),
-                            )
-                          }
-                          icon={<FaTrashAlt />}
-                        />
-                      </FormStack>
-                    ))}
-                    <Button
-                      leftIcon={<MdAdd />}
-                      colorScheme="blue"
-                      size="xs"
-                      onClick={() => setDaysIds([...daysIds, uuid()])}
+    <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
+      <ValidatedForm
+        validator={programFormValidator}
+        defaultValues={defaultValues}
+        method="post"
+        noValidate
+      >
+        <Stack spacing="4" divider={<StackDivider />}>
+          <FieldGroup title="Datos Básicos">
+            <VStack width="full" spacing="6" alignItems="flex-start">
+              <FormStack width="full">
+                <FormInput name="name" label="Nombre" isRequired />
+                <FormInput
+                  name="year"
+                  label="Año"
+                  type="number"
+                  maxWidth="100px"
+                  min="2000"
+                  isRequired
+                />
+                <FormSelect
+                  instanceId="select-sex"
+                  name="sex"
+                  label="Sexo"
+                  isRequired
+                  placeholder="Seleccionar sexo"
+                  options={[
+                    { label: 'Mujeres', value: ProgramSex.FEMALE },
+                    { label: 'Varones', value: ProgramSex.MALE },
+                    { label: 'Mixto', value: ProgramSex.ALL },
+                  ]}
+                />
+              </FormStack>
+              <FormStack justifyContent="flex-start">
+                <FormInput
+                  name="seats"
+                  label="Cupo"
+                  type="number"
+                  maxWidth="100px"
+                  max="9999"
+                  min="0"
+                  isRequired
+                />
+                <FormInput
+                  name="ageFrom"
+                  label="Edad desde"
+                  type="number"
+                  maxWidth="120px"
+                  rightElement={
+                    <chakra.span
+                      pointerEvents="none"
+                      color="gray.500"
+                      fontSize="0.8em"
+                      mr={2}
                     >
-                      Agregar día
-                    </Button>
-                  </VStack>
-                </FieldGroup>
-                <FieldGroup title="Facilitadores">
-                  <FormStack width="full">
-                    <FormSelect
-                      instanceId="facilitators-select"
-                      name="facilitators"
-                      label="Facilitador(es)"
-                      isMulti
-                      placeholder="Seleccionar facilitador..."
-                      options={facilitators.map((facilitator) => ({
-                        label: `${facilitator.firstName} ${facilitator.lastName}`,
-                        value: facilitator.id,
-                      }))}
-                    />
-                    <FormSelect
-                      instanceId="volunteers-select"
-                      name="volunteers"
-                      label="Voluntario(s)"
-                      isMulti
-                      placeholder="Seleccionar voluntario..."
-                      options={volunteers.map((volunteer) => ({
-                        label: `${volunteer.firstName} ${volunteer.lastName}`,
-                        value: volunteer.id,
-                      }))}
-                    />
-                  </FormStack>
-                </FieldGroup>
+                      años
+                    </chakra.span>
+                  }
+                  isRequired
+                />
+                <FormInput
+                  name="ageTo"
+                  label="Edad hasta"
+                  type="number"
+                  maxWidth="120px"
+                  rightElement={
+                    <chakra.span
+                      pointerEvents="none"
+                      color="gray.500"
+                      fontSize="0.8em"
+                      mr={2}
+                    >
+                      años
+                    </chakra.span>
+                  }
+                  isRequired
+                />
+                <FormCheckbox
+                  name="ageByYear"
+                  label="Edad x año"
+                  value="true"
+                  helperText="Calcular edad del programa basándose solamente en el año de nacimiento"
+                >
+                  Edad x año
+                </FormCheckbox>
+              </FormStack>
+            </VStack>
+          </FieldGroup>
+          <FieldGroup title="Días de clase">
+            <VStack width="full" spacing="6" alignItems="flex-start">
+              {daysIds.map((id, index) => (
+                <FormStack width="full" key={id}>
+                  <FormSelect
+                    instanceId={`select-day-${id}`}
+                    name={`programDays[${index}].day`}
+                    label="Día"
+                    isRequired
+                    placeholder="Seleccionar día"
+                    options={[
+                      { label: 'Lunes', value: Weekdays.MONDAY },
+                      { label: 'Martes', value: Weekdays.TUESDAY },
+                      { label: 'Miércoles', value: Weekdays.WEDNESDAY },
+                      { label: 'Jueves', value: Weekdays.THURSDAY },
+                      { label: 'Viernes', value: Weekdays.FRIDAY },
+                      { label: 'Sábado', value: Weekdays.SATURDAY },
+                      { label: 'Domingo', value: Weekdays.SUNDAY },
+                    ]}
+                  />
+                  <FormInput
+                    name={`programDays[${index}].fromTime`}
+                    label="Hora Inicio"
+                    type="time"
+                    isRequired
+                    step="1800" // 30 min
+                  />
+                  <FormInput
+                    name={`programDays[${index}].toTime`}
+                    label="Hora Fin"
+                    type="time"
+                    isRequired
+                    step="1800" // 30 min
+                  />
+                  <IconButton
+                    alignSelf="flex-end"
+                    colorScheme="blue"
+                    aria-label="Search database"
+                    onClick={() =>
+                      setDaysIds(
+                        daysIds.filter((dayId, index2) => index2 !== index),
+                      )
+                    }
+                    icon={<FaTrashAlt />}
+                  />
+                </FormStack>
+              ))}
+              <Button
+                leftIcon={<MdAdd />}
+                colorScheme="blue"
+                size="xs"
+                onClick={() => setDaysIds([...daysIds, uuid()])}
+              >
+                Agregar día
+              </Button>
+            </VStack>
+          </FieldGroup>
+          <FieldGroup title="Facilitadores">
+            <FormStack width="full">
+              <FormSelect
+                instanceId="facilitators-select"
+                name="facilitators"
+                label="Facilitador(es)"
+                isMulti
+                placeholder="Seleccionar facilitador..."
+                options={facilitators.map((facilitator) => ({
+                  label: `${facilitator.firstName} ${facilitator.lastName}`,
+                  value: facilitator.id,
+                }))}
+              />
+              <FormSelect
+                instanceId="volunteers-select"
+                name="volunteers"
+                label="Voluntario(s)"
+                isMulti
+                placeholder="Seleccionar voluntario..."
+                options={volunteers.map((volunteer) => ({
+                  label: `${volunteer.firstName} ${volunteer.lastName}`,
+                  value: volunteer.id,
+                }))}
+              />
+            </FormStack>
+          </FieldGroup>
 
-                <FieldGroup title="Resultados">
-                  <FormTextArea name="description" rows={5} />
-                </FieldGroup>
-              </Stack>
-              <HStack width="full" justifyContent="center" mt="8">
-                <Button variant="outline" onClick={() => navigate(-1)}>
-                  Cancelar
-                </Button>
-                <FormSubmitButton isLoading={isSaving} />
-              </HStack>
-            </ValidatedForm>
-          </Box>
-        </Box>
-      </Container>
+          <FieldGroup title="Resultados">
+            <FormTextArea name="description" rows={5} />
+          </FieldGroup>
+        </Stack>
+        <HStack width="full" justifyContent="center" mt="8">
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            Cancelar
+          </Button>
+          <FormSubmitButton isLoading={isSaving} />
+        </HStack>
+      </ValidatedForm>
     </Box>
   );
 }
