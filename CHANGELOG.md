@@ -1,3 +1,36 @@
+# v0.6.4 (Sat Mar 12 2022)
+
+### Release Notes
+
+#### update PR template and add auto ([#56](https://github.com/ElDesafio/eldesafio-app/pull/56))
+
+This will 😃
+
+---
+
+#### 🐛 Bug Fix
+
+- update PR template and add auto [#56](https://github.com/ElDesafio/eldesafio-app/pull/56) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.3 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add PR template ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.6.2 (Sat Mar 12 2022)
 
 #### ⚠️ Pushed to `main`
