@@ -305,7 +305,7 @@ model ParticipantsOnPrograms {
   /// It's used to know was ever active so we can show/hide the "baja" label for those that were ever active
   wasEverActive    Boolean                      @default(false)
   status           ParticipantsOnProgramsStatus @default(ACTIVE)
-  waitingListOrder Int?
+  waitingListOrder String?
   createdAt        DateTime                     @default(now()) @db.Timestamptz
   updatedAt        DateTime                     @default(now()) @updatedAt @db.Timestamptz
   createdByUser    User                         @relation("CreatedParticipantsOnProgramsByUser", fields: [createdBy], references: [id])
