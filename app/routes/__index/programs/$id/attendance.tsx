@@ -43,8 +43,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   });
 
+  const url = new URL(request.url);
+  const month = z
+    .string()
+    .optional()
+    .nullable()
+    .parse(url.searchParams.get('month'));
+
   const classes = await getProgramClasses({
     programId: Number(id),
+    month: month != null ? Number(month) : undefined,
   });
   if (!classes) {
     throw new Error('Class not found');
@@ -156,8 +164,6 @@ export default function ProgramGeneral() {
   );
 
   options.unshift({ label: 'Todo el año', value: 0 });
-
-  console.log(classes);
 
   return (
     <>

@@ -71,8 +71,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     throw new Error('There was a problem with the form data');
   }
 
-  console.log(DateTime.fromISO(data.date, { zone: 'utc' }).toJSDate());
-
   await db.class.create({
     data: {
       date: DateTime.fromISO(data.date, { zone: 'utc' }).toJSDate(),
