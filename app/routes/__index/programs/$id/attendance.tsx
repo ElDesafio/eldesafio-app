@@ -76,9 +76,47 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const isUserAdmin = isAdmin(loggedinUser);
 
+  const totalPercentageHelper: Record<
+    string,
+    { present: number; absent: number; total: 0 }
+  > = {};
+
+  classes.forEach((c) => {
+    c.participants.forEach((p) => {
+      if (!totalPercentageHelper[p.participantId]) {
+        totalPercentageHelper[p.participantId] = {
+          present: 0,
+          absent: 0,
+          total: 0,
+        };
+      }
+      if (p.status === 'PRESENT' || p.status === 'LATE') {
+        totalPercentageHelper[p.participantId].present++;
+        totalPercentageHelper[p.participantId].total++;
+      }
+      if (p.status === 'ABSENT' || p.status === 'EXCUSED') {
+        totalPercentageHelper[p.participantId].absent++;
+        totalPercentageHelper[p.participantId].total++;
+      }
+    });
+  });
+
+  const totalPercentages: Record<string, { present: number; absent: number }> =
+    {};
+
+  Object.keys(totalPercentageHelper).forEach((k) => {
+    const { present, absent, total } = totalPercentageHelper[k];
+
+    totalPercentages[k] = {
+      present: Math.ceil((present / total) * 100),
+      absent: Math.ceil((absent / total) * 100),
+    };
+  });
+
   return {
     classes,
     participants,
+    totalPercentages,
     isUserAdmin,
   };
 };
@@ -140,11 +178,13 @@ function ClassAttendanceCell({ status }: { status: ClassAttendanceStatus }) {
 }
 
 export default function ProgramGeneral() {
-  const { classes, participants, isUserAdmin } = useLoaderData<{
-    classes: GetProgramClasses;
-    participants: GetProgramParticipants;
-    isUserAdmin: boolean;
-  }>();
+  const { classes, participants, isUserAdmin, totalPercentages } =
+    useLoaderData<{
+      classes: GetProgramClasses;
+      participants: GetProgramParticipants;
+      isUserAdmin: boolean;
+      totalPercentages: Record<string, { present: number; absent: number }>;
+    }>();
   const transition = useTransition();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -200,6 +240,9 @@ export default function ProgramGeneral() {
               <Th whiteSpace="nowrap" scope="col" minWidth="300px">
                 PARTICIPANTE
               </Th>
+              <Th whiteSpace="nowrap" scope="col">
+                Totales
+              </Th>
               {classes.map((classItem) => (
                 <Th
                   key={classItem.id}
@@ -241,6 +284,9 @@ export default function ProgramGeneral() {
                       </Box>
                     </Box>
                   </Stack>
+                </Td>
+                <Td textAlign="center">
+                  {totalPercentages[attendant.participantId].present}%
                 </Td>
                 {classes.map((classItem) => (
                   <ClassAttendanceCell
