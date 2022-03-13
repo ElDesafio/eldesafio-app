@@ -463,7 +463,7 @@ export default function ProgramGeneral() {
 
                               <IconButton
                                 type="submit"
-                                size="sm"
+                                size="xs"
                                 variant="ghost"
                                 aria-label="Move Down"
                                 icon={
@@ -493,7 +493,7 @@ export default function ProgramGeneral() {
                             />
                             <IconButton
                               type="submit"
-                              size="sm"
+                              size="xs"
                               variant="ghost"
                               aria-label="Move Up"
                               icon={
@@ -516,10 +516,9 @@ export default function ProgramGeneral() {
                         >
                           <PopoverTrigger>
                             <IconButton
-                              size="sm"
+                              size="xs"
                               variant="ghost"
                               aria-label="Delete"
-                              onClick={() => {}}
                               icon={
                                 isLoading(
                                   participant.participantId,
