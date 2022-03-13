@@ -11,7 +11,6 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const loggedinUser = await getLoggedInUser(user.id);
 
-  console.log(loggedinUser);
   if (loggedinUser?.status === 'INACTIVE') {
     redirect('/logout');
   }

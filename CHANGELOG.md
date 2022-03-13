@@ -1,3 +1,315 @@
+# v0.6.7 (Sun Mar 13 2022)
+
+### Release Notes
+
+#### 57-add-program-page ([#62](https://github.com/ElDesafio/eldesafio-app/pull/62))
+
+- Se agregaron las listas de participantes a la vista de los programas.
+- Se mejoraron varias cosas de UI/UX
+
+---
+
+#### 🐛 Bug Fix
+
+- 57-add-program-page [#62](https://github.com/ElDesafio/eldesafio-app/pull/62) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.6 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add timeout to action ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.5 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- only publish if failure ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.4 (Sat Mar 12 2022)
+
+### Release Notes
+
+#### update PR template and add auto ([#56](https://github.com/ElDesafio/eldesafio-app/pull/56))
+
+This will 😃
+
+---
+
+#### 🐛 Bug Fix
+
+- update PR template and add auto [#56](https://github.com/ElDesafio/eldesafio-app/pull/56) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.3 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add PR template ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.2 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- test release notes ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.1 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- update auto ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.6.0 (Sat Mar 12 2022)
+
+#### 🚀 Enhancement
+
+- add auto slack [#55](https://github.com/ElDesafio/eldesafio-app/pull/55) ([@lucascurti](https://github.com/lucascurti))
+
+#### ⚠️ Pushed to `main`
+
+- add "auth": "app" ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.5.3 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- remove initial slack message ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.5.2 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add bot ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.5.1 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- add env variable ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.5.0 (Sat Mar 12 2022)
+
+#### 🚀 Enhancement
+
+- add slack notification [#54](https://github.com/ElDesafio/eldesafio-app/pull/54) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.4.0 (Sat Mar 12 2022)
+
+#### 🚀 Enhancement
+
+- update progress bar [#52](https://github.com/ElDesafio/eldesafio-app/pull/52) ([@lucascurti](https://github.com/lucascurti))
+
+#### ⚠️ Pushed to `main`
+
+- update package lock ([@lucascurti](https://github.com/lucascurti))
+- add all contributors ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.3.5 (Sat Mar 12 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add db fly.toml ([@lucascurti](https://github.com/lucascurti))
+- fix logo ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.3.4 (Fri Mar 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- fix logo and user tag ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.3.3 (Fri Mar 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add new relic browser ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.3.2 (Fri Mar 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add newrelic for browser ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.3.1 (Fri Mar 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add host name for new relic ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.3.0 (Fri Mar 11 2022)
+
+#### 🚀 Enhancement
+
+- add new relic settings [#45](https://github.com/ElDesafio/eldesafio-app/pull/45) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.2.0 (Fri Mar 11 2022)
+
+#### 🚀 Enhancement
+
+- add new relic [#43](https://github.com/ElDesafio/eldesafio-app/pull/43) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.1.0 (Fri Mar 11 2022)
+
+#### 🚀 Enhancement
+
+- fix font size in participant and user info [#41](https://github.com/ElDesafio/eldesafio-app/pull/41) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.0.13 (Fri Mar 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- add metronome ([@lucascurti](https://github.com/lucascurti))
+- logout user when deactivated ([@lucascurti](https://github.com/lucascurti))
+- socket working ([@lucascurti](https://github.com/lucascurti))
+- improve security ([@lucascurti](https://github.com/lucascurti))
+- set maxAge to 30 days ([@lucascurti](https://github.com/lucascurti))
+- add error for magic links ([@lucascurti](https://github.com/lucascurti))
+- add user status ([@lucascurti](https://github.com/lucascurti))
+- add user view ([@lucascurti](https://github.com/lucascurti))
+- fix user menu ([@lucascurti](https://github.com/lucascurti))
+- disable admin menu ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.0.12 (Thu Mar 10 2022)
 
 #### ⚠️ Pushed to `main`

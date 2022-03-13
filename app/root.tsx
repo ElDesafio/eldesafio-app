@@ -9,8 +9,6 @@ import {
   theme as chakraTheme,
 } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
-import NProgress from 'nprogress';
-import nProgressStyles from 'nprogress/nprogress.css';
 import type React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import remirrorStyles from 'remirror/styles/all.css';
@@ -24,17 +22,19 @@ import {
   useCatch,
   useTransition,
 } from 'remix';
+import { ClientOnly } from 'remix-utils';
 import type { Socket } from 'socket.io-client';
 import io from 'socket.io-client';
 
 import favicon from '~/assets/logo.png';
 import { theme } from '~/lib/chakra-ui-pro-theme';
+import { newrelic } from '~/lib/newrelic';
 import styles from '~/styles/styles.css';
 
+import { ProgressBar } from './components/ProgressBar';
 import ClientStyleContext from './context.client';
 import ServerStyleContext from './context.server';
 import { SocketProvider } from './socketContext';
-
 type DocumentProps = {
   children: React.ReactNode;
   title?: string;
@@ -43,17 +43,20 @@ type DocumentProps = {
 export function links() {
   return [
     { rel: 'stylesheet', href: remirrorStyles },
-    { rel: 'stylesheet', href: nProgressStyles },
     { rel: 'stylesheet', href: styles },
+    { rel: 'stylesheet', href: styles },
+    { type: 'text/javascript', src: './lib/newrelic.js' },
   ];
 }
 
 const Document = withEmotionCache(
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   ({ children, title = `El Desafio` }: DocumentProps, emotionCache) => {
     const serverSyleData = useContext(ServerStyleContext);
     const clientStyleData = useContext(ClientStyleContext);
     const transition = useTransition();
     const [socket, setSocket] = useState<Socket>();
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     useEffect(() => {
       const socket = io();
@@ -86,10 +89,10 @@ const Document = withEmotionCache(
 
     useEffect(() => {
       // when the state is idle then we can to complete the progress bar
-      if (transition.state === 'idle') NProgress.done();
+      if (transition.state === 'idle') setIsTransitioning(false);
       // and when it's something else it means it's either submitting a form or
       // waiting for the loaders of the next location so we start it
-      else NProgress.start();
+      else setIsTransitioning(true);
     }, [transition.state]);
 
     // Theme is customized here: app/lib/chakra-ui-pro-theme/index.ts
@@ -124,7 +127,15 @@ const Document = withEmotionCache(
               dangerouslySetInnerHTML={{ __html: css }}
             />
           ))}
+          {process.env.NODE_ENV !== 'development' && (
+            <script
+              dangerouslySetInnerHTML={{
+                __html: newrelic,
+              }}
+            />
+          )}
         </head>
+
         <body>
           <SocketProvider socket={socket}>
             <ChakraProvider theme={myTheme}>
@@ -132,6 +143,9 @@ const Document = withEmotionCache(
               <ScrollRestoration />
               <Scripts />
               {process.env.NODE_ENV === 'development' && <LiveReload />}
+              <ClientOnly>
+                {() => <ProgressBar isAnimating={isTransitioning} />}
+              </ClientOnly>
             </ChakraProvider>
           </SocketProvider>
           <script
@@ -164,13 +178,13 @@ export function ErrorBoundary({ error }: { error: Error }) {
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="200px"
+        height="auto"
       >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           Error
         </AlertTitle>
-        <AlertDescription maxWidth="sm">{error.message}</AlertDescription>
+        <AlertDescription maxWidth="8xl">{error.message}</AlertDescription>
       </Alert>
     </Document>
   );
@@ -206,13 +220,14 @@ export function CatchBoundary() {
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="200px"
+        height="auto"
+        overflowY="auto"
       >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           {caught.status}: {caught.statusText}
         </AlertTitle>
-        <AlertDescription maxWidth="sm">{message}</AlertDescription>
+        <AlertDescription maxWidth="8xl">{message}</AlertDescription>
       </Alert>
     </Document>
   );

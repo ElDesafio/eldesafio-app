@@ -3,7 +3,16 @@
     "git-tag",
     "all-contributors",
     "first-time-contributor",
-    "released"
+    "released",
+    [
+      "pr-body-labels"
+    ],
+    [
+      "slack",
+      {
+        "atTarget": "here"
+      }
+    ]
   ],
   "owner": "ElDesafio",
   "repo": "eldesafio-app",

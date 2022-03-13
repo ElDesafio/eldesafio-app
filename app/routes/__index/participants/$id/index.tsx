@@ -3,8 +3,10 @@ import {
   Box,
   Button,
   Divider,
+  Flex,
   Heading,
   HStack,
+  Spacer,
   Stack,
   Table,
   Tbody,
@@ -13,36 +15,57 @@ import {
 } from '@chakra-ui/react';
 import type { Participant } from '@prisma/client';
 import type { LoaderFunction } from '@remix-run/server-runtime';
-import { useLoaderData } from 'remix';
+import { MdEdit } from 'react-icons/md';
+import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
+import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import styles from '~/styles/participant-general.css';
-import { getAge, getFormattedDate } from '~/util/utils';
+import { getLoggedInUser } from '~/services/users.service';
+import { getAge, getFormattedDate, isAdmin } from '~/util/utils';
 
-export function links() {
-  return [
-    {
-      rel: 'stylesheet',
-      href: styles,
-    },
-  ];
-}
-
-export const loader: LoaderFunction = ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return db.participant.findUnique({ where: { id: +id } });
+  const participant = await db.participant.findUnique({ where: { id: +id } });
+
+  let authUser = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
+
+  const loggedinUser = await getLoggedInUser(authUser.id);
+
+  if (!loggedinUser) {
+    throw new Error('User not found');
+  }
+  if (!participant) {
+    throw new Error('Participant not found');
+  }
+
+  const isUserAdmin = isAdmin(loggedinUser);
+
+  return { participant, isUserAdmin };
 };
 
 export default function ParticipantGeneral() {
-  const participant = useLoaderData<Participant>();
+  const { participant, isUserAdmin } =
+    useLoaderData<{ participant: Participant; isUserAdmin: boolean }>();
 
   return (
     <>
-      <Heading as="h3" size="md">
-        Datos Personales
-      </Heading>
+      <Flex alignItems="center">
+        <Heading as="h3" size="md">
+          Datos Personales
+        </Heading>
+        <Spacer />
+        {isUserAdmin && (
+          <Link to="edit">
+            <Button size="sm" leftIcon={<MdEdit />} colorScheme="blue">
+              Editar
+            </Button>
+          </Link>
+        )}
+      </Flex>
       <Divider mt="2" mb="8" />
       <Stack
         direction={{ base: 'column', lg: 'row' }}
@@ -56,11 +79,7 @@ export default function ParticipantGeneral() {
           flex="1"
           order={{ base: 2, lg: 1 }}
         >
-          <Table
-            className="participant-general-table"
-            variant="simple"
-            size="sm"
-          >
+          <Table className="general-info-table" variant="simple">
             <Tbody>
               <Tr>
                 <Td width="" fontWeight="600">
@@ -86,11 +105,7 @@ export default function ParticipantGeneral() {
               </Tr>
             </Tbody>
           </Table>
-          <Table
-            className="participant-general-table"
-            variant="simple"
-            size="sm"
-          >
+          <Table className="general-info-table" variant="simple">
             <Tbody>
               <Tr>
                 <Td fontWeight="600">Dirección:</Td>

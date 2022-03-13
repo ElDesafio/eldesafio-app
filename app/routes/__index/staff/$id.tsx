@@ -28,22 +28,12 @@ import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { authenticator } from '~/services/auth.server';
 import type { GetUser } from '~/services/users.service';
 import { getLoggedInUser, getUser } from '~/services/users.service';
-import styles from '~/styles/user-general.css';
 import {
   getAge,
   getFormattedDate,
   getUserRoleName,
   isAdmin,
 } from '~/util/utils';
-
-export function links() {
-  return [
-    {
-      rel: 'stylesheet',
-      href: styles,
-    },
-  ];
-}
 
 function userStatusHelper(status: UserStatus) {
   switch (status) {
@@ -138,11 +128,7 @@ export default function UserGeneral() {
                   flex="1"
                   order={{ base: 2, lg: 1 }}
                 >
-                  <Table
-                    className="user-general-table"
-                    variant="simple"
-                    size="sm"
-                  >
+                  <Table className="general-info-table" variant="simple">
                     <Tbody>
                       <Tr>
                         <Td fontWeight="600">Email:</Td>
@@ -200,11 +186,7 @@ export default function UserGeneral() {
                       </Tr>
                     </Tbody>
                   </Table>
-                  <Table
-                    className="user-general-table"
-                    variant="simple"
-                    size="sm"
-                  >
+                  <Table className="general-info-table" variant="simple">
                     <Tbody>
                       <Tr>
                         <Td fontWeight="600">Dirección:</Td>
@@ -244,7 +226,7 @@ export default function UserGeneral() {
                     <HStack spacing="5">
                       <Tag
                         size="lg"
-                        variant="solid"
+                        variant={userStatusHelper(user.status).variant}
                         colorScheme={userStatusHelper(user.status).colorScheme}
                       >
                         {userStatusHelper(user.status).label}
