@@ -1,3 +1,24 @@
+# v0.6.7 (Sun Mar 13 2022)
+
+### Release Notes
+
+#### 57-add-program-page ([#62](https://github.com/ElDesafio/eldesafio-app/pull/62))
+
+- Se agregaron las listas de participantes a la vista de los programas.
+- Se mejoraron varias cosas de UI/UX
+
+---
+
+#### 🐛 Bug Fix
+
+- 57-add-program-page [#62](https://github.com/ElDesafio/eldesafio-app/pull/62) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.6.6 (Sat Mar 12 2022)
 
 #### ⚠️ Pushed to `main`
