@@ -6,11 +6,15 @@ This won't appear in the changelog
 
 Indicate the type of change your pull request is:
 
-- [ ] `patch`
-- [ ] `minor`
-- [ ] `major`
-- [ ] `internal`
-- [ ] `documentation`
+- [ ] `patch` - 🐛 Bug Fix
+- [ ] `minor` - 🚀 Enhancement
+- [ ] `major` - 💥 Breaking Change
+- [ ] `internal` - 🏠 Internal
+- [ ] `documentation` - 📝 Documentation
+- [ ] `tests` - 🧪 Tests
+- [ ] `dependencies` - 🔩 Dependency Updates
+- [ ] `performance` - 🏎 Performance
+- [ ] `skip-release`
 
 ## Release Notes
 
