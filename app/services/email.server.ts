@@ -11,7 +11,6 @@ export const sendMagicLinkEmail: SendEmailFunction<User> = async ({
   user,
   emailAddress,
 }) => {
-  console.log('entra');
   const msg = {
     to: emailAddress,
     from: sender,
@@ -23,5 +22,4 @@ export const sendMagicLinkEmail: SendEmailFunction<User> = async ({
   };
 
   const emailresponse = await sgMail.send(msg);
-  console.log(emailresponse);
 };

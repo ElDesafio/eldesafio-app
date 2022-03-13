@@ -1,0 +1,9 @@
+.general-info-table tbody td {
+  padding-inline-start: 0;
+  border-bottom: 0;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+}
+
+.general-info-table tbody td:first-of-type {
+  width: 200px;
+}

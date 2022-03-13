@@ -4,6 +4,7 @@ import {
   Container,
   Flex,
   Heading,
+  Link as ChakraLink,
   Spacer,
   Table,
   Tbody,
@@ -86,25 +87,25 @@ export default function Programs() {
                   <Th whiteSpace="nowrap" scope="col">
                     EDAD
                   </Th>
-                  <Th whiteSpace="nowrap" scope="col" />
                 </Tr>
               </Thead>
               <Tbody>
                 {programs.map((program) => (
                   <Tr key={program.id}>
-                    <Td whiteSpace="nowrap">{program.name}</Td>
+                    <Td whiteSpace="nowrap">
+                      <ChakraLink
+                        as={Link}
+                        to={`${program.id}`}
+                        fontWeight="medium"
+                      >
+                        {program.name}
+                      </ChakraLink>
+                    </Td>
                     <Td>asistencias 20%</Td>
                     <Td>{program.seats}</Td>
                     <Td>20 / 0</Td>
                     <Td>
                       {program.ageFrom} a {program.ageTo} años
-                    </Td>
-                    <Td textAlign="right">
-                      <Link to={`${program.id}/edit`}>
-                        <Button variant="link" colorScheme="blue">
-                          Edit
-                        </Button>
-                      </Link>
                     </Td>
                   </Tr>
                 ))}

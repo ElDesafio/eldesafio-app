@@ -178,13 +178,13 @@ export function ErrorBoundary({ error }: { error: Error }) {
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="200px"
+        height="auto"
       >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           Error
         </AlertTitle>
-        <AlertDescription maxWidth="sm">{error.message}</AlertDescription>
+        <AlertDescription maxWidth="8xl">{error.message}</AlertDescription>
       </Alert>
     </Document>
   );
@@ -220,13 +220,14 @@ export function CatchBoundary() {
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="200px"
+        height="auto"
+        overflowY="auto"
       >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           {caught.status}: {caught.statusText}
         </AlertTitle>
-        <AlertDescription maxWidth="sm">{message}</AlertDescription>
+        <AlertDescription maxWidth="8xl">{message}</AlertDescription>
       </Alert>
     </Document>
   );

@@ -79,6 +79,7 @@ export default function Dashboard() {
             flexShrink={0}
             h="9"
             marginEnd="8"
+            color="white"
           />
 
           {/* Desktop Navigation Menu */}
@@ -90,6 +91,7 @@ export default function Dashboard() {
             display={{ lg: 'none' }}
             flexShrink={0}
             h="9"
+            color="white"
           />
 
           <HStack spacing="3">

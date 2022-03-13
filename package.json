@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development remix build && run-p dev:*",
     "dev:node": "cross-env NODE_ENV=development nodemon ./build/index.js --watch ./build/index.js",
     "dev:remix": "cross-env NODE_ENV=development remix watch",
-    "postinstall": "remix setup node && patch-package && metronome setup",
+    "postinstall": "remix setup node && patch-package",
     "start": "cross-env NODE_ENV=production node ./build/index.js"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "luxon": "2.3.1",
     "metronome-sh": "^1.0.2",
     "morgan": "1.10.0",
+    "mudder": "^1.1.1",
     "newrelic": "^8.8.0",
     "patch-package": "^6.4.7",
     "react": "17.0.2",
@@ -62,6 +63,7 @@
     "@auto-it/slack": "^10.34.1",
     "@remix-run/dev": "1.2.3",
     "@types/flat": "5.0.2",
+    "@types/mudder": "^1.0.0",
     "@types/react": "17.0.39",
     "@types/react-dom": "17.0.13",
     "@types/uuid": "8.3.4",

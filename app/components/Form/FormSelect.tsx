@@ -54,7 +54,7 @@ export function FormSelect<Option extends BaseOption>({
           const defaultValuesArray = defaultValue
             .split(',')
             .map((value) =>
-              typeof value === 'string' ? value : Number(value),
+              value === Number(value).toString() ? Number(value) : value,
             );
           return defaultValuesArray.includes(option.value);
         }

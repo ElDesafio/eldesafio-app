@@ -1,9 +1,0 @@
-.user-general-table tbody td {
-  padding-inline-start: 0;
-  border-bottom: 0;
-  padding: 0.75rem 0.75rem 0.75rem 0;
-}
-
-.user-general-table tbody td:first-of-type {
-  width: 200px;
-}

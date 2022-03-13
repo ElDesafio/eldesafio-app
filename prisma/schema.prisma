@@ -51,6 +51,8 @@ model User {
   createdSurveyBiography       SurveyBiography[]        @relation("CreatedSurveyBiographyByUser")
   updatedSurveyBiography       SurveyBiography[]        @relation("UpdatedSurveyBiographyByUser")
   roles                        UserRoles[]
+  createdClasses               Class[]                  @relation("CreatedClassByUser")
+  updatedClasses               Class[]                  @relation("UpdatedClassByUser")
 }
 
 enum Roles {
@@ -145,6 +147,7 @@ model Participant {
   schoolId                   Int?
   ParticipantHealth          ParticipantHealth?
   ParticipantStatus          ParticipantStatus[]
+  ParticipantsOnClasses      ParticipantsOnClasses[]  @relation("ParticipantsOnClassesByParticipant")
 }
 
 model ParticipantStatus {
@@ -273,6 +276,7 @@ model Program {
   participants  ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByProgram")
   programDays   ProgramDays[]            @relation("ProgramDaysByProgram")
   educators     UsersOnPrograms[]        @relation("UserOnProgramsByProgram")
+  Class         Class[]                  @relation("ClassByProgram")
 }
 
 model UsersOnPrograms {
@@ -301,7 +305,7 @@ model ParticipantsOnPrograms {
   /// It's used to know was ever active so we can show/hide the "baja" label for those that were ever active
   wasEverActive    Boolean                      @default(false)
   status           ParticipantsOnProgramsStatus @default(ACTIVE)
-  waitingListOrder Int?
+  waitingListOrder String?
   createdAt        DateTime                     @default(now()) @db.Timestamptz
   updatedAt        DateTime                     @default(now()) @updatedAt @db.Timestamptz
   createdByUser    User                         @relation("CreatedParticipantsOnProgramsByUser", fields: [createdBy], references: [id])
@@ -321,6 +325,41 @@ model ProgramDays {
   toTime    String
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+}
+
+model Class {
+  id                    Int                     @id @default(autoincrement())
+  programId             Int
+  program               Program                 @relation("ClassByProgram", fields: [programId], references: [id])
+  date                  DateTime                @db.Date
+  isRainyDay            Boolean                 @default(false)
+  createdAt             DateTime                @default(now()) @db.Timestamptz
+  updatedAt             DateTime                @default(now()) @updatedAt @db.Timestamptz
+  createdBy             Int
+  createdByUser         User                    @relation("CreatedClassByUser", fields: [createdBy], references: [id])
+  updatedBy             Int
+  updatedByUser         User                    @relation("UpdatedClassByUser", fields: [updatedBy], references: [id])
+  ParticipantsOnClasses ParticipantsOnClasses[] @relation("ParticipantsOnClassesByClass")
+}
+
+enum ClassAttendanceStatus {
+  UNKNOWN
+  PRESENT
+  LATE
+  ABSENT
+  EXCUSED
+}
+
+model ParticipantsOnClasses {
+  classId       Int
+  class         Class                 @relation("ParticipantsOnClassesByClass", fields: [classId], references: [id])
+  participantId Int
+  participant   Participant           @relation("ParticipantsOnClassesByParticipant", fields: [participantId], references: [id])
+  status        ClassAttendanceStatus @default(UNKNOWN)
+  createdAt     DateTime              @default(now()) @db.Timestamptz
+  updatedAt     DateTime              @default(now()) @updatedAt @db.Timestamptz
+
+  @@id([classId, participantId])
 }
 
 model School {
