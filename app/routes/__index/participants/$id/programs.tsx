@@ -8,7 +8,6 @@ import { z } from 'zod';
 
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import { getAge } from '~/util/utils';
 
 import { ProgramBox } from './components/ProgramBox';
 import type { Prisma, Sex } from '.prisma/client';
@@ -167,31 +166,19 @@ export const action: ActionFunction = async ({ request, params }) => {
           },
         },
         orderBy: {
-          waitingListOrder: 'desc',
+          waitingListOrder: 'asc',
         },
       });
-
-      console.log(waitingList);
 
       // Let's start assuming the waiting list is empty.
       let newWaitingListString = mudder.alphabet.mudder()[0];
 
-      if (waitingList.length === 1) {
-        const lastWaitingListString = waitingList[0].waitingListOrder;
+      if (waitingList.length > 0) {
+        const lastWaitingListString =
+          waitingList[waitingList.length - 1].waitingListOrder;
         newWaitingListString = mudder.alphabet.mudder(
           lastWaitingListString!,
           '',
-        )[0];
-      }
-      // If there are more than one participants on the waiting list,
-      // we calculate the new string based on the last 2 participants
-      // on the list
-      if (waitingList.length > 1) {
-        const lastWaitingListString = waitingList[0].waitingListOrder;
-        const secondToLastWaitingListString = waitingList[1].waitingListOrder;
-        newWaitingListString = mudder.alphabet.mudder(
-          secondToLastWaitingListString!,
-          lastWaitingListString!,
         )[0];
       }
 

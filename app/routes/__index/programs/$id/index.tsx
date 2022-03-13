@@ -5,6 +5,8 @@ import {
   Divider,
   Flex,
   Heading,
+  HStack,
+  IconButton,
   Link as ChakraLink,
   Spacer,
   Stack,
@@ -18,17 +20,26 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { css } from '@emotion/react';
+import mudder from 'mudder';
+import { FaAngleDown, FaAngleUp, FaTrashAlt } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { Form, json, Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { authenticator } from '~/services/auth.server';
+import { db } from '~/services/db.server';
 import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getDayByName, isAdmin, ProgramSexText } from '~/util/utils';
+
+enum FormTypeWaiting {
+  UP = 'UP',
+  DOWN = 'DOWN',
+  REMOVE = 'REMOVE',
+}
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -56,15 +67,24 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     (educator) => !educator.isFacilitator,
   );
 
-  const participantsActive = program.participants.filter(
-    (participant) => participant.status === 'ACTIVE',
-  );
-  const participantsInactive = program.participants.filter(
-    (participant) => participant.status === 'INACTIVE',
-  );
-  const participantsWaiting = program.participants.filter(
-    (participant) => participant.status === 'WAITING',
-  );
+  const participantsActive = program.participants
+    .filter((participant) => participant.status === 'ACTIVE')
+    .sort((a, b) =>
+      a.participant.firstName < b.participant.firstName ? -1 : 1,
+    );
+  const participantsInactive = program.participants
+    .filter((participant) => participant.status === 'INACTIVE')
+    .sort((a, b) =>
+      a.participant.firstName < b.participant.firstName ? -1 : 1,
+    );
+  const participantsWaiting = program.participants
+    .filter((participant) => participant.status === 'WAITING')
+    .sort((a, b) => {
+      if (a.waitingListOrder && b.waitingListOrder) {
+        return a.waitingListOrder < b.waitingListOrder ? -1 : 1;
+      }
+      return 0;
+    });
 
   const isUserAdmin = isAdmin(loggedinUser);
 
@@ -77,6 +97,105 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     participantsInactive,
     participantsWaiting,
   };
+};
+
+export const action: ActionFunction = async ({ request, params }) => {
+  const { id: programId } = z.object({ id: z.string() }).parse(params);
+
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
+
+  if (!user) throw json('Unauthorized', { status: 403 });
+
+  const form = await request.formData();
+  const participantId = z.string().parse(form.get('participantId'));
+
+  const waitingList = await db.participantsOnPrograms.findMany({
+    where: {
+      programId: +programId,
+      status: 'WAITING',
+      waitingListOrder: {
+        not: null,
+      },
+    },
+    orderBy: {
+      waitingListOrder: 'asc',
+    },
+  });
+
+  const participantIndex = waitingList.findIndex(
+    (p) => p.participantId === +participantId,
+  );
+
+  switch (form.get('type') as FormTypeWaiting) {
+    case FormTypeWaiting.DOWN: {
+      // Check if there is an element after the current one
+      const participantAfter = waitingList[participantIndex + 1];
+      const participantAfter2 = waitingList[participantIndex + 2];
+
+      const lower = participantAfter?.waitingListOrder ?? '';
+      const upper = participantAfter2?.waitingListOrder ?? '';
+
+      const newWaitingListString = mudder.alphabet.mudder(lower, upper)[0];
+
+      return await db.participantsOnPrograms.update({
+        where: {
+          programId_participantId: {
+            programId: +programId,
+            participantId: +participantId,
+          },
+        },
+        data: {
+          waitingListOrder: newWaitingListString,
+          updatedBy: user.id,
+        },
+      });
+    }
+
+    case FormTypeWaiting.UP: {
+      // Check if there is an element after the current one
+      const participantBefore = waitingList[participantIndex - 1];
+      const participantBefore2 = waitingList[participantIndex - 2];
+
+      const lower = participantBefore2?.waitingListOrder ?? '';
+      const upper = participantBefore?.waitingListOrder ?? '';
+
+      const newWaitingListString = mudder.alphabet.mudder(lower, upper)[0];
+
+      return await db.participantsOnPrograms.update({
+        where: {
+          programId_participantId: {
+            programId: +programId,
+            participantId: +participantId,
+          },
+        },
+        data: {
+          waitingListOrder: newWaitingListString,
+          updatedBy: user.id,
+        },
+      });
+    }
+
+    case FormTypeWaiting.REMOVE: {
+      return await db.participantsOnPrograms.update({
+        where: {
+          programId_participantId: {
+            programId: +programId,
+            participantId: +participantId,
+          },
+        },
+        data: {
+          status: 'INACTIVE',
+          waitingListOrder: null,
+          updatedBy: user.id,
+        },
+      });
+    }
+    default: {
+      throw new Error('Form Type not supported');
+    }
+  }
 };
 
 export default function ProgramGeneral() {
@@ -283,9 +402,10 @@ export default function ProgramGeneral() {
             <Table size="sm">
               <TableCaption>Total: {participantsWaiting.length}</TableCaption>
               <Tbody>
-                {participantsWaiting.map((participant) => (
+                {participantsWaiting.map((participant, index) => (
                   <Tr key={participant.participantId}>
                     <Td>
+                      {index + 1}.{' '}
                       <ChakraLink
                         as={Link}
                         to={`/participants/${participant.participantId}`}
@@ -293,6 +413,75 @@ export default function ProgramGeneral() {
                         {participant.participant.firstName}{' '}
                         {participant.participant.lastName}
                       </ChakraLink>
+                    </Td>
+                    <Td width="40px">
+                      <HStack spacing={1} justifyContent="center">
+                        {index + 1 !== participantsWaiting.length &&
+                          participantsWaiting.length > 1 && (
+                            <Form method="post">
+                              <input
+                                name="type"
+                                type="hidden"
+                                value={FormTypeWaiting.DOWN}
+                              />
+                              <input
+                                name="participantId"
+                                type="hidden"
+                                value={participant.participantId}
+                              />
+                              <IconButton
+                                type="submit"
+                                size="sm"
+                                variant="ghost"
+                                aria-label="Move Down"
+                                onClick={() => {}}
+                                icon={<FaAngleDown />}
+                              />
+                            </Form>
+                          )}
+                        {index !== 0 && participantsWaiting.length > 1 && (
+                          <Form method="post">
+                            <input
+                              name="type"
+                              type="hidden"
+                              value={FormTypeWaiting.UP}
+                            />
+                            <input
+                              name="participantId"
+                              type="hidden"
+                              value={participant.participantId}
+                            />
+                            <IconButton
+                              type="submit"
+                              size="sm"
+                              variant="ghost"
+                              aria-label="Move Up"
+                              onClick={() => {}}
+                              icon={<FaAngleUp />}
+                            />
+                          </Form>
+                        )}
+                        <Form method="post">
+                          <input
+                            name="type"
+                            type="hidden"
+                            value={FormTypeWaiting.REMOVE}
+                          />
+                          <input
+                            name="participantId"
+                            type="hidden"
+                            value={participant.participantId}
+                          />
+                          <IconButton
+                            type="submit"
+                            size="sm"
+                            variant="ghost"
+                            aria-label="Delete"
+                            onClick={() => {}}
+                            icon={<FaTrashAlt />}
+                          />
+                        </Form>
+                      </HStack>
                     </Td>
                   </Tr>
                 ))}

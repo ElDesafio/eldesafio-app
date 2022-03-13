@@ -257,7 +257,6 @@ export function ProgramForm({
                   {daysIds.length > 1 && (
                     <IconButton
                       alignSelf="flex-end"
-                      colorScheme="red"
                       variant="ghost"
                       aria-label="Delete day"
                       onClick={() =>
