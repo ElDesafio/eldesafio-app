@@ -2,13 +2,23 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Divider,
   Flex,
   Heading,
   HStack,
   IconButton,
   Link as ChakraLink,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
   Spacer,
+  Spinner,
   Stack,
   Table,
   TableCaption,
@@ -25,7 +35,7 @@ import mudder from 'mudder';
 import { FaAngleDown, FaAngleUp, FaTrashAlt } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { Form, json, Link, useLoaderData } from 'remix';
+import { Form, json, Link, useLoaderData, useTransition } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -217,10 +227,20 @@ export default function ProgramGeneral() {
     participantsInactive: Exclude<GetProgram, null>['participants'];
     participantsWaiting: Exclude<GetProgram, null>['participants'];
   }>();
+  const transition = useTransition();
 
   if (!program) {
     throw new Error("Program doesn't exist");
   }
+
+  const isLoading = (participantId: number, FormType: FormTypeWaiting) => {
+    return (
+      +(transition.submission?.formData.get(
+        'participantId',
+      ) as any as string) === participantId &&
+      transition.submission?.formData.get('type') === FormType
+    );
+  };
 
   return (
     <>
@@ -440,13 +460,22 @@ export default function ProgramGeneral() {
                                 type="hidden"
                                 value={participant.participantId}
                               />
+
                               <IconButton
                                 type="submit"
                                 size="sm"
                                 variant="ghost"
                                 aria-label="Move Down"
-                                onClick={() => {}}
-                                icon={<FaAngleDown />}
+                                icon={
+                                  isLoading(
+                                    participant.participantId,
+                                    FormTypeWaiting.DOWN,
+                                  ) ? (
+                                    <Spinner size="xs" />
+                                  ) : (
+                                    <FaAngleDown />
+                                  )
+                                }
                               />
                             </Form>
                           )}
@@ -467,31 +496,73 @@ export default function ProgramGeneral() {
                               size="sm"
                               variant="ghost"
                               aria-label="Move Up"
-                              onClick={() => {}}
-                              icon={<FaAngleUp />}
+                              icon={
+                                isLoading(
+                                  participant.participantId,
+                                  FormTypeWaiting.UP,
+                                ) ? (
+                                  <Spinner size="xs" />
+                                ) : (
+                                  <FaAngleUp />
+                                )
+                              }
                             />
                           </Form>
                         )}
-                        <Form method="post">
-                          <input
-                            name="type"
-                            type="hidden"
-                            value={FormTypeWaiting.REMOVE}
-                          />
-                          <input
-                            name="participantId"
-                            type="hidden"
-                            value={participant.participantId}
-                          />
-                          <IconButton
-                            type="submit"
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Delete"
-                            onClick={() => {}}
-                            icon={<FaTrashAlt />}
-                          />
-                        </Form>
+                        <Popover
+                          returnFocusOnClose={false}
+                          placement="top"
+                          closeOnBlur={true}
+                        >
+                          <PopoverTrigger>
+                            <IconButton
+                              size="sm"
+                              variant="ghost"
+                              aria-label="Delete"
+                              onClick={() => {}}
+                              icon={
+                                isLoading(
+                                  participant.participantId,
+                                  FormTypeWaiting.REMOVE,
+                                ) ? (
+                                  <Spinner size="xs" />
+                                ) : (
+                                  <FaTrashAlt />
+                                )
+                              }
+                            />
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <PopoverHeader fontWeight="semibold">
+                              Confirmación
+                            </PopoverHeader>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverBody>
+                              ¿Estás seguro que querés sacarlo de la lista de
+                              espera?
+                            </PopoverBody>
+                            <PopoverFooter d="flex" justifyContent="flex-end">
+                              <ButtonGroup size="sm">
+                                <Form method="post">
+                                  <input
+                                    name="type"
+                                    type="hidden"
+                                    value={FormTypeWaiting.REMOVE}
+                                  />
+                                  <input
+                                    name="participantId"
+                                    type="hidden"
+                                    value={participant.participantId}
+                                  />
+                                  <Button type="submit" colorScheme="red">
+                                    Borrar
+                                  </Button>
+                                </Form>
+                              </ButtonGroup>
+                            </PopoverFooter>
+                          </PopoverContent>
+                        </Popover>
                       </HStack>
                     </Td>
                   </Tr>
