@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Flex,
+  HStack,
   Stack,
   Table,
   Tbody,
@@ -167,13 +168,17 @@ export default function ProgramGeneral() {
 
   return (
     <>
-      <Flex alignItems="center" justifyContent="space-between">
+      <Stack
+        direction={{ base: 'column', sm: 'row' }}
+        spacing="6"
+        justifyContent="space-between"
+      >
         <Link to="new">
           <Button leftIcon={<MdAdd />} colorScheme="blue">
             Agregar estimulo
           </Button>
         </Link>
-        <Box minWidth="200px">
+        <Box minWidth="200px" width="200px">
           <FormSelect
             name="months"
             instanceId="months-select"
@@ -187,8 +192,8 @@ export default function ProgramGeneral() {
             options={options}
           />
         </Box>
-      </Flex>
-      <Box mt={8}>
+      </Stack>
+      <Box mt={6} overflowX="auto" pt="10px">
         <Table borderWidth="1px" fontSize="sm" size="sm" width="auto">
           <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
             <Tr>
