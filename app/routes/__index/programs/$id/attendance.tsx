@@ -7,6 +7,7 @@ import {
   HStack,
   Stack,
   Table,
+  TableCaption,
   Tbody,
   Td,
   Text,
@@ -235,6 +236,13 @@ export default function ProgramGeneral() {
       </Stack>
       <Box mt={6} overflowX="auto" pt="10px">
         <Table borderWidth="1px" fontSize="sm" size="sm" width="auto">
+          <TableCaption textAlign="left">
+            Cantidad de participantes activos:{' '}
+            <Text as="span" fontWeight="semibold">
+              {participants.length}
+            </Text>
+          </TableCaption>
+
           <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
             <Tr>
               <Th whiteSpace="nowrap" scope="col" minWidth="300px">
