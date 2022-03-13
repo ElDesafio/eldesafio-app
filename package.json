@@ -63,6 +63,7 @@
     "@auto-it/slack": "^10.34.1",
     "@remix-run/dev": "1.2.3",
     "@types/flat": "5.0.2",
+    "@types/mudder": "^1.0.0",
     "@types/react": "17.0.39",
     "@types/react-dom": "17.0.13",
     "@types/uuid": "8.3.4",

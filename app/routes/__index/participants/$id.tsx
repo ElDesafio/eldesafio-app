@@ -50,7 +50,8 @@ export default function Participant() {
             <TabLink
               to={useResolvedPath('').pathname}
               aria-current={
-                location.pathname === useResolvedPath('').pathname
+                location.pathname.match(/^\/participants\/\d+$/) ||
+                location.pathname.match(/^\/participants\/.+\/edit.*$/)
                   ? 'page'
                   : undefined
               }

@@ -1,5 +1,6 @@
 import { SimpleGrid } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
+import mudder from 'mudder';
 import { useEffect } from 'react';
 import type { ActionFunction, LoaderFunction } from 'remix';
 import { json, useLoaderData, useSearchParams } from 'remix';
@@ -142,6 +143,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         create: {
           status: 'ACTIVE',
           wasEverActive: true,
+          waitingListOrder: null,
           createdBy: user.id,
           updatedBy: user.id,
           programId: +programId,
@@ -150,11 +152,49 @@ export const action: ActionFunction = async ({ request, params }) => {
         update: {
           status: 'ACTIVE',
           wasEverActive: true,
+          waitingListOrder: null,
           updatedBy: user.id,
         },
       });
     }
     case FormTypeAddToProgram.WAITING: {
+      const waitingList = await db.participantsOnPrograms.findMany({
+        where: {
+          programId: +programId,
+          status: 'WAITING',
+          waitingListOrder: {
+            not: null,
+          },
+        },
+        orderBy: {
+          waitingListOrder: 'desc',
+        },
+      });
+
+      console.log(waitingList);
+
+      // Let's start assuming the waiting list is empty.
+      let newWaitingListString = mudder.alphabet.mudder()[0];
+
+      if (waitingList.length === 1) {
+        const lastWaitingListString = waitingList[0].waitingListOrder;
+        newWaitingListString = mudder.alphabet.mudder(
+          lastWaitingListString!,
+          '',
+        )[0];
+      }
+      // If there are more than one participants on the waiting list,
+      // we calculate the new string based on the last 2 participants
+      // on the list
+      if (waitingList.length > 1) {
+        const lastWaitingListString = waitingList[0].waitingListOrder;
+        const secondToLastWaitingListString = waitingList[1].waitingListOrder;
+        newWaitingListString = mudder.alphabet.mudder(
+          secondToLastWaitingListString!,
+          lastWaitingListString!,
+        )[0];
+      }
+
       return await db.participantsOnPrograms.upsert({
         where: {
           programId_participantId: {
@@ -164,6 +204,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         },
         create: {
           status: 'WAITING',
+          waitingListOrder: newWaitingListString,
           createdBy: user.id,
           updatedBy: user.id,
           programId: +programId,
@@ -171,6 +212,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         },
         update: {
           status: 'WAITING',
+          waitingListOrder: newWaitingListString,
           updatedBy: user.id,
         },
       });
@@ -185,6 +227,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         },
         data: {
           status: 'INACTIVE',
+          waitingListOrder: null,
           updatedBy: user.id,
         },
       });

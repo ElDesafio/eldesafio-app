@@ -106,7 +106,7 @@ export default function ProgramGeneral() {
     <>
       <Flex alignItems="center">
         <Heading as="h3" size="md">
-          Datos
+          Datos Generales
         </Heading>
         <Spacer />
         {isUserAdmin && (
