@@ -16,6 +16,7 @@ import {
   TagLabel,
   Tbody,
   Td,
+  Text,
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -367,7 +368,12 @@ export default function ProgramGeneral() {
           </Heading>
           {participantsActive.length > 0 ? (
             <Table size="sm">
-              <TableCaption>Total: {participantsActive.length}</TableCaption>
+              <TableCaption>
+                Total:{' '}
+                <Text as="span" fontWeight={600}>
+                  {participantsActive.length}
+                </Text>
+              </TableCaption>
               <Tbody>
                 {participantsActive.map((participant) => (
                   <Tr key={participant.participantId}>
@@ -400,7 +406,12 @@ export default function ProgramGeneral() {
           </Heading>
           {participantsWaiting.length > 0 ? (
             <Table size="sm">
-              <TableCaption>Total: {participantsWaiting.length}</TableCaption>
+              <TableCaption>
+                Total:{' '}
+                <Text as="span" fontWeight={600}>
+                  {participantsWaiting.length}
+                </Text>
+              </TableCaption>
               <Tbody>
                 {participantsWaiting.map((participant, index) => (
                   <Tr key={participant.participantId}>
@@ -507,7 +518,12 @@ export default function ProgramGeneral() {
           </Heading>
           {participantsInactive.length > 0 ? (
             <Table size="sm">
-              <TableCaption>Total: {participantsInactive.length}</TableCaption>
+              <TableCaption>
+                Total:{' '}
+                <Text as="span" fontWeight={600}>
+                  {participantsInactive.length}
+                </Text>
+              </TableCaption>
               <Tbody>
                 {participantsInactive.map((participant) => (
                   <Tr key={participant.participantId}>
