@@ -47,7 +47,9 @@ export default function Program() {
             <TabLink
               to="attendance"
               aria-current={
-                location.pathname === useResolvedPath('attendance').pathname
+                location.pathname.includes(
+                  useResolvedPath('attendance').pathname,
+                )
                   ? 'page'
                   : undefined
               }

@@ -20,7 +20,8 @@ type BaseOption = {
 
 type FormSelectProps<Option extends BaseOption> = {
   name: string;
-  label: string;
+  label?: string;
+  defaultValue?: Option['value'];
   isRequired?: boolean;
   helperText?: React.ReactNode;
   placeholder?: string;
@@ -44,14 +45,19 @@ export function FormSelect<Option extends BaseOption>({
   instanceId,
   onChange,
   color,
+  defaultValue: defaultValueProp,
   ...rest
 }: FormSelectProps<Option>) {
   const { validate, clearError, defaultValue, error } = useField(name);
 
-  const cleanDefaultValue = defaultValue
+  const finalDefaultValue = defaultValueProp
+    ? `${defaultValueProp}`
+    : defaultValue;
+
+  const cleanDefaultValue = finalDefaultValue
     ? options.filter((option) => {
-        if (typeof defaultValue === 'string' && 'value' in option) {
-          const defaultValuesArray = defaultValue
+        if (typeof finalDefaultValue === 'string' && 'value' in option) {
+          const defaultValuesArray = finalDefaultValue
             .split(',')
             .map((value) =>
               value === Number(value).toString() ? Number(value) : value,
@@ -59,7 +65,7 @@ export function FormSelect<Option extends BaseOption>({
           return defaultValuesArray.includes(option.value);
         }
       })
-    : defaultValue;
+    : finalDefaultValue;
 
   let controlBg: string | undefined;
   let controlColor: string | undefined;
@@ -84,7 +90,7 @@ export function FormSelect<Option extends BaseOption>({
 
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
+      {label != null && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <Select<Option, typeof isMulti, GroupBase<Option>>
         id={name}
         instanceId={instanceId}

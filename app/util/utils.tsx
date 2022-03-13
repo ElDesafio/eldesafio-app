@@ -1,6 +1,11 @@
 import { Text } from '@chakra-ui/react';
 import type { User, UserRoles, UserStatus, Weekdays } from '@prisma/client';
-import { BloodType, FormAnswerOptions, Roles } from '@prisma/client';
+import {
+  BloodType,
+  ClassAttendanceStatus,
+  FormAnswerOptions,
+  Roles,
+} from '@prisma/client';
 import { DateTime } from 'luxon';
 import type React from 'react';
 import { useSearchParams } from 'remix';
@@ -196,4 +201,46 @@ export function isFacilitatorVolunteer(user: UserForRoleCheck) {
 export function isMentor(user: UserForRoleCheck) {
   checkUserAndRolesExist(user);
   return user?.roles?.some((role) => role.role === Roles.MENTOR);
+}
+
+export function getAttendanceProps(attendance: ClassAttendanceStatus) {
+  let backgroundColor: string;
+  let textColor: string;
+  let text: string;
+  let shortText: string;
+
+  switch (attendance) {
+    case ClassAttendanceStatus.PRESENT: {
+      backgroundColor = 'green.500';
+      textColor = 'white';
+      text = 'Presente';
+      shortText = 'P';
+      break;
+    }
+    case ClassAttendanceStatus.ABSENT: {
+      backgroundColor = 'red.500';
+      textColor = 'white';
+      text = 'Ausente';
+      shortText = 'A';
+      break;
+    }
+    case ClassAttendanceStatus.LATE: {
+      backgroundColor = 'green.100';
+      textColor = 'gray.600';
+      text = 'Tardanza';
+      shortText = 'T';
+      break;
+    }
+    case ClassAttendanceStatus.EXCUSED: {
+      backgroundColor = 'red.100';
+      textColor = 'gray.600';
+      text = 'Justificada';
+      shortText = 'J';
+      break;
+    }
+    default:
+      throw new Error('Attendance not supported');
+  }
+
+  return { backgroundColor, textColor, text, shortText };
 }

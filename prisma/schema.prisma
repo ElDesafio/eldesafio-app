@@ -276,7 +276,7 @@ model Program {
   participants  ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByProgram")
   programDays   ProgramDays[]            @relation("ProgramDaysByProgram")
   educators     UsersOnPrograms[]        @relation("UserOnProgramsByProgram")
-  Class         Class[]                  @relation("ClassByProgram")
+  classes       Class[]                  @relation("ClassByProgram")
 }
 
 model UsersOnPrograms {
@@ -328,18 +328,18 @@ model ProgramDays {
 }
 
 model Class {
-  id                    Int                     @id @default(autoincrement())
-  programId             Int
-  program               Program                 @relation("ClassByProgram", fields: [programId], references: [id])
-  date                  DateTime                @db.Date
-  isRainyDay            Boolean                 @default(false)
-  createdAt             DateTime                @default(now()) @db.Timestamptz
-  updatedAt             DateTime                @default(now()) @updatedAt @db.Timestamptz
-  createdBy             Int
-  createdByUser         User                    @relation("CreatedClassByUser", fields: [createdBy], references: [id])
-  updatedBy             Int
-  updatedByUser         User                    @relation("UpdatedClassByUser", fields: [updatedBy], references: [id])
-  ParticipantsOnClasses ParticipantsOnClasses[] @relation("ParticipantsOnClassesByClass")
+  id            Int                     @id @default(autoincrement())
+  programId     Int
+  program       Program                 @relation("ClassByProgram", fields: [programId], references: [id], onDelete: Cascade)
+  date          DateTime                @db.Date
+  isRainyDay    Boolean                 @default(false)
+  createdAt     DateTime                @default(now()) @db.Timestamptz
+  updatedAt     DateTime                @default(now()) @updatedAt @db.Timestamptz
+  createdBy     Int
+  createdByUser User                    @relation("CreatedClassByUser", fields: [createdBy], references: [id])
+  updatedBy     Int
+  updatedByUser User                    @relation("UpdatedClassByUser", fields: [updatedBy], references: [id])
+  participants  ParticipantsOnClasses[] @relation("ParticipantsOnClassesByClass")
 }
 
 enum ClassAttendanceStatus {
@@ -352,9 +352,9 @@ enum ClassAttendanceStatus {
 
 model ParticipantsOnClasses {
   classId       Int
-  class         Class                 @relation("ParticipantsOnClassesByClass", fields: [classId], references: [id])
+  class         Class                 @relation("ParticipantsOnClassesByClass", fields: [classId], references: [id], onDelete: Cascade)
   participantId Int
-  participant   Participant           @relation("ParticipantsOnClassesByParticipant", fields: [participantId], references: [id])
+  participant   Participant           @relation("ParticipantsOnClassesByParticipant", fields: [participantId], references: [id], onDelete: Cascade)
   status        ClassAttendanceStatus @default(UNKNOWN)
   createdAt     DateTime              @default(now()) @db.Timestamptz
   updatedAt     DateTime              @default(now()) @updatedAt @db.Timestamptz

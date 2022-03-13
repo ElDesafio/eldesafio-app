@@ -15,7 +15,7 @@ import { useField } from 'remix-validated-form';
 
 type FormInputProps = {
   name: string;
-  label: string;
+  label?: string;
   isRequired?: boolean;
   hidden?: boolean;
   helperText?: React.ReactNode;
@@ -59,7 +59,7 @@ export const FormInput = ({
         isRequired={isRequired}
         maxWidth={maxWidth}
       >
-        {!hidden && <FormLabel htmlFor={name}>{label}</FormLabel>}
+        {!hidden && label && <FormLabel htmlFor={name}>{label}</FormLabel>}
         <InputGroup>
           {leftElement && <InputLeftElement> {leftElement}</InputLeftElement>}
           {hidden ? <VisuallyHidden>{input}</VisuallyHidden> : input}

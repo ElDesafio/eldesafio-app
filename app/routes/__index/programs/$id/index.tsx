@@ -35,7 +35,14 @@ import mudder from 'mudder';
 import { FaAngleDown, FaAngleUp, FaTrashAlt } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { Form, json, Link, useLoaderData, useTransition } from 'remix';
+import {
+  Form,
+  json,
+  Link,
+  PrefetchPageLinks,
+  useLoaderData,
+  useTransition,
+} from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -244,6 +251,8 @@ export default function ProgramGeneral() {
 
   return (
     <>
+      <PrefetchPageLinks page={`/programs/${program.id}/attendance`} />
+
       <Flex alignItems="center">
         <Heading as="h3" size="md">
           Datos Generales
