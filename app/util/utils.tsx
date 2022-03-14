@@ -6,10 +6,14 @@ import {
   FormAnswerOptions,
   Roles,
 } from '@prisma/client';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import { DateTime } from 'luxon';
 import type React from 'react';
 import { useSearchParams } from 'remix';
 import { z } from 'zod';
+
+import type { GetProgramClasses } from '~/services/classes.service';
 
 export function getAge<T extends boolean>(
   birthday: string,
@@ -243,4 +247,232 @@ export function getAttendanceProps(attendance: ClassAttendanceStatus) {
   }
 
   return { backgroundColor, textColor, text, shortText };
+}
+
+export function formatAttendanceChartData(classes: GetProgramClasses) {
+  // Helper to collect data by month
+  const helper: Record<
+    string,
+    {
+      present: number;
+      absent: number;
+      late: number;
+      excused: number;
+      rainyDays: number;
+      totalClasses: 0;
+    }
+  > = {};
+
+  classes.forEach((classItem) => {
+    //! There is an issue in Prisma. It's returning it as ISO instead of Date object
+    const month = DateTime.fromISO(classItem.date as unknown as string, {
+      zone: 'utc',
+    })
+      .setLocale('en-EN')
+      .month.toString();
+
+    if (!helper[month]) {
+      helper[month] = {
+        present: 0,
+        absent: 0,
+        late: 0,
+        excused: 0,
+        rainyDays: 0,
+        totalClasses: 0,
+      };
+    }
+
+    helper[month].totalClasses++;
+
+    if (classItem.isRainyDay) {
+      helper[month].rainyDays++;
+    }
+
+    classItem.participants.forEach((participant) => {
+      if (participant.status === ClassAttendanceStatus.PRESENT) {
+        helper[month].present++;
+      }
+      if (participant.status === ClassAttendanceStatus.ABSENT) {
+        helper[month].absent++;
+      }
+      if (participant.status === ClassAttendanceStatus.LATE) {
+        helper[month].late++;
+      }
+      if (participant.status === ClassAttendanceStatus.EXCUSED) {
+        helper[month].excused++;
+      }
+    });
+  });
+
+  // const totalPercentages: Record<
+  //   string,
+  //   {
+  //     present: number;
+  //     absent: number;
+  //     late: number;
+  //     excused: number;
+  //     rainyDays: number;
+  //   }
+  // > = {};
+
+  const presentByMonth: number[] = [];
+  const absentByMonth: number[] = [];
+  const lateByMonth: number[] = [];
+  const excusedByMonth: number[] = [];
+  const rainyDaysByMonth: number[] = [];
+  const presentTotal: number[] = [];
+  const monthsKeys: string[] = [];
+
+  Object.keys(helper)
+    .sort((a, b) => (Number(a) > Number(b) ? 1 : -1))
+    .forEach((month, index) => {
+      const { present, absent, late, excused, rainyDays, totalClasses } =
+        helper[month];
+
+      const totalStimulus = present + absent + late + excused;
+
+      const presentPercentage = (present / totalStimulus) * 100;
+      const absentPercentage = (absent / totalStimulus) * 100;
+      const latePercentage = (late / totalStimulus) * 100;
+      const excusedPercentage = (excused / totalStimulus) * 100;
+      const rainyDaysPercentage = (rainyDays / totalClasses) * 100;
+      const presentTotalPercentage = presentPercentage + latePercentage;
+
+      presentByMonth.push(Math.ceil(presentPercentage));
+      absentByMonth.push(Math.ceil(absentPercentage));
+      lateByMonth.push(Math.ceil(latePercentage));
+      excusedByMonth.push(Math.ceil(excusedPercentage));
+      rainyDaysByMonth.push(Math.ceil(rainyDaysPercentage));
+      presentTotal.push(Math.ceil(presentTotalPercentage));
+
+      monthsKeys.push(month);
+
+      // totalPercentages[month] = {
+      //   present: (present / totalStimulus) * 100,
+      //   absent: (absent / totalStimulus) * 100,
+      //   late: (late / totalStimulus) * 100,
+      //   excused: (excused / totalStimulus) * 100,
+      //   rainyDays: (rainyDays / totalClasses) * 100,
+      // };
+    });
+  // console.log(totalPercentages);
+  // return { totalPercentages, monthsKeys };
+
+  const options: Highcharts.Options = {
+    title: {
+      text: '',
+    },
+    xAxis: {
+      categories: monthsKeys,
+      title: {
+        text: '',
+      },
+    },
+    yAxis: {
+      title: {
+        text: '',
+      },
+    },
+
+    tooltip: {
+      formatter: function () {
+        // return '<b>'+ this.series.name +'</b>: '+ Math.round(this.percentage) +' %';
+        return (
+          '<span style="color:' +
+          this.series.color +
+          '">\u25CF</span> ' +
+          this.series.name +
+          ': <b>' +
+          this.point.y.toFixed(0) +
+          '%</b><br/>'
+        );
+      },
+
+      // pointFormat: function() {
+      //  // return '<span style="color:'+ series.color +'">\u25CF</span>'+ series.name +': <b>'+point.y+'%</b><br/>';
+      //  return '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y}%</b><br/>'
+      // }
+    },
+    plotOptions: {
+      column: {
+        stacking: 'normal',
+      },
+    },
+
+    series: [
+      {
+        type: 'column',
+        name: 'Presente',
+        color: '#38A169',
+        data: presentByMonth,
+        stack: 'present',
+      },
+      {
+        type: 'column',
+        name: 'Tardanza',
+        color: '#C6F6D5',
+        data: lateByMonth,
+        stack: 'present',
+      },
+      {
+        type: 'column',
+        name: 'Ausente',
+        color: '#E53E3E',
+        data: absentByMonth,
+        stack: 'absent',
+      },
+      {
+        type: 'column',
+        name: 'Justificada',
+        color: '#FED7D7',
+        data: excusedByMonth,
+        stack: 'absent',
+      },
+      {
+        type: 'spline',
+        name: 'Presente Total',
+        data: presentTotal,
+        marker: {
+          lineWidth: 2,
+          lineColor: '#7CC576',
+          fillColor: '#7CC576',
+          color: '#7CC576',
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            let pcnt = this.y;
+            return Highcharts.numberFormat(pcnt, 0) + '%';
+          },
+          y: -10,
+        },
+      },
+      {
+        type: 'spline',
+        name: 'Días de lluvia',
+        data: rainyDaysByMonth,
+        visible: false,
+        marker: {
+          lineWidth: 2,
+          lineColor: '#95a5a6',
+          fillColor: '#95a5a6',
+          color: '#95a5a6',
+        },
+        color: '#95a5a6',
+        dataLabels: {
+          enabled: true,
+          color: '#95a5a6',
+          style: {
+            textShadow: false,
+          },
+          formatter: function () {
+            let pcnt = this.y;
+            return Highcharts.numberFormat(pcnt, 0) + '%';
+          },
+          y: -10,
+        },
+      },
+    ],
+  };
+  return options;
 }

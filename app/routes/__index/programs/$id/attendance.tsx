@@ -39,6 +39,8 @@ import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getAge, getAttendanceProps, isAdmin } from '~/util/utils';
 
+import { AttendanceChart } from './components/AttendanceChart';
+
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
   let authUser = await authenticator.isAuthenticated(request, {
@@ -310,6 +312,9 @@ export default function ProgramGeneral() {
             ))}
           </Tbody>
         </Table>
+      </Box>
+      <Box>
+        <AttendanceChart />
       </Box>
     </>
   );
