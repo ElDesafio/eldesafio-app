@@ -84,7 +84,7 @@ export function AttendanceForm({
         </FormCheckbox>
       </FormStack>
 
-      <Box mt={8}>
+      <Box mt={8} overflowX="auto">
         <Table borderWidth="0" size="sm" width="auto">
           <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
             <Tr>
