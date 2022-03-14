@@ -8,7 +8,7 @@ import {
 } from '@prisma/client';
 import type Highcharts from 'highcharts';
 import { numberFormat } from 'highcharts';
-import { DateTime } from 'luxon';
+import { DateTime, Info } from 'luxon';
 import type React from 'react';
 import { useSearchParams } from 'remix';
 import { z } from 'zod';
@@ -237,6 +237,7 @@ export function getAttendanceProps(attendance: ClassAttendanceStatus) {
     case ClassAttendanceStatus.LATE: {
       backgroundColor = 'green.100';
       backgroundColorHex = '#FED7D7';
+      backgroundColorHex = '#C6F6D5';
       textColor = 'gray.600';
       textColorHex = '#4A5568';
       text = 'Tardanza';
@@ -245,7 +246,7 @@ export function getAttendanceProps(attendance: ClassAttendanceStatus) {
     }
     case ClassAttendanceStatus.EXCUSED: {
       backgroundColor = 'red.100';
-      backgroundColorHex = '#C6F6D5';
+      backgroundColorHex = '#FED7D7';
       textColor = 'gray.600';
       textColorHex = '#4A5568';
       text = 'Justificada';
@@ -351,7 +352,7 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
       rainyDaysByMonth.push(Math.ceil(rainyDaysPercentage));
       presentTotal.push(Math.ceil(presentTotalPercentage));
 
-      monthsKeys.push(month);
+      monthsKeys.push(Info.months('long', { locale: 'es-Es' })[+month]);
     });
 
   const options: Highcharts.Options = {
