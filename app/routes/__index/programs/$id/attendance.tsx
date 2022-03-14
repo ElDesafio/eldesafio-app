@@ -4,8 +4,7 @@ import {
   Box,
   Button,
   Divider,
-  Flex,
-  HStack,
+  Heading,
   Stack,
   Table,
   TableCaption,
@@ -15,7 +14,6 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import type { ClassAttendanceStatus } from '@prisma/client';
 import { DateTime, Info } from 'luxon';
@@ -31,6 +29,7 @@ import {
 } from 'remix';
 import { z } from 'zod';
 
+import { AlertED } from '~/components/AlertED';
 import { FormSelect } from '~/components/Form/FormSelect';
 import { authenticator } from '~/services/auth.server';
 import type { GetProgramClasses } from '~/services/classes.service';
@@ -227,7 +226,7 @@ export default function ProgramGeneral() {
             name="months"
             instanceId="months-select"
             placeholder="Seleccionar mes..."
-            defaultValue={selectedMonth}
+            value={options[selectedMonth]}
             onChange={(newValue) => {
               if (newValue && 'label' in newValue) {
                 setSearchParams({ month: newValue.value.toString() });
@@ -238,83 +237,94 @@ export default function ProgramGeneral() {
         </Box>
       </Stack>
       <Box mt={6} overflowX="auto" pt="10px">
-        <Table borderWidth="1px" fontSize="sm" size="sm" width="auto">
-          <TableCaption textAlign="left">
-            Cantidad de participantes activos:{' '}
-            <Text as="span" fontWeight="semibold">
-              {participants.length}
-            </Text>
-          </TableCaption>
+        {classes.length > 0 ? (
+          <Table borderWidth="1px" fontSize="sm" size="sm" width="auto">
+            <TableCaption textAlign="left">
+              Cantidad de participantes activos:{' '}
+              <Text as="span" fontWeight="semibold">
+                {participants.length}
+              </Text>
+            </TableCaption>
 
-          <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
-            <Tr>
-              <Th whiteSpace="nowrap" scope="col" minWidth="300px">
-                PARTICIPANTE
-              </Th>
-              <Th whiteSpace="nowrap" scope="col">
-                Totales
-              </Th>
-              {classes.map((classItem) => (
-                <Th
-                  key={classItem.id}
-                  whiteSpace="nowrap"
-                  scope="col"
-                  width="50px"
-                  textAlign="center"
-                  textTransform="initial"
-                  fontWeight="400"
-                  fontSize="10px"
-                  lineHeight="1.2"
-                  pr={1}
-                  pl={1}
-                >
-                  <ClassDateHeader
-                    date={classItem.date}
-                    isRainyDay={classItem.isRainyDay}
-                  />
+            <Thead bg="gray.50">
+              <Tr>
+                <Th whiteSpace="nowrap" scope="col" minWidth="300px">
+                  PARTICIPANTE
                 </Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {participants.map((attendant) => (
-              <Tr key={attendant.participantId}>
-                <Td whiteSpace="nowrap">
-                  <Stack direction="row" spacing="4" align="center">
-                    <Box flexShrink={0}>
-                      <Avatar size="sm" src={attendant.picture || undefined} />
-                    </Box>
-                    <Box>
-                      <Box fontSize="sm" fontWeight="medium">
-                        <Link to={`/participants/${attendant.participantId}`}>
-                          {attendant.firstName} {attendant.lastName}
-                        </Link>
-                      </Box>
-                      <Box fontSize="sm" color="gray.500">
-                        {getAge(attendant.birthday)}
-                      </Box>
-                    </Box>
-                  </Stack>
-                </Td>
-                <Td textAlign="center">
-                  {totalPercentages[attendant.participantId].present}%
-                </Td>
+                <Th whiteSpace="nowrap" scope="col">
+                  Totales
+                </Th>
                 {classes.map((classItem) => (
-                  <ClassAttendanceCell
+                  <Th
                     key={classItem.id}
-                    status={
-                      classItem.participants.filter(
-                        (p) => p.participantId === attendant.participantId,
-                      )[0].status
-                    }
-                  />
+                    whiteSpace="nowrap"
+                    scope="col"
+                    width="50px"
+                    textAlign="center"
+                    textTransform="initial"
+                    fontWeight="400"
+                    fontSize="10px"
+                    lineHeight="1.2"
+                    pr={1}
+                    pl={1}
+                  >
+                    <ClassDateHeader
+                      date={classItem.date}
+                      isRainyDay={classItem.isRainyDay}
+                    />
+                  </Th>
                 ))}
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {participants.map((attendant) => (
+                <Tr key={attendant.participantId}>
+                  <Td whiteSpace="nowrap">
+                    <Stack direction="row" spacing="4" align="center">
+                      <Box flexShrink={0}>
+                        <Avatar
+                          size="sm"
+                          src={attendant.picture || undefined}
+                        />
+                      </Box>
+                      <Box>
+                        <Box fontSize="sm" fontWeight="medium">
+                          <Link to={`/participants/${attendant.participantId}`}>
+                            {attendant.firstName} {attendant.lastName}
+                          </Link>
+                        </Box>
+                        <Box fontSize="sm" color="gray.500">
+                          {getAge(attendant.birthday)}
+                        </Box>
+                      </Box>
+                    </Stack>
+                  </Td>
+                  <Td textAlign="center">
+                    {totalPercentages[attendant.participantId].present}%
+                  </Td>
+                  {classes.map((classItem) => (
+                    <ClassAttendanceCell
+                      key={classItem.id}
+                      status={
+                        classItem.participants.filter(
+                          (p) => p.participantId === attendant.participantId,
+                        )[0].status
+                      }
+                    />
+                  ))}
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        ) : (
+          <AlertED title="Vacío" description="No hay clases en este mes." />
+        )}
       </Box>
-      <Divider mt={8} mb={8} />
+      <Heading as="h3" size="md" mt={8}>
+        Gráfico anual
+      </Heading>
+      <Divider mt={2} mb={8} />
+
       <Box>
         <AttendanceChart />
       </Box>
