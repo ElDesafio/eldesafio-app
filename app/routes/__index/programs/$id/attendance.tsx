@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Divider,
   Flex,
   HStack,
   Stack,
@@ -313,6 +314,7 @@ export default function ProgramGeneral() {
           </Tbody>
         </Table>
       </Box>
+      <Divider mt={8} mb={8} />
       <Box>
         <AttendanceChart />
       </Box>

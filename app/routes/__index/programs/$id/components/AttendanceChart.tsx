@@ -4,15 +4,14 @@ import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useRef } from 'react';
 import { useFetcher, useParams } from 'remix';
 
+import type { GetProgramClasses } from '~/services/classes.service';
 import { formatAttendanceChartData } from '~/util/utils';
 
 export function AttendanceChart() {
   const { id } = useParams();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
-  const routeData = useFetcher<{ id: number; name: string }[]>();
-
-  console.log(routeData);
+  const routeData = useFetcher<{ classes: GetProgramClasses }>();
 
   useEffect(() => {
     routeData.load(`/programs/${id}/attendance?month=0`);
@@ -33,7 +32,7 @@ export function AttendanceChart() {
   }
 
   return (
-    <Box width="full" height="600px">
+    <Box width="full" mb={8}>
       <HighchartsReact
         highcharts={Highcharts}
         options={formatAttendanceChartData(routeData.data.classes)}

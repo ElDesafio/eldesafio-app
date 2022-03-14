@@ -6,8 +6,8 @@ import {
   FormAnswerOptions,
   Roles,
 } from '@prisma/client';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import type Highcharts from 'highcharts';
+import { numberFormat } from 'highcharts';
 import { DateTime } from 'luxon';
 import type React from 'react';
 import { useSearchParams } from 'remix';
@@ -209,35 +209,45 @@ export function isMentor(user: UserForRoleCheck) {
 
 export function getAttendanceProps(attendance: ClassAttendanceStatus) {
   let backgroundColor: string;
+  let backgroundColorHex: string;
   let textColor: string;
+  let textColorHex: string;
   let text: string;
   let shortText: string;
 
   switch (attendance) {
     case ClassAttendanceStatus.PRESENT: {
       backgroundColor = 'green.500';
+      backgroundColorHex = '#38A169';
       textColor = 'white';
+      textColorHex = '#FFFFFF';
       text = 'Presente';
       shortText = 'P';
       break;
     }
     case ClassAttendanceStatus.ABSENT: {
       backgroundColor = 'red.500';
+      backgroundColorHex = '#E53E3E';
       textColor = 'white';
+      textColorHex = '#FFFFFF';
       text = 'Ausente';
       shortText = 'A';
       break;
     }
     case ClassAttendanceStatus.LATE: {
       backgroundColor = 'green.100';
+      backgroundColorHex = '#FED7D7';
       textColor = 'gray.600';
+      textColorHex = '#4A5568';
       text = 'Tardanza';
       shortText = 'T';
       break;
     }
     case ClassAttendanceStatus.EXCUSED: {
       backgroundColor = 'red.100';
+      backgroundColorHex = '#C6F6D5';
       textColor = 'gray.600';
+      textColorHex = '#4A5568';
       text = 'Justificada';
       shortText = 'J';
       break;
@@ -246,7 +256,14 @@ export function getAttendanceProps(attendance: ClassAttendanceStatus) {
       throw new Error('Attendance not supported');
   }
 
-  return { backgroundColor, textColor, text, shortText };
+  return {
+    backgroundColor,
+    textColor,
+    text,
+    shortText,
+    backgroundColorHex,
+    textColorHex,
+  };
 }
 
 export function formatAttendanceChartData(classes: GetProgramClasses) {
@@ -304,17 +321,6 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
     });
   });
 
-  // const totalPercentages: Record<
-  //   string,
-  //   {
-  //     present: number;
-  //     absent: number;
-  //     late: number;
-  //     excused: number;
-  //     rainyDays: number;
-  //   }
-  // > = {};
-
   const presentByMonth: number[] = [];
   const absentByMonth: number[] = [];
   const lateByMonth: number[] = [];
@@ -346,17 +352,7 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
       presentTotal.push(Math.ceil(presentTotalPercentage));
 
       monthsKeys.push(month);
-
-      // totalPercentages[month] = {
-      //   present: (present / totalStimulus) * 100,
-      //   absent: (absent / totalStimulus) * 100,
-      //   late: (late / totalStimulus) * 100,
-      //   excused: (excused / totalStimulus) * 100,
-      //   rainyDays: (rainyDays / totalClasses) * 100,
-      // };
     });
-  // console.log(totalPercentages);
-  // return { totalPercentages, monthsKeys };
 
   const options: Highcharts.Options = {
     title: {
@@ -376,22 +372,16 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
 
     tooltip: {
       formatter: function () {
-        // return '<b>'+ this.series.name +'</b>: '+ Math.round(this.percentage) +' %';
         return (
           '<span style="color:' +
-          this.series.color +
+          this.point.color +
           '">\u25CF</span> ' +
           this.series.name +
           ': <b>' +
-          this.point.y.toFixed(0) +
+          this.point?.y?.toFixed(0) +
           '%</b><br/>'
         );
       },
-
-      // pointFormat: function() {
-      //  // return '<span style="color:'+ series.color +'">\u25CF</span>'+ series.name +': <b>'+point.y+'%</b><br/>';
-      //  return '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y}%</b><br/>'
-      // }
     },
     plotOptions: {
       column: {
@@ -403,28 +393,28 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
       {
         type: 'column',
         name: 'Presente',
-        color: '#38A169',
+        color: getAttendanceProps('PRESENT').backgroundColorHex,
         data: presentByMonth,
         stack: 'present',
       },
       {
         type: 'column',
         name: 'Tardanza',
-        color: '#C6F6D5',
+        color: getAttendanceProps('LATE').backgroundColorHex,
         data: lateByMonth,
         stack: 'present',
       },
       {
         type: 'column',
         name: 'Ausente',
-        color: '#E53E3E',
+        color: getAttendanceProps('ABSENT').backgroundColorHex,
         data: absentByMonth,
         stack: 'absent',
       },
       {
         type: 'column',
         name: 'Justificada',
-        color: '#FED7D7',
+        color: getAttendanceProps('EXCUSED').backgroundColorHex,
         data: excusedByMonth,
         stack: 'absent',
       },
@@ -434,15 +424,15 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
         data: presentTotal,
         marker: {
           lineWidth: 2,
-          lineColor: '#7CC576',
-          fillColor: '#7CC576',
-          color: '#7CC576',
+          lineColor: getAttendanceProps('PRESENT').backgroundColorHex,
+          fillColor: getAttendanceProps('PRESENT').backgroundColorHex,
+          color: getAttendanceProps('PRESENT').backgroundColorHex,
         },
         dataLabels: {
           enabled: true,
           formatter: function () {
             let pcnt = this.y;
-            return Highcharts.numberFormat(pcnt, 0) + '%';
+            return numberFormat(pcnt as number, 0) + '%';
           },
           y: -10,
         },
@@ -467,7 +457,7 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
           },
           formatter: function () {
             let pcnt = this.y;
-            return Highcharts.numberFormat(pcnt, 0) + '%';
+            return numberFormat(pcnt as number, 0) + '%';
           },
           y: -10,
         },
