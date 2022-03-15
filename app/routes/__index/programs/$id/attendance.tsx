@@ -138,9 +138,11 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 function ClassDateHeader({
+  classId,
   date,
   isRainyDay = false,
 }: {
+  classId: number;
   date: Date;
   isRainyDay: boolean;
 }) {
@@ -163,6 +165,11 @@ function ClassDateHeader({
         <br />
         {dateLuxon.year}
       </Text>
+      <Link to={`${classId}/edit`}>
+        <Button variant="solid" colorScheme="gray" size="xs" pr={1} pl={1}>
+          Editar
+        </Button>
+      </Link>
     </Box>
   );
 }
@@ -269,6 +276,7 @@ export default function ProgramGeneral() {
                     pl={1}
                   >
                     <ClassDateHeader
+                      classId={classItem.id}
                       date={classItem.date}
                       isRainyDay={classItem.isRainyDay}
                     />

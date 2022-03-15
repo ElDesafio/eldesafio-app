@@ -21,13 +21,14 @@ import { FormCheckbox } from '~/components/Form/FormCheckbox';
 import { FormInput } from '~/components/Form/FormInput';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
+import type { GetClass } from '~/services/classes.service';
 import type { GetProgramParticipants } from '~/services/programs.service';
 import { getAge, schemaCheckbox } from '~/util/utils';
 
 import { AlertED } from '../AlertED';
 import { FormRadioAttendance } from '../Form/FormRadioAttendance';
 
-const attendanceSchema = z.object({
+export const attendanceSchema = z.object({
   date: z.string().nonempty('Fecha no puede estar vacía'),
   isRainyDay: schemaCheckbox,
   attendants: z
@@ -47,7 +48,9 @@ export const attendanceFormValidator = withZod(attendanceSchema);
 
 type AttendanceFormProps = {
   defaultValues?: Partial<z.infer<typeof attendanceSchema>>;
-  attendants: GetProgramParticipants;
+  attendants:
+    | GetProgramParticipants
+    | Exclude<GetClass, undefined>['attendants'];
 };
 
 export function AttendanceForm({
@@ -125,7 +128,7 @@ export function AttendanceForm({
                   <FormInput
                     name={`attendants[${index}].participantId`}
                     hidden
-                    defaultValue={attendant.participantId}
+                    value={attendant.participantId}
                   />
                   <FormRadioAttendance name={`attendants[${index}].status`} />
                 </Td>

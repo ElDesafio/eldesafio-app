@@ -37,7 +37,7 @@ export default function Program() {
               to={useResolvedPath('').pathname}
               aria-current={
                 location.pathname.match(/^\/programs\/\d+$/) ||
-                location.pathname.match(/^\/programs\/.+\/edit.*$/)
+                location.pathname.match(/^\/programs\/edit.*$/)
                   ? 'page'
                   : undefined
               }

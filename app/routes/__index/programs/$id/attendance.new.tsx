@@ -90,7 +90,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/programs/${programId}/attendance`);
 };
 
-export default function ProgramGeneral() {
+export default function AttendanceNew() {
   const { participants } = useLoaderData<{
     participants: GetProgramParticipants;
   }>();

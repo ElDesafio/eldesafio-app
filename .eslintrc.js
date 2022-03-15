@@ -36,6 +36,9 @@ module.exports = {
         project: '.',
       },
     },
+    react: {
+      version: 'detect',
+    },
   },
   rules: {
     'prettier/prettier': 2,
@@ -53,6 +56,11 @@ module.exports = {
       },
     ],
     'no-duplicate-imports': 'off',
+    'object-shorthand': [
+      'error',
+      'always',
+      { avoidExplicitReturnArrows: true },
+    ],
     '@typescript-eslint/no-duplicate-imports': ['error'],
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/indent': ['off', 2],

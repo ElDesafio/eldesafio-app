@@ -62,7 +62,8 @@ export const FormRadioAttendance = ({
 }: FormRadioAttendanceProps & Omit<RadioGroupProps, 'children'>) => {
   const { validate, clearError, defaultValue, error } = useField(name);
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: name,
+    name,
+    defaultValue,
   });
 
   const group = getRootProps();
@@ -74,7 +75,6 @@ export const FormRadioAttendance = ({
         id={name}
         onBlur={validate}
         {...group}
-        defaultValue={defaultValue}
         onChange={(value) => {
           if (onChange) {
             onChange(value);
@@ -82,22 +82,19 @@ export const FormRadioAttendance = ({
           clearError();
         }}
         {...rest}
+        defaultValue={undefined}
       >
         <ButtonGroup isAttached variant="outline">
           <ButtonRadio
-            value={ClassAttendanceStatus.PRESENT}
             {...getRadioProps({ value: ClassAttendanceStatus.PRESENT })}
           />
           <ButtonRadio
-            value={ClassAttendanceStatus.ABSENT}
             {...getRadioProps({ value: ClassAttendanceStatus.ABSENT })}
           />
           <ButtonRadio
-            value={ClassAttendanceStatus.LATE}
             {...getRadioProps({ value: ClassAttendanceStatus.LATE })}
           />
           <ButtonRadio
-            value={ClassAttendanceStatus.EXCUSED}
             {...getRadioProps({ value: ClassAttendanceStatus.EXCUSED })}
           />
         </ButtonGroup>

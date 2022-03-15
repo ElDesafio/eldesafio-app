@@ -26,7 +26,7 @@ type FormSelectProps<Option extends BaseOption> = {
   helperText?: React.ReactNode;
   placeholder?: string;
   isMulti?: boolean;
-  value: Option;
+  value?: Option;
   options: Option[];
   instanceId?: string;
   color?: 'red' | 'blue' | 'green' | 'yellow' | 'orange' | 'purple' | 'gray';

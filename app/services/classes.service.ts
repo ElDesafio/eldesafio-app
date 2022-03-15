@@ -117,3 +117,43 @@ export async function getProgramClasses({
 export type GetProgramClasses = Prisma.PromiseReturnType<
   typeof getProgramClasses
 >;
+
+export async function getClass(id: number) {
+  const classItem = await db.class.findUnique({
+    where: { id },
+    include: {
+      participants: {
+        orderBy: {
+          participant: {
+            firstName: 'asc',
+          },
+        },
+        include: {
+          participant: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              picture: true,
+              birthday: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!classItem) return;
+
+  return {
+    date: classItem.date,
+    isRainyDay: classItem.isRainyDay,
+    attendants: classItem.participants.map((participant) => ({
+      participantId: participant.participantId,
+      status: participant.status,
+      ...participant.participant,
+    })),
+  };
+}
+
+export type GetClass = Prisma.PromiseReturnType<typeof getClass>;
