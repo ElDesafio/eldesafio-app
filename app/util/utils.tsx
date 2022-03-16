@@ -253,8 +253,17 @@ export function getAttendanceProps(attendance: ClassAttendanceStatus) {
       shortText = 'J';
       break;
     }
+    case ClassAttendanceStatus.UNKNOWN: {
+      backgroundColor = 'gray.100';
+      backgroundColorHex = '#EDF2F7';
+      textColor = 'gray.600';
+      textColorHex = '#4A5568';
+      text = 'Desconocida';
+      shortText = '';
+      break;
+    }
     default:
-      throw new Error('Attendance not supported');
+      throw new Error('[getAttendanceProps] Attendance not supported');
   }
 
   return {
@@ -283,11 +292,11 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
 
   classes.forEach((classItem) => {
     //! There is an issue in Prisma. It's returning it as ISO instead of Date object
-    const month = DateTime.fromISO(classItem.date as unknown as string, {
-      zone: 'utc',
-    })
-      .setLocale('en-EN')
-      .month.toString();
+    const month = (
+      DateTime.fromISO(classItem.date as unknown as string, {
+        zone: 'utc',
+      }).setLocale('en-EN').month - 1
+    ).toString();
 
     if (!helper[month]) {
       helper[month] = {

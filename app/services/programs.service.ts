@@ -68,7 +68,14 @@ export async function getProgramParticipants({
   whereAnd.push({ programId });
 
   if (includeStatus) {
-    whereAnd.push({ status: { in: includeStatus } });
+    whereAnd.push({
+      OR: [
+        { status: { in: includeStatus } },
+        {
+          wasEverActive: includeStatus.includes('INACTIVE') ? true : undefined,
+        },
+      ],
+    });
   }
 
   const participantsOnPrograms = await db.participantsOnPrograms.findMany({
@@ -93,6 +100,7 @@ export async function getProgramParticipants({
     return {
       ...rest,
       ...participant,
+      programStatus: rest.status,
     };
   });
 }

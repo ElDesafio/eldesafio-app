@@ -145,9 +145,9 @@ model Participant {
   surveyBiography            SurveyBiography?
   programs                   ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByParticipant")
   schoolId                   Int?
-  ParticipantHealth          ParticipantHealth?
-  ParticipantStatus          ParticipantStatus[]
-  ParticipantsOnClasses      ParticipantsOnClasses[]  @relation("ParticipantsOnClassesByParticipant")
+  health                     ParticipantHealth?
+  status                     ParticipantStatus[]
+  classes                    ParticipantsOnClasses[]  @relation("ParticipantsOnClassesByParticipant")
 }
 
 model ParticipantStatus {

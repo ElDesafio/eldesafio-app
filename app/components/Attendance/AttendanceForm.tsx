@@ -1,5 +1,6 @@
 import {
   Avatar,
+  AvatarBadge,
   Box,
   Button,
   HStack,
@@ -9,6 +10,7 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -116,7 +118,23 @@ export function AttendanceForm({
                 <Td whiteSpace="nowrap">
                   <Stack direction="row" spacing="4" align="center">
                     <Box flexShrink={0}>
-                      <Avatar src={attendant.picture || undefined} />
+                      <Tooltip
+                        label="inactivo"
+                        aria-label="inactivo"
+                        isDisabled={
+                          !(
+                            attendant.programStatus !== 'ACTIVE' &&
+                            attendant.wasEverActive
+                          )
+                        }
+                      >
+                        <Avatar src={attendant.picture || undefined}>
+                          {attendant.programStatus !== 'ACTIVE' &&
+                            attendant.wasEverActive && (
+                              <AvatarBadge bg="red" boxSize="1.25em" />
+                            )}
+                        </Avatar>
+                      </Tooltip>
                     </Box>
                     <Box>
                       <Box fontWeight="medium">

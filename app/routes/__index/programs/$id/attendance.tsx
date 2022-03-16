@@ -1,11 +1,16 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import {
   Avatar,
+  AvatarBadge,
   Box,
   Button,
   Divider,
+  FormControl,
+  FormLabel,
   Heading,
+  HStack,
   Stack,
+  Switch,
   Table,
   TableCaption,
   Tbody,
@@ -13,9 +18,11 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from '@chakra-ui/react';
 import type { ClassAttendanceStatus } from '@prisma/client';
+import { ParticipantsOnProgramsStatus } from '@prisma/client';
 import { DateTime, Info } from 'luxon';
 import { FaCloudRain } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
@@ -35,6 +42,7 @@ import { getAge, getAttendanceProps, isAdmin } from '~/util/utils';
 
 import { AttendanceChartBars } from './components/AttendanceChartBars';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
   let authUser = await authenticator.isAuthenticated(request, {
@@ -42,7 +50,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   });
 
   const url = new URL(request.url);
-  console.log('from loader', url.searchParams.get('month'));
+
+  const includeSearchParam = url.searchParams
+    .getAll('include')
+    .map(
+      (status) =>
+        ParticipantsOnProgramsStatus[
+          status as keyof typeof ParticipantsOnProgramsStatus
+        ],
+    );
+
   const month = z
     .string()
     .optional()
@@ -65,7 +82,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const participants = await getProgramParticipants({
     programId: Number(id),
-    includeStatus: ['ACTIVE'],
+    includeStatus:
+      includeSearchParam.length > 0 ? includeSearchParam : ['ACTIVE'],
   });
 
   if (!participants) {
@@ -137,8 +155,6 @@ function ClassDateHeader({
 
   const selectedMonth = searchParams.get('month');
 
-  console.log('component', selectedMonth);
-
   return (
     <Box position="relative">
       {isRainyDay && (
@@ -166,6 +182,9 @@ function ClassDateHeader({
   );
 }
 function ClassAttendanceCell({ status }: { status: ClassAttendanceStatus }) {
+  if (!status) {
+    return <Td />;
+  }
   return (
     <Td
       textAlign="center"
@@ -179,7 +198,7 @@ function ClassAttendanceCell({ status }: { status: ClassAttendanceStatus }) {
   );
 }
 
-export default function ProgramGeneral() {
+export default function Attendance() {
   const { classes, participants, isUserAdmin, totalPercentages } =
     useLoaderData<{
       classes: GetProgramClasses;
@@ -198,7 +217,6 @@ export default function ProgramGeneral() {
   if (!classes) {
     throw new Error("Class doesn't exist");
   }
-  console.log(searchParams.get('month'));
   const options = Info.months('long', { locale: 'es-Es' }).map(
     (month, index) => ({
       label: month,
@@ -220,26 +238,60 @@ export default function ProgramGeneral() {
             Agregar estimulo
           </Button>
         </Link>
-        <Box minWidth="200px" width="200px">
-          <FormSelect
-            name="months"
-            instanceId="months-select"
-            placeholder="Seleccionar mes..."
-            value={options[selectedMonth]}
-            onChange={(newValue) => {
-              if (newValue && 'label' in newValue) {
-                setSearchParams({ month: newValue.value.toString() });
-              }
-            }}
-            options={options}
-          />
-        </Box>
+        <HStack spacing={6}>
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="show-inactives" mb="0">
+              Mostrar inactivos
+            </FormLabel>
+            <Switch
+              id="show-inactives"
+              isChecked={searchParams.getAll('include').includes('INACTIVE')}
+              onChange={(event) => {
+                let includeArray = searchParams.getAll('include');
+                if (event.target.checked) {
+                  includeArray.push('INACTIVE');
+                  includeArray.push('ACTIVE');
+                  includeArray = [...new Set(includeArray)];
+                  searchParams.delete('include');
+                  includeArray.forEach((i) =>
+                    searchParams.append('include', i),
+                  );
+                }
+                if (!event.target.checked) {
+                  includeArray = [
+                    ...new Set(includeArray.filter((i) => i !== 'INACTIVE')),
+                  ];
+                  searchParams.delete('include');
+                  includeArray.forEach((i) =>
+                    searchParams.append('include', i),
+                  );
+                }
+                setSearchParams(searchParams);
+              }}
+            />
+          </FormControl>
+          <Box minWidth="200px" width="200px">
+            <FormSelect
+              name="months"
+              instanceId="months-select"
+              placeholder="Seleccionar mes..."
+              value={options[selectedMonth]}
+              onChange={(newValue) => {
+                if (newValue && 'label' in newValue) {
+                  searchParams.set('month', newValue.value.toString());
+                  setSearchParams(searchParams);
+                }
+              }}
+              options={options}
+            />
+          </Box>
+        </HStack>
       </Stack>
       <Box mt={6} overflowX="auto" pt="10px">
-        {classes.length > 0 ? (
+        {classes.length > 0 && participants.length > 0 ? (
           <Table borderWidth="1px" fontSize="sm" size="sm" width="auto">
             <TableCaption textAlign="left">
-              Cantidad de participantes activos:{' '}
+              Cantidad de participantes:{' '}
               <Text as="span" fontWeight="semibold">
                 {participants.length}
               </Text>
@@ -282,10 +334,26 @@ export default function ProgramGeneral() {
                   <Td whiteSpace="nowrap">
                     <Stack direction="row" spacing="4" align="center">
                       <Box flexShrink={0}>
-                        <Avatar
-                          size="sm"
-                          src={attendant.picture || undefined}
-                        />
+                        <Tooltip
+                          label="inactivo"
+                          aria-label="inactivo"
+                          isDisabled={
+                            !(
+                              attendant.status !== 'ACTIVE' &&
+                              attendant.wasEverActive
+                            )
+                          }
+                        >
+                          <Avatar
+                            size="sm"
+                            src={attendant.picture || undefined}
+                          >
+                            {attendant.status !== 'ACTIVE' &&
+                              attendant.wasEverActive && (
+                                <AvatarBadge bg="red" boxSize="1.25em" />
+                              )}
+                          </Avatar>
+                        </Tooltip>
                       </Box>
                       <Box>
                         <Box fontSize="sm" fontWeight="medium">
@@ -300,7 +368,7 @@ export default function ProgramGeneral() {
                     </Stack>
                   </Td>
                   <Td textAlign="center">
-                    {totalPercentages[attendant.participantId].present}%
+                    {totalPercentages[attendant.participantId]?.present}%
                   </Td>
                   {classes.map((classItem) => (
                     <ClassAttendanceCell
@@ -308,7 +376,7 @@ export default function ProgramGeneral() {
                       status={
                         classItem.participants.filter(
                           (p) => p.participantId === attendant.participantId,
-                        )[0].status
+                        )[0]?.status
                       }
                     />
                   ))}
@@ -317,7 +385,10 @@ export default function ProgramGeneral() {
             </Tbody>
           </Table>
         ) : (
-          <AlertED title="Vacío" description="No hay clases en este mes." />
+          <AlertED
+            title="Vacío"
+            description="No hay clases o alumnos para el filtro seleccionado."
+          />
         )}
       </Box>
       <Heading as="h3" size="md" mt={8}>

@@ -14,7 +14,9 @@ export function AttendanceChartBars() {
   const routeData = useFetcher<{ classes: GetProgramClasses }>();
 
   useEffect(() => {
-    routeData.load(`/programs/${id}/attendance?month=0`);
+    routeData.load(
+      `/programs/${id}/attendance?month=0&include="ACTIVE"&include="INACTIVE"`,
+    );
   }, []);
 
   if (!routeData?.data) {

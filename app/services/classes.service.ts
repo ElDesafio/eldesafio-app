@@ -145,14 +145,39 @@ export async function getClass(id: number) {
 
   if (!classItem) return;
 
+  const attendants = await Promise.all(
+    classItem.participants.map(async (participant) => {
+      const participantOnProgram = await db.participantsOnPrograms.findUnique({
+        where: {
+          programId_participantId: {
+            participantId: participant.participantId,
+            programId: classItem.programId,
+          },
+        },
+        select: {
+          wasEverActive: true,
+          status: true,
+        },
+      });
+
+      if (!participantOnProgram) {
+        throw new Error(`[getClass] Error getting participant on program.`);
+      }
+
+      return {
+        participantId: participant.participantId,
+        status: participant.status,
+        wasEverActive: participantOnProgram.wasEverActive,
+        programStatus: participantOnProgram.status,
+        ...participant.participant,
+      };
+    }),
+  );
+
   return {
     date: classItem.date,
     isRainyDay: classItem.isRainyDay,
-    attendants: classItem.participants.map((participant) => ({
-      participantId: participant.participantId,
-      status: participant.status,
-      ...participant.participant,
-    })),
+    attendants,
   };
 }
 
