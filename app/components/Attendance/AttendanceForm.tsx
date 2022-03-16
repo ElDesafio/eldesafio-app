@@ -166,7 +166,7 @@ export function AttendanceForm({
         <FormSubmitButton isLoading={isSaving} />
       </HStack>
       <FormInput
-        name={`selectedMonth`}
+        name="selectedMonth"
         hidden
         value={selectedMonth ?? undefined}
       />

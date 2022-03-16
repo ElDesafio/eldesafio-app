@@ -1,8 +1,23 @@
 /* eslint-disable sonarjs/no-identical-functions */
-import { Divider, Flex, Heading } from '@chakra-ui/react';
+import {
+  Button,
+  ButtonGroup,
+  Divider,
+  Flex,
+  Heading,
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
+} from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import { Form, json, redirect, useLoaderData, useTransition } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -63,11 +78,23 @@ export const action: ActionFunction = async ({ request, params }) => {
   });
 
   const url = new URL(request.url);
-  const selectedMonth = url.searchParams.get('month');
-
-  if (!user) throw json('Unauthorized', { status: 403 });
 
   const formData = await request.formData();
+
+  // Check if it's a delete request
+  if (formData.get('type') === `DELETE_CLASS`) {
+    await db.class.delete({
+      where: {
+        id: +classId,
+      },
+    });
+
+    return redirect(
+      `/programs/${programId}/attendance?${url.searchParams.toString()}`,
+    );
+  }
+
+  if (!user) throw json('Unauthorized', { status: 403 });
 
   const { data } = attendanceFormValidator.validate(formData);
 
@@ -111,9 +138,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   });
 
   return redirect(
-    `/programs/${programId}/attendance${
-      selectedMonth !== 'null' ? `?month=${selectedMonth}` : ''
-    }`,
+    `/programs/${programId}/attendance?${url.searchParams.toString()}`,
   );
 };
 
@@ -123,12 +148,63 @@ export default function AttendanceEdit() {
     defaultValues: Partial<z.infer<typeof attendanceSchema>>;
   }>();
 
+  const transition = useTransition();
+
+  const isDeleting =
+    transition.state === 'submitting' &&
+    transition.submission?.formData.get('type') === `DELETE_CLASS`;
+
+  if (!classItem) {
+    throw new Error("Class doesn't exist");
+  }
+
   return (
     <>
       <Flex alignItems="center" justifyContent="space-between">
-        <Heading as="h3" size="md">
-          Editar Estímulo
-        </Heading>
+        <HStack flex={1} display="flex" justifyContent="space-between">
+          <Heading as="h3" size="md">
+            Editar Estímulo
+          </Heading>
+          <Popover
+            returnFocusOnClose={false}
+            placement="left"
+            closeOnBlur={true}
+          >
+            <PopoverTrigger>
+              <Button colorScheme="red" isLoading={isDeleting}>
+                Borrar
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverHeader fontWeight="semibold">Confirmación</PopoverHeader>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverBody>
+                ¿Estás seguro que querés borrar la clase? Una vez borrada no se
+                puede recuperar.
+              </PopoverBody>
+              <PopoverFooter d="flex" justifyContent="flex-end">
+                <ButtonGroup size="sm">
+                  <Form method="post">
+                    <input name="type" type="hidden" value="DELETE_CLASS" />
+                    <input
+                      name="participantId"
+                      type="hidden"
+                      value={classItem?.id}
+                    />
+                    <Button
+                      type="submit"
+                      colorScheme="red"
+                      isLoading={isDeleting}
+                    >
+                      Borrar
+                    </Button>
+                  </Form>
+                </ButtonGroup>
+              </PopoverFooter>
+            </PopoverContent>
+          </Popover>
+        </HStack>
       </Flex>
       <Divider mt="2" mb="8" />
       {classItem ? (

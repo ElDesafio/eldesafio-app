@@ -177,6 +177,7 @@ export async function getClass(id: number) {
   return {
     date: classItem.date,
     isRainyDay: classItem.isRainyDay,
+    id: classItem.id,
     attendants,
   };
 }

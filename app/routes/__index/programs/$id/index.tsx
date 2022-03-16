@@ -563,7 +563,16 @@ export default function ProgramGeneral() {
                                     type="hidden"
                                     value={participant.participantId}
                                   />
-                                  <Button type="submit" colorScheme="red">
+                                  <Button
+                                    type="submit"
+                                    colorScheme="red"
+                                    isLoading={
+                                      !!isLoading(
+                                        participant.participantId,
+                                        FormTypeWaiting.REMOVE,
+                                      )
+                                    }
+                                  >
                                     Borrar
                                   </Button>
                                 </Form>

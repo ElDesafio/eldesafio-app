@@ -48,6 +48,10 @@ module.exports = {
     semi: 0,
     'comma-dangle': 0,
     'space-before-function-paren': 0,
+    'react/jsx-curly-brace-presence': [
+      'error',
+      { props: 'never', children: 'never', propElementValues: 'always' },
+    ],
     'react/self-closing-comp': [
       'error',
       {
