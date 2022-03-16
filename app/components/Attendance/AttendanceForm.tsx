@@ -13,7 +13,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { ClassAttendanceStatus } from '@prisma/client';
-import { Link, useNavigate, useTransition } from 'remix';
+import { Link, useNavigate, useSearchParams, useTransition } from 'remix';
 import { ValidatedForm, withZod } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -58,6 +58,9 @@ export function AttendanceForm({
   attendants,
 }: AttendanceFormProps) {
   let navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const selectedMonth = searchParams.get('month');
 
   const transition = useTransition();
 
@@ -71,6 +74,7 @@ export function AttendanceForm({
     <ValidatedForm
       validator={attendanceFormValidator}
       defaultValues={defaultValues}
+      action={`?month=${selectedMonth}`}
       method="post"
       noValidate
     >
@@ -143,6 +147,11 @@ export function AttendanceForm({
         </Button>
         <FormSubmitButton isLoading={isSaving} />
       </HStack>
+      <FormInput
+        name={`selectedMonth`}
+        hidden
+        value={selectedMonth ?? undefined}
+      />
     </ValidatedForm>
   );
 }

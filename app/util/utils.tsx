@@ -372,7 +372,7 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
     },
 
     tooltip: {
-      formatter: function () {
+      formatter() {
         return (
           '<span style="color:' +
           this.point.color +
@@ -431,7 +431,7 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
         },
         dataLabels: {
           enabled: true,
-          formatter: function () {
+          formatter() {
             let pcnt = this.y;
             return numberFormat(pcnt as number, 0) + '%';
           },
@@ -456,7 +456,7 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
           style: {
             textShadow: false,
           },
-          formatter: function () {
+          formatter() {
             let pcnt = this.y;
             return numberFormat(pcnt as number, 0) + '%';
           },

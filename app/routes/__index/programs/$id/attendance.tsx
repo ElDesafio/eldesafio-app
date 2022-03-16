@@ -19,14 +19,8 @@ import type { ClassAttendanceStatus } from '@prisma/client';
 import { DateTime, Info } from 'luxon';
 import { FaCloudRain } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import {
-  json,
-  Link,
-  useLoaderData,
-  useSearchParams,
-  useTransition,
-} from 'remix';
+import type { LoaderFunction } from 'remix';
+import { Link, useLoaderData, useSearchParams, useTransition } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -39,7 +33,7 @@ import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getAge, getAttendanceProps, isAdmin } from '~/util/utils';
 
-import { AttendanceChart } from './components/AttendanceChart';
+import { AttendanceChartBars } from './components/AttendanceChartBars';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -48,6 +42,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   });
 
   const url = new URL(request.url);
+  console.log('from loader', url.searchParams.get('month'));
   const month = z
     .string()
     .optional()
@@ -124,19 +119,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   };
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
-  const { id: programId } = z.object({ id: z.string() }).parse(params);
-
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
-
-  const form = await request.formData();
-  const participantId = z.string().parse(form.get('participantId'));
-};
-
 function ClassDateHeader({
   classId,
   date,
@@ -150,6 +132,12 @@ function ClassDateHeader({
   const dateLuxon = DateTime.fromISO(date as unknown as string, {
     zone: 'utc',
   }).setLocale('es-ES');
+
+  const [searchParams] = useSearchParams();
+
+  const selectedMonth = searchParams.get('month');
+
+  console.log('component', selectedMonth);
 
   return (
     <Box position="relative">
@@ -165,7 +153,11 @@ function ClassDateHeader({
         <br />
         {dateLuxon.year}
       </Text>
-      <Link to={`${classId}/edit`}>
+      <Link
+        to={`${classId}/edit${
+          selectedMonth != null ? `?month=${selectedMonth}` : ''
+        } `}
+      >
         <Button variant="solid" colorScheme="gray" size="xs" pr={1} pl={1}>
           Editar
         </Button>
@@ -206,7 +198,7 @@ export default function ProgramGeneral() {
   if (!classes) {
     throw new Error("Class doesn't exist");
   }
-
+  console.log(searchParams.get('month'));
   const options = Info.months('long', { locale: 'es-Es' }).map(
     (month, index) => ({
       label: month,
@@ -334,7 +326,7 @@ export default function ProgramGeneral() {
       <Divider mt={2} mb={8} />
 
       <Box>
-        <AttendanceChart />
+        <AttendanceChartBars />
       </Box>
     </>
   );

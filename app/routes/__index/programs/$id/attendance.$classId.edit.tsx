@@ -62,6 +62,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   });
 
+  const url = new URL(request.url);
+  console.log(url);
+  const selectedMonth = url.searchParams.get('month');
+
+  console.log('selectedMonthAction', { selectedMonth });
+
   if (!user) throw json('Unauthorized', { status: 403 });
 
   const formData = await request.formData();
@@ -107,7 +113,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     ]);
   });
 
-  return redirect(`/programs/${programId}/attendance`);
+  return redirect(
+    `/programs/${programId}/attendance${
+      selectedMonth !== 'null' ? `?month=${selectedMonth}` : ''
+    }`,
+  );
 };
 
 export default function AttendanceEdit() {

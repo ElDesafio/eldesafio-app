@@ -7,7 +7,7 @@ import { useFetcher, useParams } from 'remix';
 import type { GetProgramClasses } from '~/services/classes.service';
 import { formatAttendanceChartData } from '~/util/utils';
 
-export function AttendanceChart() {
+export function AttendanceChartBars() {
   const { id } = useParams();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
