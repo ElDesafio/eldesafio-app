@@ -63,10 +63,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   });
 
   const url = new URL(request.url);
-  console.log(url);
   const selectedMonth = url.searchParams.get('month');
-
-  console.log('selectedMonthAction', { selectedMonth });
 
   if (!user) throw json('Unauthorized', { status: 403 });
 
