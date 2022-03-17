@@ -1,3 +1,23 @@
+# v0.8.0 (Thu Mar 17 2022)
+
+### Release Notes
+
+#### 66-add-program-results-to-the-program-view-page ([#67](https://github.com/ElDesafio/eldesafio-app/pull/67))
+
+- Se agregó el apartado de Resultados a la vista del programa
+
+---
+
+#### 🚀 Enhancement
+
+- 66-add-program-results-to-the-program-view-page [#67](https://github.com/ElDesafio/eldesafio-app/pull/67) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.7.0 (Thu Mar 17 2022)
 
 ### Release Notes
