@@ -49,12 +49,12 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
           if (isActive) {
             setSearchParams(
               { removeFromProgramId: id.toString() },
-              { replace: false },
+              { replace: true },
             );
           } else {
             setSearchParams(
               { addToProgramId: id.toString() },
-              { replace: false },
+              { replace: true },
             );
           }
         }}
@@ -106,14 +106,14 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
       </CheckboxCard>
       <AddToProgramModal
         isOpen={addToProgramId === id.toString()}
-        onClose={() => setSearchParams({}, { replace: false })}
+        onClose={() => setSearchParams({}, { replace: true })}
         programId={id}
         programName={name}
         isOnWaitingList={isOnWaitingList}
       />
       <RemoveFromProgramModal
         isOpen={removeFromProgramId === id.toString()}
-        onClose={() => setSearchParams({}, { replace: false })}
+        onClose={() => setSearchParams({}, { replace: true })}
         programId={id}
         programName={name}
       />

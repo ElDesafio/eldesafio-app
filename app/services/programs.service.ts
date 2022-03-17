@@ -99,15 +99,17 @@ export async function getProgramParticipants({
     },
   });
 
-  return participantsOnPrograms.map((participantOnProgram) => {
-    const { participant, ...rest } = participantOnProgram;
+  return participantsOnPrograms
+    .map((participantOnProgram) => {
+      const { participant, ...rest } = participantOnProgram;
 
-    return {
-      ...rest,
-      ...participant,
-      programStatus: rest.status,
-    };
-  });
+      return {
+        ...rest,
+        ...participant,
+        programStatus: rest.status,
+      };
+    })
+    .sort((a) => (a.programStatus === 'ACTIVE' ? -1 : 1));
 }
 
 export type GetProgramParticipants = Prisma.PromiseReturnType<
