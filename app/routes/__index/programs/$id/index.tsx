@@ -53,6 +53,8 @@ import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getDayByName, isAdmin, ProgramSexText } from '~/util/utils';
 
+import { ProgramChartPie } from './components/ProgramChartPie';
+
 enum FormTypeWaiting {
   UP = 'UP',
   DOWN = 'DOWN',
@@ -277,6 +279,7 @@ export default function ProgramGeneral() {
           direction={{ base: 'column', md: 'row' }}
           spacing={{ base: 0, md: 6 }}
           justifyContent="space-between"
+          alignItems="flex-start"
           flex="1"
           order={{ base: 2, lg: 1 }}
         >
@@ -366,6 +369,7 @@ export default function ProgramGeneral() {
               </Tr>
             </Tbody>
           </Table>
+          <ProgramChartPie />
         </Stack>
         <Stack
           direction={{ base: 'row', lg: 'column' }}

@@ -276,7 +276,7 @@ export function getAttendanceProps(attendance: ClassAttendanceStatus) {
   };
 }
 
-export function formatAttendanceChartData(classes: GetProgramClasses) {
+export function formatAttendanceChartBarsData(classes: GetProgramClasses) {
   // Helper to collect data by month
   const helper: Record<
     string,
@@ -470,6 +470,139 @@ export function formatAttendanceChartData(classes: GetProgramClasses) {
             return numberFormat(pcnt as number, 0) + '%';
           },
           y: -10,
+        },
+      },
+    ],
+  };
+  return options;
+}
+
+export function formatProgramChartPieData(classes: GetProgramClasses) {
+  // Helper to collect data by month
+  let present: number = 0;
+  let absent: number = 0;
+  let late: number = 0;
+  let excused: number = 0;
+
+  classes.forEach((classItem) => {
+    classItem.participants.forEach((participant) => {
+      if (participant.status === ClassAttendanceStatus.PRESENT) {
+        present++;
+      }
+      if (participant.status === ClassAttendanceStatus.ABSENT) {
+        absent++;
+      }
+      if (participant.status === ClassAttendanceStatus.LATE) {
+        late++;
+      }
+      if (participant.status === ClassAttendanceStatus.EXCUSED) {
+        excused++;
+      }
+    });
+  });
+
+  const presentTotal = present + late;
+  const absentTotal = absent + excused;
+
+  const totalStimulus = present + absent + late + excused;
+
+  const options: Highcharts.Options = {
+    chart: {
+      type: 'pie',
+      height: '300px',
+    },
+    title: {
+      text: null as unknown as undefined,
+    },
+    yAxis: {
+      title: {
+        text: '',
+      },
+    },
+    credits: {
+      enabled: false,
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        shadow: false,
+        center: ['50%', '50%'],
+      },
+    },
+    tooltip: {
+      valueSuffix: '%',
+      pointFormat: '<b>{point.y}</b>',
+      formatter() {
+        return (
+          this.point.name + ': <b>' + this.point.y?.toFixed(2) + '</b>' + '%'
+        );
+      },
+    },
+    series: [
+      {
+        type: null as unknown as 'variablepie',
+        name: 'Totals',
+        data: [
+          {
+            name: 'Presente Total',
+            y: (presentTotal * 100) / totalStimulus,
+            color: getAttendanceProps('PRESENT').backgroundColorHex,
+          },
+          {
+            name: 'Ausente Total',
+            y: (absentTotal * 100) / totalStimulus,
+            color: getAttendanceProps('ABSENT').backgroundColorHex,
+          },
+        ],
+        size: '90%',
+        dataLabels: {
+          formatter() {
+            return (
+              // @ts-ignore
+              this.point.name + ': <b>' + this.y?.toFixed(2) + '</b>' + '%'
+            );
+          },
+          color: 'white',
+          distance: -50,
+        },
+      },
+      {
+        type: null as unknown as 'variablepie',
+        name: 'Breakdown',
+        data: [
+          {
+            name: 'Presente',
+            y: (present * 100) / totalStimulus,
+            color: getAttendanceProps('PRESENT').backgroundColorHex,
+          },
+          {
+            name: 'Tardanza',
+            y: (late * 100) / totalStimulus,
+            color: getAttendanceProps('LATE').backgroundColorHex,
+          },
+          {
+            name: 'Ausente',
+            y: (absent * 100) / totalStimulus,
+            color: getAttendanceProps('ABSENT').backgroundColorHex,
+          },
+          {
+            name: 'Justificada',
+            y: (excused * 100) / totalStimulus,
+            color: getAttendanceProps('EXCUSED').backgroundColorHex,
+          },
+        ],
+        size: '100%',
+        innerSize: '90%',
+        dataLabels: {
+          enabled: false,
+          formatter() {
+            // display only if larger than 1
+            // @ts-ignore
+            return this.y && this.y > 1
+              ? // @ts-ignore
+                '<b>' + this.point.name + ':</b> ' + this.y.toFixed(2) + '%'
+              : null;
+          },
         },
       },
     ],

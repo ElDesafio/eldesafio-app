@@ -35,6 +35,7 @@ import { ProgressBar } from './components/ProgressBar';
 import ClientStyleContext from './context.client';
 import ServerStyleContext from './context.server';
 import { SocketProvider } from './socketContext';
+
 type DocumentProps = {
   children: React.ReactNode;
   title?: string;
