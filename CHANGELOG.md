@@ -1,3 +1,32 @@
+# v0.7.0 (Thu Mar 17 2022)
+
+### Release Notes
+
+#### 64-add-attendance ([#65](https://github.com/ElDesafio/eldesafio-app/pull/65))
+
+- Added Attendance view with the ability to add/edit/remove classes. 
+- Added graphics
+
+#### add auto label ([#63](https://github.com/ElDesafio/eldesafio-app/pull/63))
+
+This will 😃
+
+---
+
+#### 🚀 Enhancement
+
+- 64-add-attendance [#65](https://github.com/ElDesafio/eldesafio-app/pull/65) ([@lucascurti](https://github.com/lucascurti))
+
+#### 🏠 Internal
+
+- add auto label [#63](https://github.com/ElDesafio/eldesafio-app/pull/63) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.6.7 (Sun Mar 13 2022)
 
 ### Release Notes
