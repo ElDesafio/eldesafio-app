@@ -39,7 +39,7 @@ async function getParticipantProgramsByYear(
 
   return await db.program.findMany({
     where: {
-      year: year,
+      year,
       AND: [
         {
           OR: [

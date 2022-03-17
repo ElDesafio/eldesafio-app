@@ -1,10 +1,19 @@
 import { Text } from '@chakra-ui/react';
 import type { User, UserRoles, UserStatus, Weekdays } from '@prisma/client';
-import { BloodType, FormAnswerOptions, Roles } from '@prisma/client';
-import { DateTime } from 'luxon';
+import {
+  BloodType,
+  ClassAttendanceStatus,
+  FormAnswerOptions,
+  Roles,
+} from '@prisma/client';
+import type Highcharts from 'highcharts';
+import { numberFormat } from 'highcharts';
+import { DateTime, Info } from 'luxon';
 import type React from 'react';
 import { useSearchParams } from 'remix';
 import { z } from 'zod';
+
+import type { GetProgramClasses } from '~/services/classes.service';
 
 export function getAge<T extends boolean>(
   birthday: string,
@@ -196,4 +205,407 @@ export function isFacilitatorVolunteer(user: UserForRoleCheck) {
 export function isMentor(user: UserForRoleCheck) {
   checkUserAndRolesExist(user);
   return user?.roles?.some((role) => role.role === Roles.MENTOR);
+}
+
+export function getAttendanceProps(attendance: ClassAttendanceStatus) {
+  let backgroundColor: string;
+  let backgroundColorHex: string;
+  let textColor: string;
+  let textColorHex: string;
+  let text: string;
+  let shortText: string;
+
+  switch (attendance) {
+    case ClassAttendanceStatus.PRESENT: {
+      backgroundColor = 'green.500';
+      backgroundColorHex = '#38A169';
+      textColor = 'white';
+      textColorHex = '#FFFFFF';
+      text = 'Presente';
+      shortText = 'P';
+      break;
+    }
+    case ClassAttendanceStatus.ABSENT: {
+      backgroundColor = 'red.500';
+      backgroundColorHex = '#E53E3E';
+      textColor = 'white';
+      textColorHex = '#FFFFFF';
+      text = 'Ausente';
+      shortText = 'A';
+      break;
+    }
+    case ClassAttendanceStatus.LATE: {
+      backgroundColor = 'green.100';
+      backgroundColorHex = '#FED7D7';
+      backgroundColorHex = '#C6F6D5';
+      textColor = 'gray.600';
+      textColorHex = '#4A5568';
+      text = 'Tardanza';
+      shortText = 'T';
+      break;
+    }
+    case ClassAttendanceStatus.EXCUSED: {
+      backgroundColor = 'red.100';
+      backgroundColorHex = '#FED7D7';
+      textColor = 'gray.600';
+      textColorHex = '#4A5568';
+      text = 'Justificada';
+      shortText = 'J';
+      break;
+    }
+    case ClassAttendanceStatus.UNKNOWN: {
+      backgroundColor = 'gray.100';
+      backgroundColorHex = '#EDF2F7';
+      textColor = 'gray.600';
+      textColorHex = '#4A5568';
+      text = 'Desconocida';
+      shortText = '';
+      break;
+    }
+    default:
+      throw new Error('[getAttendanceProps] Attendance not supported');
+  }
+
+  return {
+    backgroundColor,
+    textColor,
+    text,
+    shortText,
+    backgroundColorHex,
+    textColorHex,
+  };
+}
+
+export function formatAttendanceChartBarsData(classes: GetProgramClasses) {
+  // Helper to collect data by month
+  const helper: Record<
+    string,
+    {
+      present: number;
+      absent: number;
+      late: number;
+      excused: number;
+      rainyDays: number;
+      totalClasses: 0;
+    }
+  > = {};
+
+  classes.forEach((classItem) => {
+    //! There is an issue in Prisma. It's returning it as ISO instead of Date object
+    const month = (
+      DateTime.fromISO(classItem.date as unknown as string, {
+        zone: 'utc',
+      }).setLocale('en-EN').month - 1
+    ).toString();
+
+    if (!helper[month]) {
+      helper[month] = {
+        present: 0,
+        absent: 0,
+        late: 0,
+        excused: 0,
+        rainyDays: 0,
+        totalClasses: 0,
+      };
+    }
+
+    helper[month].totalClasses++;
+
+    if (classItem.isRainyDay) {
+      helper[month].rainyDays++;
+    }
+
+    classItem.participants.forEach((participant) => {
+      if (participant.status === ClassAttendanceStatus.PRESENT) {
+        helper[month].present++;
+      }
+      if (participant.status === ClassAttendanceStatus.ABSENT) {
+        helper[month].absent++;
+      }
+      if (participant.status === ClassAttendanceStatus.LATE) {
+        helper[month].late++;
+      }
+      if (participant.status === ClassAttendanceStatus.EXCUSED) {
+        helper[month].excused++;
+      }
+    });
+  });
+
+  const presentByMonth: number[] = [];
+  const absentByMonth: number[] = [];
+  const lateByMonth: number[] = [];
+  const excusedByMonth: number[] = [];
+  const rainyDaysByMonth: number[] = [];
+  const presentTotal: number[] = [];
+  const monthsKeys: string[] = [];
+
+  Object.keys(helper)
+    .sort((a, b) => (Number(a) > Number(b) ? 1 : -1))
+    .forEach((month, index) => {
+      const { present, absent, late, excused, rainyDays, totalClasses } =
+        helper[month];
+
+      const totalStimulus = present + absent + late + excused;
+
+      const presentPercentage = (present / totalStimulus) * 100;
+      const absentPercentage = (absent / totalStimulus) * 100;
+      const latePercentage = (late / totalStimulus) * 100;
+      const excusedPercentage = (excused / totalStimulus) * 100;
+      const rainyDaysPercentage = (rainyDays / totalClasses) * 100;
+      const presentTotalPercentage = presentPercentage + latePercentage;
+
+      presentByMonth.push(Math.ceil(presentPercentage));
+      absentByMonth.push(Math.ceil(absentPercentage));
+      lateByMonth.push(Math.ceil(latePercentage));
+      excusedByMonth.push(Math.ceil(excusedPercentage));
+      rainyDaysByMonth.push(Math.ceil(rainyDaysPercentage));
+      presentTotal.push(Math.ceil(presentTotalPercentage));
+
+      monthsKeys.push(Info.months('long', { locale: 'es-Es' })[+month]);
+    });
+
+  const options: Highcharts.Options = {
+    title: {
+      text: '',
+    },
+    xAxis: {
+      categories: monthsKeys,
+      title: {
+        text: '',
+      },
+    },
+    yAxis: {
+      title: {
+        text: '',
+      },
+    },
+
+    tooltip: {
+      formatter() {
+        return (
+          '<span style="color:' +
+          this.point.color +
+          '">\u25CF</span> ' +
+          this.series.name +
+          ': <b>' +
+          this.point?.y?.toFixed(0) +
+          '%</b><br/>'
+        );
+      },
+    },
+    plotOptions: {
+      column: {
+        stacking: 'normal',
+      },
+    },
+
+    series: [
+      {
+        type: 'column',
+        name: 'Presente',
+        color: getAttendanceProps('PRESENT').backgroundColorHex,
+        data: presentByMonth,
+        stack: 'present',
+      },
+      {
+        type: 'column',
+        name: 'Tardanza',
+        color: getAttendanceProps('LATE').backgroundColorHex,
+        data: lateByMonth,
+        stack: 'present',
+      },
+      {
+        type: 'column',
+        name: 'Ausente',
+        color: getAttendanceProps('ABSENT').backgroundColorHex,
+        data: absentByMonth,
+        stack: 'absent',
+      },
+      {
+        type: 'column',
+        name: 'Justificada',
+        color: getAttendanceProps('EXCUSED').backgroundColorHex,
+        data: excusedByMonth,
+        stack: 'absent',
+      },
+      {
+        type: 'spline',
+        name: 'Presente Total',
+        data: presentTotal,
+        marker: {
+          lineWidth: 2,
+          lineColor: getAttendanceProps('PRESENT').backgroundColorHex,
+          fillColor: getAttendanceProps('PRESENT').backgroundColorHex,
+          color: getAttendanceProps('PRESENT').backgroundColorHex,
+        },
+        dataLabels: {
+          enabled: true,
+          formatter() {
+            let pcnt = this.y;
+            return numberFormat(pcnt as number, 0) + '%';
+          },
+          y: -10,
+        },
+      },
+      {
+        type: 'spline',
+        name: 'Días de lluvia',
+        data: rainyDaysByMonth,
+        visible: false,
+        marker: {
+          lineWidth: 2,
+          lineColor: '#95a5a6',
+          fillColor: '#95a5a6',
+          color: '#95a5a6',
+        },
+        color: '#95a5a6',
+        dataLabels: {
+          enabled: true,
+          color: '#95a5a6',
+          style: {
+            textShadow: false,
+          },
+          formatter() {
+            let pcnt = this.y;
+            return numberFormat(pcnt as number, 0) + '%';
+          },
+          y: -10,
+        },
+      },
+    ],
+  };
+  return options;
+}
+
+export function formatProgramChartPieData(classes: GetProgramClasses) {
+  // Helper to collect data by month
+  let present: number = 0;
+  let absent: number = 0;
+  let late: number = 0;
+  let excused: number = 0;
+
+  classes.forEach((classItem) => {
+    classItem.participants.forEach((participant) => {
+      if (participant.status === ClassAttendanceStatus.PRESENT) {
+        present++;
+      }
+      if (participant.status === ClassAttendanceStatus.ABSENT) {
+        absent++;
+      }
+      if (participant.status === ClassAttendanceStatus.LATE) {
+        late++;
+      }
+      if (participant.status === ClassAttendanceStatus.EXCUSED) {
+        excused++;
+      }
+    });
+  });
+
+  const presentTotal = present + late;
+  const absentTotal = absent + excused;
+
+  const totalStimulus = present + absent + late + excused;
+
+  const options: Highcharts.Options = {
+    chart: {
+      type: 'pie',
+      height: '300px',
+    },
+    title: {
+      text: null as unknown as undefined,
+    },
+    yAxis: {
+      title: {
+        text: '',
+      },
+    },
+    credits: {
+      enabled: false,
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        shadow: false,
+        center: ['50%', '50%'],
+      },
+    },
+    tooltip: {
+      valueSuffix: '%',
+      pointFormat: '<b>{point.y}</b>',
+      formatter() {
+        return (
+          this.point.name + ': <b>' + this.point.y?.toFixed(2) + '</b>' + '%'
+        );
+      },
+    },
+    series: [
+      {
+        type: null as unknown as 'variablepie',
+        name: 'Totals',
+        data: [
+          {
+            name: 'Presente Total',
+            y: (presentTotal * 100) / totalStimulus,
+            color: getAttendanceProps('PRESENT').backgroundColorHex,
+          },
+          {
+            name: 'Ausente Total',
+            y: (absentTotal * 100) / totalStimulus,
+            color: getAttendanceProps('ABSENT').backgroundColorHex,
+          },
+        ],
+        size: '90%',
+        dataLabels: {
+          formatter() {
+            return (
+              // @ts-ignore
+              this.point.name + ': <b>' + this.y?.toFixed(2) + '</b>' + '%'
+            );
+          },
+          color: 'white',
+          distance: -50,
+        },
+      },
+      {
+        type: null as unknown as 'variablepie',
+        name: 'Breakdown',
+        data: [
+          {
+            name: 'Presente',
+            y: (present * 100) / totalStimulus,
+            color: getAttendanceProps('PRESENT').backgroundColorHex,
+          },
+          {
+            name: 'Tardanza',
+            y: (late * 100) / totalStimulus,
+            color: getAttendanceProps('LATE').backgroundColorHex,
+          },
+          {
+            name: 'Ausente',
+            y: (absent * 100) / totalStimulus,
+            color: getAttendanceProps('ABSENT').backgroundColorHex,
+          },
+          {
+            name: 'Justificada',
+            y: (excused * 100) / totalStimulus,
+            color: getAttendanceProps('EXCUSED').backgroundColorHex,
+          },
+        ],
+        size: '100%',
+        innerSize: '90%',
+        dataLabels: {
+          enabled: false,
+          formatter() {
+            // display only if larger than 1
+            // @ts-ignore
+            return this.y && this.y > 1
+              ? // @ts-ignore
+                '<b>' + this.point.name + ':</b> ' + this.y.toFixed(2) + '%'
+              : null;
+          },
+        },
+      },
+    ],
+  };
+  return options;
 }

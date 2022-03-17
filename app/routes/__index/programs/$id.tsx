@@ -37,7 +37,7 @@ export default function Program() {
               to={useResolvedPath('').pathname}
               aria-current={
                 location.pathname.match(/^\/programs\/\d+$/) ||
-                location.pathname.match(/^\/programs\/.+\/edit.*$/)
+                location.pathname.match(/^\/programs\/edit.*$/)
                   ? 'page'
                   : undefined
               }
@@ -47,7 +47,9 @@ export default function Program() {
             <TabLink
               to="attendance"
               aria-current={
-                location.pathname === useResolvedPath('attendance').pathname
+                location.pathname.includes(
+                  useResolvedPath('attendance').pathname,
+                )
                   ? 'page'
                   : undefined
               }

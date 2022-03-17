@@ -35,7 +35,14 @@ import mudder from 'mudder';
 import { FaAngleDown, FaAngleUp, FaTrashAlt } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { Form, json, Link, useLoaderData, useTransition } from 'remix';
+import {
+  Form,
+  json,
+  Link,
+  PrefetchPageLinks,
+  useLoaderData,
+  useTransition,
+} from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -45,6 +52,8 @@ import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getDayByName, isAdmin, ProgramSexText } from '~/util/utils';
+
+import { ProgramChartPie } from './components/ProgramChartPie';
 
 enum FormTypeWaiting {
   UP = 'UP',
@@ -244,6 +253,8 @@ export default function ProgramGeneral() {
 
   return (
     <>
+      <PrefetchPageLinks page={`/programs/${program.id}/attendance`} />
+
       <Flex alignItems="center">
         <Heading as="h3" size="md">
           Datos Generales
@@ -268,6 +279,7 @@ export default function ProgramGeneral() {
           direction={{ base: 'column', md: 'row' }}
           spacing={{ base: 0, md: 6 }}
           justifyContent="space-between"
+          alignItems="flex-start"
           flex="1"
           order={{ base: 2, lg: 1 }}
         >
@@ -357,6 +369,7 @@ export default function ProgramGeneral() {
               </Tr>
             </Tbody>
           </Table>
+          <ProgramChartPie />
         </Stack>
         <Stack
           direction={{ base: 'row', lg: 'column' }}
@@ -554,7 +567,16 @@ export default function ProgramGeneral() {
                                     type="hidden"
                                     value={participant.participantId}
                                   />
-                                  <Button type="submit" colorScheme="red">
+                                  <Button
+                                    type="submit"
+                                    colorScheme="red"
+                                    isLoading={
+                                      !!isLoading(
+                                        participant.participantId,
+                                        FormTypeWaiting.REMOVE,
+                                      )
+                                    }
+                                  >
                                     Borrar
                                   </Button>
                                 </Form>

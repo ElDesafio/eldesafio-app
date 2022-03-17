@@ -36,6 +36,9 @@ module.exports = {
         project: '.',
       },
     },
+    react: {
+      version: 'detect',
+    },
   },
   rules: {
     'prettier/prettier': 2,
@@ -45,6 +48,10 @@ module.exports = {
     semi: 0,
     'comma-dangle': 0,
     'space-before-function-paren': 0,
+    'react/jsx-curly-brace-presence': [
+      'error',
+      { props: 'never', children: 'never', propElementValues: 'always' },
+    ],
     'react/self-closing-comp': [
       'error',
       {
@@ -53,6 +60,11 @@ module.exports = {
       },
     ],
     'no-duplicate-imports': 'off',
+    'object-shorthand': [
+      'error',
+      'always',
+      { avoidExplicitReturnArrows: true },
+    ],
     '@typescript-eslint/no-duplicate-imports': ['error'],
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/indent': ['off', 2],
