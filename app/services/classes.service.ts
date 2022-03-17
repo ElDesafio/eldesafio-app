@@ -174,6 +174,8 @@ export async function getClass(id: number) {
     }),
   );
 
+  attendants.sort((a) => (a.programStatus === 'ACTIVE' ? -1 : 1));
+
   return {
     date: classItem.date,
     isRainyDay: classItem.isRainyDay,
