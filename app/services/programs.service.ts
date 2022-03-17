@@ -82,6 +82,11 @@ export async function getProgramParticipants({
     where: {
       AND: whereAnd,
     },
+    orderBy: {
+      participant: {
+        firstName: 'asc',
+      },
+    },
     include: {
       participant: {
         select: {
