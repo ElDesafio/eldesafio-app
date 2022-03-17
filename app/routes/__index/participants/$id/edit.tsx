@@ -15,7 +15,7 @@ import type { Participant, Prisma } from '.prisma/client';
 
 async function getParticipant(id: number) {
   return await db.participant.findUnique({
-    where: { id: id },
+    where: { id },
     include: { school: true },
   });
 }

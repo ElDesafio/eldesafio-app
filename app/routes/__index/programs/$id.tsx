@@ -66,16 +66,6 @@ export default function Program() {
             >
               Diario
             </TabLink>
-            <TabLink
-              to="results"
-              aria-current={
-                location.pathname.includes(useResolvedPath('results').pathname)
-                  ? 'page'
-                  : undefined
-              }
-            >
-              Resultados
-            </TabLink>
           </Stack>
         </Container>
       </Box>

@@ -20,13 +20,12 @@ import * as z from 'zod';
 import { FieldGroup } from '~/components/FieldGroup';
 import { FormCheckbox } from '~/components/Form/FormCheckbox';
 import { FormInput } from '~/components/Form/FormInput';
+import { FormRichTextEditor } from '~/components/Form/FormRichTextEditor';
 import { FormSelect } from '~/components/Form/FormSelect';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
 import type { GetProgram } from '~/services/programs.service';
 import { convertStringToNumberForZod, schemaCheckbox } from '~/util/utils';
-
-import { FormTextArea } from '../Form/FormTextArea';
 
 const programSchema = z.object({
   name: z.string().nonempty('Nombre no puede estar vacío'),
@@ -42,6 +41,7 @@ const programSchema = z.object({
       message: 'Sexo no puede estar vacío',
     }),
   }),
+  description: z.string().nullable(),
   seats: z.preprocess(
     convertStringToNumberForZod,
     z
@@ -321,7 +321,7 @@ export function ProgramForm({
           </FieldGroup>
 
           <FieldGroup title="Resultados">
-            <FormTextArea name="description" rows={5} />
+            <FormRichTextEditor name="description" />
           </FieldGroup>
         </Stack>
         <HStack width="full" justifyContent="center" mt="8">

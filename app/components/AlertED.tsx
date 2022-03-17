@@ -36,7 +36,7 @@ export function AlertED({
         </AlertTitle>
       )}
       {description && (
-        <AlertDescription mt={1} maxWidth="sm">
+        <AlertDescription mt={1} maxWidth="max">
           {description}
         </AlertDescription>
       )}

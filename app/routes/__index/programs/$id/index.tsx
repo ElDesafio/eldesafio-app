@@ -46,6 +46,7 @@ import {
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
+import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import type { GetProgram } from '~/services/programs.service';
@@ -640,6 +641,18 @@ export default function ProgramGeneral() {
           )}
         </Box>
       </Stack>
+      <Heading as="h3" size="md" mt={8}>
+        Resultados
+      </Heading>
+      <Divider mb={3} />
+      {program?.description ? (
+        <MarkdownEditor initialContent={program.description} editable={false} />
+      ) : (
+        <AlertED
+          title="Vacío"
+          description="No hay Resultados para este programa. Los podés agregar haciendo click en el botón de 'editar'."
+        />
+      )}
     </>
   );
 }
