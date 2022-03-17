@@ -46,7 +46,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "4.3.1",
-    "remirror": "1.0.69",
+    "remirror": "1.0.71",
     "remix": "1.2.3",
     "remix-auth": "3.2.1",
     "remix-auth-email-link": "^1.2.0",
