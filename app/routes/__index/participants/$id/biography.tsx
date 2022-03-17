@@ -4,6 +4,7 @@ import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
+import { AlertED } from '~/components/AlertED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { db } from '~/services/db.server';
 
@@ -40,10 +41,13 @@ export default function ParticipantHealth() {
           editable={false}
         />
       ) : (
-        <p>No hay biografía para el participante</p>
+        <AlertED
+          title="Vacía"
+          description="No hay biografía para el participante"
+        />
       )}
       <Stack direction="row" mt={6} justifyContent="center" width="full">
-        <Link to={`edit`}>
+        <Link to="edit">
           <Button colorScheme="blue">Editar</Button>
         </Link>
       </Stack>
