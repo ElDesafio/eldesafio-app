@@ -8,8 +8,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
   const url = new URL(request.url);
 
-  console.log(url.searchParams.getAll('programId'));
-
   const programsIdsSearchParam = url.searchParams
     .getAll('programId')
     .map((programId) => +programId);

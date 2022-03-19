@@ -26,7 +26,9 @@ export function AlertED({
       textAlign="center"
       height="170px"
       rounded="lg"
-      colorScheme="gray"
+      colorScheme={
+        rest.status === undefined || rest.status === 'info' ? 'gray' : undefined
+      }
       {...rest}
     >
       <AlertIcon boxSize="40px" mr={0} />
