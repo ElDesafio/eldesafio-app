@@ -88,10 +88,16 @@ export default function ParticipantGeneral() {
           searchParams.append('hidePrograms', pid.toString());
         }
       });
-      setSearchParams(searchParams, { replace: true });
+      setSearchParams(searchParams, {
+        replace: true,
+        state: { scroll: false },
+      });
     } else {
       searchParams.append('hidePrograms', programId.toString());
-      setSearchParams(searchParams, { replace: true });
+      setSearchParams(searchParams, {
+        replace: true,
+        state: { scroll: false },
+      });
     }
   };
 

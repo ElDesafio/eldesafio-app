@@ -141,12 +141,12 @@ const Document = withEmotionCache(
           <SocketProvider socket={socket}>
             <ChakraProvider theme={myTheme}>
               {children}
-              <ScrollRestoration />
-              <Scripts />
               {process.env.NODE_ENV === 'development' && <LiveReload />}
               <ClientOnly>
                 {() => <ProgressBar isAnimating={isTransitioning} />}
               </ClientOnly>
+              <ScrollRestoration />
+              <Scripts />
             </ChakraProvider>
           </SocketProvider>
           <script
