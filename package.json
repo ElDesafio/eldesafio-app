@@ -52,8 +52,8 @@
     "remix-auth-email-link": "^1.2.0",
     "remix-utils": "2.7.0",
     "remix-validated-form": "2.1.1",
-    "socket.io": "^4.4.1",
-    "socket.io-client": "^4.4.1",
+    "socket.io": "4.4.1",
+    "socket.io-client": "4.4.1",
     "uuid": "8.3.2",
     "zod": "3.13.4"
   },
