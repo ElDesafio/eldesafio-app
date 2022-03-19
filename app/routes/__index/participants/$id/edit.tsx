@@ -72,7 +72,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect('/participants');
+  return redirect(`/participants/${id}`);
 };
 
 export default function EditParticipant() {

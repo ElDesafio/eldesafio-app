@@ -17,6 +17,7 @@ import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 
+import { AlertED } from '~/components/AlertED';
 import { db } from '~/services/db.server';
 
 import type { School } from '.prisma/client';
@@ -59,40 +60,44 @@ export default function Programs() {
             shadow="base"
             overflowX="auto"
           >
-            <Table borderWidth="1px" fontSize="sm">
-              <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
-                <Tr>
-                  <Th whiteSpace="nowrap" scope="col">
-                    NOMBRE
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col">
-                    DIRECCIÓN
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col">
-                    TELÉFONO
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col" />
-                </Tr>
-              </Thead>
-              <Tbody>
-                {schools.map((school) => (
-                  <Tr key={school.id}>
-                    <Td whiteSpace="nowrap">{school.name}</Td>
-                    <Td>
-                      {school.address} ({school.city})
-                    </Td>
-                    <Td>{school.phone}</Td>
-                    <Td textAlign="right">
-                      <Link to={`${school.id}/edit`}>
-                        <Button variant="link" colorScheme="blue">
-                          Edit
-                        </Button>
-                      </Link>
-                    </Td>
+            {schools.length > 0 ? (
+              <Table borderWidth="1px" fontSize="sm">
+                <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
+                  <Tr>
+                    <Th whiteSpace="nowrap" scope="col">
+                      NOMBRE
+                    </Th>
+                    <Th whiteSpace="nowrap" scope="col">
+                      DIRECCIÓN
+                    </Th>
+                    <Th whiteSpace="nowrap" scope="col">
+                      TELÉFONO
+                    </Th>
+                    <Th whiteSpace="nowrap" scope="col" />
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {schools.map((school) => (
+                    <Tr key={school.id}>
+                      <Td whiteSpace="nowrap">{school.name}</Td>
+                      <Td>
+                        {school.address} ({school.city})
+                      </Td>
+                      <Td>{school.phone}</Td>
+                      <Td textAlign="right">
+                        <Link to={`${school.id}/edit`}>
+                          <Button variant="link" colorScheme="blue">
+                            Edit
+                          </Button>
+                        </Link>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            ) : (
+              <AlertED title="Vacío" description="No hay escuelas" />
+            )}
           </Box>
         </Container>
       </Box>

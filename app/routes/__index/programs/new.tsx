@@ -34,7 +34,22 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const { programDays, ...rest } = fieldValues.data;
+  const { programDays, facilitators, volunteers, ...rest } = fieldValues.data;
+
+  const facilitatorsArray =
+    typeof facilitators === 'string'
+      ? facilitators.split(',').map((id) => ({
+          userId: Number(id),
+          isFacilitator: true,
+        }))
+      : [];
+  const volunteersArray =
+    typeof volunteers === 'string'
+      ? volunteers.split(',').map((id) => ({
+          userId: Number(id),
+          isFacilitator: false,
+        }))
+      : [];
 
   const program = await db.program.create({
     data: {
@@ -43,6 +58,9 @@ export const action: ActionFunction = async ({ request }) => {
       updatedBy: user.id,
       programDays: {
         create: programDays,
+      },
+      educators: {
+        create: [...facilitatorsArray, ...volunteersArray],
       },
     },
   });

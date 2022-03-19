@@ -20,6 +20,7 @@ import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 
+import { AlertED } from '~/components/AlertED';
 import { db } from '~/services/db.server';
 import { getAge } from '~/util/utils';
 
@@ -65,57 +66,64 @@ export default function Participants() {
             shadow="base"
             overflowX="auto"
           >
-            <Table borderWidth="1px" fontSize="sm">
-              <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
-                <Tr>
-                  <Th whiteSpace="nowrap" scope="col">
-                    PARTICIPANTE
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col">
-                    EDAD
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col">
-                    DNI
-                  </Th>
-                  <Th whiteSpace="nowrap" scope="col" />
-                </Tr>
-              </Thead>
-              <Tbody>
-                {participants.map((participant) => (
-                  <Tr key={participant.id}>
-                    <Td whiteSpace="nowrap">
-                      <Stack direction="row" spacing="4" align="center">
-                        <Box flexShrink={0}>
-                          <Avatar
-                            size="md"
-                            src={participant.picture || undefined}
-                          />
-                        </Box>
-                        <Box>
-                          <Box fontSize="sm" fontWeight="medium">
-                            <Link to={`/participants/${participant.id}`}>
-                              {participant.firstName} {participant.lastName}
-                            </Link>
-                          </Box>
-                          <Box fontSize="sm" color="gray.500">
-                            cambiareste@correo.com
-                          </Box>
-                        </Box>
-                      </Stack>
-                    </Td>
-                    <Td>{getAge(participant.birthday)}</Td>
-                    <Td>{participant.dni}</Td>
-                    <Td textAlign="right">
-                      <Link to={`${participant.id}/edit`}>
-                        <Button variant="link" colorScheme="blue">
-                          Edit
-                        </Button>
-                      </Link>
-                    </Td>
+            {participants.length > 0 ? (
+              <Table borderWidth="1px" fontSize="sm">
+                <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
+                  <Tr>
+                    <Th whiteSpace="nowrap" scope="col">
+                      PARTICIPANTE
+                    </Th>
+                    <Th whiteSpace="nowrap" scope="col">
+                      EDAD
+                    </Th>
+                    <Th whiteSpace="nowrap" scope="col">
+                      DNI
+                    </Th>
+                    <Th whiteSpace="nowrap" scope="col" />
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {participants.map((participant) => (
+                    <Tr key={participant.id}>
+                      <Td whiteSpace="nowrap">
+                        <Stack direction="row" spacing="4" align="center">
+                          <Box flexShrink={0}>
+                            <Avatar
+                              size="md"
+                              src={participant.picture || undefined}
+                            />
+                          </Box>
+                          <Box>
+                            <Box fontSize="sm" fontWeight="medium">
+                              <Link to={`/participants/${participant.id}`}>
+                                {participant.firstName} {participant.lastName}
+                              </Link>
+                            </Box>
+                            <Box fontSize="sm" color="gray.500">
+                              cambiareste@correo.com
+                            </Box>
+                          </Box>
+                        </Stack>
+                      </Td>
+                      <Td>{getAge(participant.birthday)}</Td>
+                      <Td>{participant.dni}</Td>
+                      <Td textAlign="right">
+                        <Link to={`${participant.id}/edit`}>
+                          <Button variant="link" colorScheme="blue">
+                            Edit
+                          </Button>
+                        </Link>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            ) : (
+              <AlertED
+                title="Vacío"
+                description="No hay participantes para el año seleccionado"
+              />
+            )}
           </Box>
         </Container>
       </Box>
