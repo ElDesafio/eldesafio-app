@@ -6,15 +6,19 @@ import {
   Flex,
   Heading,
   HStack,
+  Icon,
   Spacer,
   Stack,
   Table,
   Tbody,
   Td,
+  Text,
+  Tooltip,
   Tr,
 } from '@chakra-ui/react';
 import type { Participant } from '@prisma/client';
 import type { LoaderFunction } from '@remix-run/server-runtime';
+import { FaWhatsapp } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
@@ -22,7 +26,16 @@ import { z } from 'zod';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
-import { getAge, getFormattedDate, isAdmin } from '~/util/utils';
+import {
+  getAge,
+  getFormattedDate,
+  getNeighborhoodText,
+  getPhoneBelongsToText,
+  isAdmin,
+  PartcipantSexText,
+} from '~/util/utils';
+
+import { ParticipantChartPie } from './components/ParticipantChartPie';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -93,7 +106,7 @@ export default function ParticipantGeneral() {
               </Tr>
               <Tr>
                 <Td fontWeight="600">Sexo:</Td>
-                <Td>{participant.sex}</Td>
+                <Td>{PartcipantSexText[participant.sex]}</Td>
               </Tr>
               <Tr>
                 <Td fontWeight="600">DNI:</Td>
@@ -113,7 +126,10 @@ export default function ParticipantGeneral() {
               </Tr>
               <Tr>
                 <Td fontWeight="600">Barrio:</Td>
-                <Td>{participant.neighborhood}</Td>
+                <Td>
+                  {participant.neighborhood &&
+                    getNeighborhoodText(participant.neighborhood)}
+                </Td>
               </Tr>
               <Tr>
                 <Td fontWeight="600">Ciudad:</Td>
@@ -122,15 +138,51 @@ export default function ParticipantGeneral() {
               <Tr>
                 <Td fontWeight="600">Teléfono 1:</Td>
                 <Td>
-                  {participant.phone1} {participant.phone1HasWhatsapp} (
-                  {participant.phone1BelongsTo})
+                  <HStack alignItems="center" spacing={2}>
+                    <span>{participant.phone1}</span>
+                    {participant.phone1HasWhatsapp && (
+                      <Tooltip
+                        hasArrow
+                        placement="top"
+                        label="Tiene Whatsapp"
+                        alignItems="center"
+                      >
+                        <Box alignItems="center" pt={1}>
+                          <Icon color="green.500" as={FaWhatsapp} />
+                        </Box>
+                      </Tooltip>
+                    )}
+                    {participant.phone1BelongsTo && (
+                      <Text as="i" colorScheme="gray">
+                        ({getPhoneBelongsToText(participant.phone1BelongsTo)})
+                      </Text>
+                    )}
+                  </HStack>
                 </Td>
               </Tr>
               <Tr>
                 <Td fontWeight="600">Teléfono 2:</Td>
                 <Td>
-                  {participant.phone2} {participant.phone2HasWhatsapp} (
-                  {participant.phone2BelongsTo})
+                  <HStack alignItems="center" spacing={2}>
+                    <span>{participant.phone2}</span>
+                    {participant.phone2HasWhatsapp && (
+                      <Tooltip
+                        hasArrow
+                        placement="top"
+                        label="Tiene Whatsapp"
+                        alignItems="center"
+                      >
+                        <Box alignItems="center" pt={1}>
+                          <Icon color="green.500" as={FaWhatsapp} />
+                        </Box>
+                      </Tooltip>
+                    )}
+                    {participant.phone2BelongsTo && (
+                      <Text as="i" colorScheme="gray">
+                        ({getPhoneBelongsToText(participant.phone2BelongsTo)})
+                      </Text>
+                    )}
+                  </HStack>
                 </Td>
               </Tr>
             </Tbody>
@@ -150,6 +202,14 @@ export default function ParticipantGeneral() {
           </Box>
         </Stack>
       </Stack>
+      <Flex alignItems="center">
+        <Heading as="h3" size="md" mt={8}>
+          Programas y Asistencias
+        </Heading>
+        <Spacer />
+      </Flex>
+      <Divider mt="2" mb="8" />
+      <ParticipantChartPie />
     </>
   );
 }

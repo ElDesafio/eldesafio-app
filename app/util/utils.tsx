@@ -1,5 +1,12 @@
 import { Text } from '@chakra-ui/react';
-import type { User, UserRoles, UserStatus, Weekdays } from '@prisma/client';
+import type {
+  Neighborhood,
+  PhoneBelongsTo,
+  User,
+  UserRoles,
+  UserStatus,
+  Weekdays,
+} from '@prisma/client';
 import {
   BloodType,
   ClassAttendanceStatus,
@@ -55,6 +62,41 @@ export enum ProgramSexText {
   MALE = 'varones',
   FEMALE = 'mujeres',
   ALL = 'mixto',
+}
+
+export enum PartcipantSexText {
+  MALE = 'Varón',
+  FEMALE = 'Mujer',
+}
+
+export function getNeighborhoodText(neighborhood: Neighborhood) {
+  switch (neighborhood) {
+    case 'LA_LATA':
+      return 'La Lata';
+    case 'MORENO':
+      return 'Moreno';
+    case 'SAN_FRANCISQUITO':
+      return 'San Francisquito';
+    case 'OTHER':
+      return 'Otro';
+    default:
+      throw new Error('[getNeighborhoodText] Unknown neighborhood');
+  }
+}
+
+export function getPhoneBelongsToText(phoneBelongsTo: PhoneBelongsTo) {
+  switch (phoneBelongsTo) {
+    case 'FATHER':
+      return 'Padre';
+    case 'MOTHER':
+      return 'Madre';
+    case 'SELF':
+      return 'Propio';
+    case 'TUTOR':
+      return 'Otro/Tutor';
+    default:
+      throw new Error('[getPhoneBelongsToText] Unknown phone belongs to');
+  }
 }
 
 export function getDayByName(name: Weekdays) {
@@ -276,7 +318,17 @@ export function getAttendanceProps(attendance: ClassAttendanceStatus) {
   };
 }
 
-export function formatAttendanceChartBarsData(classes: GetProgramClasses) {
+export type ClassForChart = {
+  date: Date;
+  isRainyDay: boolean;
+  participants: Array<{
+    status: ClassAttendanceStatus;
+  }>;
+};
+
+export function formatAttendanceChartBarsData(
+  classes: GetProgramClasses | ClassForChart[],
+) {
   // Helper to collect data by month
   const helper: Record<
     string,
@@ -477,7 +529,9 @@ export function formatAttendanceChartBarsData(classes: GetProgramClasses) {
   return options;
 }
 
-export function formatProgramChartPieData(classes: GetProgramClasses) {
+export function formatProgramChartPieData(
+  classes: GetProgramClasses | ClassForChart[],
+) {
   // Helper to collect data by month
   let present: number = 0;
   let absent: number = 0;

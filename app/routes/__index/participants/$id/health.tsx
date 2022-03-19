@@ -10,6 +10,7 @@ import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
+import { AlertED } from '~/components/AlertED';
 import type { GetParticipantHealth } from '~/services/participants.service';
 import { getParticipantHealth } from '~/services/participants.service';
 import { getBloodTypeName, getFormAnswerOptionName } from '~/util/utils';
@@ -288,10 +289,10 @@ export default function ParticipantHealth() {
           </Stack>
         </>
       ) : (
-        <p>No hay datos de salud</p>
+        <AlertED title="Vacío" description="No hay datos de salud" />
       )}
       <Stack direction="row" mt={6} justifyContent="center" width="full">
-        <Link to={`edit`}>
+        <Link to="edit">
           <Button colorScheme="blue">Editar</Button>
         </Link>
       </Stack>

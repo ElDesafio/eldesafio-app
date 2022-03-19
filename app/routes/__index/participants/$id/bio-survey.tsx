@@ -11,6 +11,7 @@ import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
+import { AlertED } from '~/components/AlertED';
 import type { GetParticipantBioSurvey } from '~/services/participants.service';
 import { getParticipantBioSurvey } from '~/services/participants.service';
 import { getFormAnswerOptionName } from '~/util/utils';
@@ -190,10 +191,10 @@ export default function ParticipantHealth() {
           </VStack>
         </>
       ) : (
-        <p>No hay datos biográficos</p>
+        <AlertED title="Vacío" description="No hay datos biográficos" />
       )}
       <Stack direction="row" mt={6} justifyContent="center" width="full">
-        <Link to={`edit`}>
+        <Link to="edit">
           <Button colorScheme="blue">Editar</Button>
         </Link>
       </Stack>

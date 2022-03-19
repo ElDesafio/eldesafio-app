@@ -391,14 +391,18 @@ export default function Attendance() {
           />
         )}
       </Box>
-      <Heading as="h3" size="md" mt={8}>
-        Gráfico anual
-      </Heading>
-      <Divider mt={2} mb={8} />
+      {classes.length > 0 && participants.length > 0 && (
+        <>
+          <Heading as="h3" size="md" mt={8}>
+            Gráfico anual
+          </Heading>
+          <Divider mt={2} mb={8} />
 
-      <Box>
-        <AttendanceChartBars />
-      </Box>
+          <Box>
+            <AttendanceChartBars />
+          </Box>
+        </>
+      )}
     </>
   );
 }
