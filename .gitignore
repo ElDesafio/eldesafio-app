@@ -1,10 +1,14 @@
 node_modules
 
 /.cache
-/server/build
-/public/build
 /build
-
+/public/build
 .env
+
+/cypress/screenshots
+/cypress/videos
+/postgres-data
+
+/coverage
 
 newrelic_agent.log

@@ -97,7 +97,7 @@ export function FormSelect<Option extends BaseOption>({
         instanceId={instanceId}
         name={name}
         isMulti={isMulti}
-        delimiter={','}
+        delimiter=","
         options={options}
         // @ts-ignore
         onBlur={validate}

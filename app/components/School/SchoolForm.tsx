@@ -16,9 +16,6 @@ import { FieldGroup } from '~/components/FieldGroup';
 import { FormInput } from '~/components/Form/FormInput';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
-import { schemaCheckbox } from '~/util/utils';
-
-import { ProgramSex, Weekdays } from '.prisma/client';
 
 const schoolSchema = z.object({
   name: z.string().nonempty('Nombre no puede estar vacío'),

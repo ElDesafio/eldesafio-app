@@ -1,5 +1,5 @@
 import type { HTMLChakraProps } from '@chakra-ui/react';
-import { chakra, useColorModeValue, useToken } from '@chakra-ui/react';
+import { chakra, useColorModeValue } from '@chakra-ui/react';
 
 export const Logo = (props: HTMLChakraProps<'svg'>) => {
   const logoColor = props.color === 'blue' ? '#2B6CB0' : '#FFF';

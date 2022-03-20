@@ -1,4 +1,5 @@
-import { lighten, mode, StyleFunctionProps } from '@chakra-ui/theme-tools'
+import type { StyleFunctionProps } from '@chakra-ui/theme-tools';
+import { lighten, mode } from '@chakra-ui/theme-tools';
 
 export default {
   global: (props: StyleFunctionProps) => ({
@@ -14,4 +15,4 @@ export default {
       borderColor: mode('gray.200', lighten('gray.700', 3)(props.theme))(props),
     },
   }),
-}
+};

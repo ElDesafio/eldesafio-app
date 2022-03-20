@@ -21,5 +21,5 @@ export const sendMagicLinkEmail: SendEmailFunction<User> = async ({
     },
   };
 
-  const emailresponse = await sgMail.send(msg);
+  await sgMail.send(msg);
 };

@@ -1,4 +1,4 @@
-import * as React from "react";
+import type { InputProps } from '@chakra-ui/react';
 import {
   Box,
   Flex,
@@ -7,14 +7,13 @@ import {
   IconButton,
   Input,
   InputGroup,
-  InputProps,
   InputRightElement,
+  useColorModeValue as mode,
   useDisclosure,
   useMergeRefs,
-  useColorModeValue as mode,
-} from "@chakra-ui/react";
-
-import { HiEye, HiEyeOff } from "react-icons/hi";
+} from '@chakra-ui/react';
+import * as React from 'react';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>(
   (props, ref) => {
@@ -41,7 +40,7 @@ export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>(
           <FormLabel>Password</FormLabel>
           <Box
             as="a"
-            color={mode("blue.600", "blue.200")}
+            color={mode('blue.600', 'blue.200')}
             fontWeight="semibold"
             fontSize="sm"
           >
@@ -50,9 +49,10 @@ export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>(
         </Flex>
         <InputGroup>
           <Input
+            // @ts-ignore
             ref={mergeRef}
             name="password"
-            type={isOpen ? "text" : "password"}
+            type={isOpen ? 'text' : 'password'}
             autoComplete="current-password"
             required
             {...props}
@@ -61,7 +61,7 @@ export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>(
             <IconButton
               bg="transparent !important"
               variant="ghost"
-              aria-label={isOpen ? "Mask password" : "Reveal password"}
+              aria-label={isOpen ? 'Mask password' : 'Reveal password'}
               icon={isOpen ? <HiEyeOff /> : <HiEye />}
               onClick={onClickReveal}
             />
@@ -69,7 +69,7 @@ export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>(
         </InputGroup>
       </FormControl>
     );
-  }
+  },
 );
 
-PasswordField.displayName = "PasswordField";
+PasswordField.displayName = 'PasswordField';

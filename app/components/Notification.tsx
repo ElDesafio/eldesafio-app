@@ -1,5 +1,6 @@
-import { Box, Center, CenterProps } from "@chakra-ui/react";
-import { FaBell } from "react-icons/fa";
+import type { CenterProps } from '@chakra-ui/react';
+import { Box, Center } from '@chakra-ui/react';
+import { FaBell } from 'react-icons/fa';
 
 const NotificationBadge = (props: CenterProps) => (
   <Center
@@ -25,8 +26,8 @@ export const Notification = (props: CenterProps) => (
     h="8"
     position="relative"
     rounded="md"
-    _hover={{ bg: "whiteAlpha.200" }}
-    _focus={{ shadow: "outline" }}
+    _hover={{ bg: 'whiteAlpha.200' }}
+    _focus={{ shadow: 'outline' }}
     {...props}
   >
     <Box srOnly>Click to see 9 notifications</Box>

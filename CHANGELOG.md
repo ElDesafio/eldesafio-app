@@ -24,7 +24,7 @@
 
 #### 64-add-attendance ([#65](https://github.com/ElDesafio/eldesafio-app/pull/65))
 
-- Added Attendance view with the ability to add/edit/remove classes. 
+- Added Attendance view with the ability to add/edit/remove classes.
 - Added graphics
 
 #### add auto label ([#63](https://github.com/ElDesafio/eldesafio-app/pull/63))

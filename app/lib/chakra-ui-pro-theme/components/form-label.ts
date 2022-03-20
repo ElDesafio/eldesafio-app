@@ -2,7 +2,7 @@ const baseStyle = {
   color: 'emphasized',
   mb: '1.5',
   fontSize: 'sm',
-}
+};
 
 const sizes = {
   sm: {
@@ -26,7 +26,7 @@ const sizes = {
       left: '4',
     },
   },
-}
+};
 
 const variants = {
   inline: () => ({
@@ -51,15 +51,15 @@ const variants = {
       color: 'muted',
     },
   }),
-}
+};
 
 const defaultProps = {
   size: 'md',
-}
+};
 
 export default {
   baseStyle,
   sizes,
   variants,
   defaultProps,
-}
+};

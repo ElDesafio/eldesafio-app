@@ -95,7 +95,7 @@ export const FormAutocomplete = ({
         options={searchData}
         onInputChange={onInputChange}
         chakraStyles={{
-          dropdownIndicator: (provided, state) => ({
+          dropdownIndicator: (provided) => ({
             ...provided,
             bg: 'transparent',
             px: 2,

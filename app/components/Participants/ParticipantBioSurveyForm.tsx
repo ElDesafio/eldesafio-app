@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { FormAnswerOptions } from '@prisma/client';
 import { useState } from 'react';
-import { useNavigate, useTransition, useTransition } from 'remix';
+import { useNavigate, useTransition } from 'remix';
 import { ValidatedForm, withZod } from 'remix-validated-form';
 import * as z from 'zod';
 

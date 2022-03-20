@@ -1,3 +1,6 @@
+/**
+ * @type {import('eslint').Linter.BaseConfig}
+ */
 module.exports = {
   env: {
     browser: true,
@@ -5,25 +8,24 @@ module.exports = {
     node: true,
     'jest/globals': true,
   },
+  parser: '@babel/eslint-parser',
+  parserOptions: {
+    sourceType: 'module',
+    requireConfigFile: false,
+    ecmaVersion: 'latest',
+    babelOptions: {
+      presets: ['@babel/preset-react'],
+    },
+  },
   extends: [
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:sonarjs/recommended',
     'plugin:import/recommended',
-    'plugin:import/typescript',
     'prettier',
   ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
   plugins: [
     'react',
-    '@typescript-eslint',
     'sonarjs',
     'unicorn',
     'jest',
@@ -31,13 +33,23 @@ module.exports = {
     'prettier',
   ],
   settings: {
-    'import/resolver': {
-      typescript: {
-        project: '.',
-      },
-    },
     react: {
       version: 'detect',
+    },
+    jest: {
+      version: 27,
+    },
+    'import/ignore': ['node_modules', '\\.(css|md|svg|json)$'],
+    'import/parsers': {
+      [require.resolve('@typescript-eslint/parser')]: ['.ts', '.tsx', '.d.ts'],
+    },
+    'import/resolver': {
+      [require.resolve('eslint-import-resolver-node')]: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+      [require.resolve('eslint-import-resolver-typescript')]: {
+        alwaysTryTypes: true,
+      },
     },
   },
   rules: {
@@ -65,26 +77,6 @@ module.exports = {
       'always',
       { avoidExplicitReturnArrows: true },
     ],
-    '@typescript-eslint/no-duplicate-imports': ['error'],
-    '@typescript-eslint/consistent-type-imports': 'error',
-    '@typescript-eslint/indent': ['off', 2],
-    '@typescript-eslint/no-unused-vars': [
-      'warn',
-      { vars: 'all', args: 'after-used', ignoreRestSiblings: true },
-    ],
-    '@typescript-eslint/member-delimiter-style': [
-      'error',
-      {
-        multiline: {
-          delimiter: 'semi',
-          requireLast: true,
-        },
-        singleline: {
-          delimiter: 'semi',
-          requireLast: false,
-        },
-      },
-    ],
     // "unicorn/no-fn-reference-in-iterator": "off",
     // "unicorn/no-array-for-each": "off",
     // "unicorn/no-null": "off",
@@ -101,4 +93,51 @@ module.exports = {
     //     },
     // ],
   },
+  overrides: [
+    {
+      files: ['**/*.ts?(x)'],
+      extends: ['plugin:import/typescript'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        sourceType: 'module',
+        ecmaVersion: 2019,
+        ecmaFeatures: {
+          jsx: true,
+        },
+        warnOnUnsupportedTypeScriptVersion: true,
+      },
+      plugins: ['@typescript-eslint'],
+      rules: {
+        '@typescript-eslint/no-duplicate-imports': ['error'],
+        '@typescript-eslint/consistent-type-imports': 'error',
+        '@typescript-eslint/indent': ['off', 2],
+        '@typescript-eslint/no-unused-vars': [
+          'warn',
+          { vars: 'all', args: 'after-used', ignoreRestSiblings: true },
+        ],
+        '@typescript-eslint/member-delimiter-style': [
+          'error',
+          {
+            multiline: {
+              delimiter: 'semi',
+              requireLast: true,
+            },
+            singleline: {
+              delimiter: 'semi',
+              requireLast: false,
+            },
+          },
+        ],
+      },
+    },
+    {
+      files: ['**/routes/**/*.js?(x)', '**/routes/**/*.tsx'],
+      rules: {
+        // Routes may use default exports without a name. At the route level
+        // identifying components for debugging purposes is less of an issue, as
+        // the route boundary is more easily identifiable.
+        'react/display-name': 0,
+      },
+    },
+  ],
 };

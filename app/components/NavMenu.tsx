@@ -2,12 +2,7 @@
 import { Box, Flex, HStack } from '@chakra-ui/react';
 import { AiOutlineTeam } from 'react-icons/ai';
 import { FaSchool } from 'react-icons/fa';
-import {
-  MdAdminPanelSettings,
-  MdGroup,
-  MdOutlineFamilyRestroom,
-  MdSchool,
-} from 'react-icons/md';
+import { MdGroup, MdOutlineFamilyRestroom, MdSchool } from 'react-icons/md';
 import { useLocation } from 'remix';
 
 import { NavItem } from './NavItem';

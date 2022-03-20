@@ -1,11 +1,10 @@
 import type { User } from '@prisma/client';
-import { redirect } from 'remix';
 import { Authenticator, AuthorizationError } from 'remix-auth';
 import { EmailLinkStrategy } from 'remix-auth-email-link';
 
 import { db } from './db.server';
 import { sendMagicLinkEmail } from './email.server';
-import { destroySession, getSession, sessionStorage } from './session.server';
+import { sessionStorage } from './session.server';
 
 // This secret is used to encrypt the token sent in the magic link and the
 // session used to validate someone else is not trying to sign-in as another

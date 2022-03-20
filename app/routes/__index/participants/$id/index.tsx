@@ -234,7 +234,7 @@ export default function ParticipantGeneral() {
           <Avatar size="2xl" src={participant.picture || undefined} />
           <Box>
             <HStack spacing="5">
-              <Button>{participant.active ? 'Activo' : 'Inactivo'}</Button>
+              <Button>Activo</Button>
             </HStack>
           </Box>
         </Stack>
