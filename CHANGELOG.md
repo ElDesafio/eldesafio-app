@@ -1,3 +1,21 @@
+# v0.9.4 (Sun Mar 20 2022)
+
+#### 🔩 Dependency Updates
+
+- Update actions/checkout action to v3 [#78](https://github.com/ElDesafio/eldesafio-app/pull/78) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### ⚠️ Pushed to `main`
+
+- udpate release labels ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 3
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v0.9.3 (Sun Mar 20 2022)
 
 #### ⚠️ Pushed to `main`
