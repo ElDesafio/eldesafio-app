@@ -1,6 +1,5 @@
 node_modules
 
-/.cache
 /build
 /public/build
 .env
@@ -8,5 +7,3 @@ node_modules
 /cypress/screenshots
 /cypress/videos
 /postgres-data
-
-newrelic_agent.log

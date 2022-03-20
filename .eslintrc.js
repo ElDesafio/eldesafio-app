@@ -1,3 +1,6 @@
+/**
+ * @type {import('eslint').Linter.BaseConfig}
+ */
 module.exports = {
   env: {
     browser: true,
@@ -38,6 +41,9 @@ module.exports = {
     },
     react: {
       version: 'detect',
+    },
+    jest: {
+      version: 27,
     },
   },
   rules: {
