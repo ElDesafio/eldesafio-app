@@ -250,6 +250,7 @@ jobs:
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+        run: git fetch --unshallow --tags
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
