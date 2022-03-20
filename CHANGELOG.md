@@ -1,3 +1,34 @@
+# v0.9.0 (Sun Mar 20 2022)
+
+### Release Notes
+
+#### Update to remix blue stack ([#73](https://github.com/ElDesafio/eldesafio-app/pull/73))
+
+Update code and Github Action
+
+#### 70-update-user-view ([#72](https://github.com/ElDesafio/eldesafio-app/pull/72))
+
+- Add participant charts and many other fixes
+
+---
+
+#### 🚀 Enhancement
+
+- Update to remix blue stack [#73](https://github.com/ElDesafio/eldesafio-app/pull/73) ([@lucascurti](https://github.com/lucascurti))
+- 70-update-user-view [#72](https://github.com/ElDesafio/eldesafio-app/pull/72) ([@lucascurti](https://github.com/lucascurti))
+
+#### ⚠️ Pushed to `main`
+
+- fix 2 ([@lucascurti](https://github.com/lucascurti))
+- fix ([@lucascurti](https://github.com/lucascurti))
+- fetch tags ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.8.0 (Thu Mar 17 2022)
 
 ### Release Notes
