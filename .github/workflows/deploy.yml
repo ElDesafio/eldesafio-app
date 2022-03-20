@@ -249,7 +249,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         run: git fetch --unshallow --tags
 
       - name: ⎔ Setup node
