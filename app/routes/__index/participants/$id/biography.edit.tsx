@@ -1,5 +1,6 @@
 import { Button, HStack } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
+import { withZod } from '@remix-validated-form/with-zod';
 import type { ActionFunction, LoaderFunction } from 'remix';
 import {
   json,
@@ -8,7 +9,7 @@ import {
   useNavigate,
   useTransition,
 } from 'remix';
-import { ValidatedForm, validationError, withZod } from 'remix-validated-form';
+import { ValidatedForm, validationError } from 'remix-validated-form';
 import { z } from 'zod';
 
 import { FormRichTextEditor } from '~/components/Form/FormRichTextEditor';
@@ -51,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const formData = Object.fromEntries(await request.formData());
 
-  const fieldValues = biographyValidator.validate(formData);
+  const fieldValues = await biographyValidator.validate(formData);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 

@@ -8,8 +8,9 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import { withZod } from '@remix-validated-form/with-zod';
 import { useNavigate } from 'remix';
-import { ValidatedForm, withZod } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
 import { FieldGroup } from '~/components/FieldGroup';

@@ -19,7 +19,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = Object.fromEntries(await request.formData());
 
-  const fieldValues = schoolFormValidator.validate(formData);
+  const fieldValues = await schoolFormValidator.validate(formData);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 

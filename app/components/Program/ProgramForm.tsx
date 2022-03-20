@@ -9,11 +9,12 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { ProgramSex, Weekdays } from '@prisma/client';
+import { withZod } from '@remix-validated-form/with-zod';
 import { useEffect, useState } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
 import { useNavigate, useTransition } from 'remix';
-import { ValidatedForm, withZod } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import { v4 as uuid } from 'uuid';
 import * as z from 'zod';
 

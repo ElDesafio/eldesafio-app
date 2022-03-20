@@ -33,7 +33,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (!user) throw json('Unauthorized', { status: 403 });
 
-  const fieldValues = schoolFormValidator.validate(
+  const fieldValues = await schoolFormValidator.validate(
     Object.fromEntries(await request.formData()),
   );
   if (fieldValues.error) return validationError(fieldValues.error);

@@ -32,7 +32,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const formData = Object.fromEntries(await request.formData());
 
-  const fieldValues = participantHealthValidator.validate(formData);
+  const fieldValues = await participantHealthValidator.validate(formData);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 

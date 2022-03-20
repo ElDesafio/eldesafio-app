@@ -96,7 +96,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (!user) throw json('Unauthorized', { status: 403 });
 
-  const { data } = attendanceFormValidator.validate(formData);
+  const { data } = await attendanceFormValidator.validate(formData);
 
   if (!data) {
     throw new Error('There was a problem with the form data');
