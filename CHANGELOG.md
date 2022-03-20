@@ -1,3 +1,15 @@
+# v0.9.1 (Sun Mar 20 2022)
+
+#### ⚠️ Pushed to `main`
+
+- update renovate ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.9.0 (Sun Mar 20 2022)
 
 ### Release Notes
