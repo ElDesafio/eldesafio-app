@@ -132,7 +132,11 @@ jobs:
   build:
     name: 🐳 Build
     timeout-minutes: 15
-    # only build/deploy main branch on pushes
+    needs:
+      - lint
+      - typecheck
+      # - vitest
+      # - cypress    # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
