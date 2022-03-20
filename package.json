@@ -71,7 +71,7 @@
     "remix-auth": "3.2.1",
     "remix-auth-email-link": "1.2.0",
     "remix-utils": "2.9.0",
-    "remix-validated-form": "2.1.1",
+    "remix-validated-form": "4.1.8",
     "socket.io": "4.4.1",
     "socket.io-client": "4.4.1",
     "tiny-invariant": "1.2.0",
