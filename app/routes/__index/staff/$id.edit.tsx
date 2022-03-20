@@ -12,7 +12,7 @@ import { db } from '~/services/db.server';
 
 async function getUser(id: number) {
   return await db.user.findUnique({
-    where: { id: id },
+    where: { id },
     include: { roles: true },
   });
 }

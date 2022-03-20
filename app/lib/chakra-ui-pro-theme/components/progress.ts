@@ -2,7 +2,7 @@ const baseStyle = {
   track: {
     borderRadius: 'base',
   },
-}
+};
 
 const variants = {
   solid: {
@@ -18,15 +18,15 @@ const variants = {
       bg: 'brand.50',
     },
   },
-}
+};
 
 const defaultProps = {
   colorScheme: 'brand',
   variant: 'solid',
-}
+};
 
 export default {
   variants,
   baseStyle,
   defaultProps,
-}
+};

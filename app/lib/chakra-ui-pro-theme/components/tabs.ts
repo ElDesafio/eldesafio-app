@@ -9,7 +9,7 @@ const baseStyle = {
       boxShadow: 'base',
     },
   },
-}
+};
 
 const variants = {
   line: {
@@ -30,7 +30,7 @@ const variants = {
       },
     },
   },
-}
+};
 
 const sizes = {
   md: {
@@ -38,6 +38,6 @@ const sizes = {
       fontSize: 'sm',
     },
   },
-}
+};
 
-export default { baseStyle, variants, sizes }
+export default { baseStyle, variants, sizes };

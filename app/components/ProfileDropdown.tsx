@@ -2,7 +2,6 @@ import type { UseMenuButtonProps } from '@chakra-ui/react';
 import {
   Avatar,
   Box,
-  Button,
   chakra,
   Flex,
   HStack,

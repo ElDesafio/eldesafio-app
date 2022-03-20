@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Container,
   FormControl,
   HStack,
   Stack,
@@ -39,7 +38,7 @@ const participantSchema = z.object({
     z.string().url('La URL de la imagen no es válida').nullable(),
   ),
   sex: z.nativeEnum(Sex, {
-    errorMap: (issue) => ({
+    errorMap: () => ({
       message: 'Sexo no puede estar vacío',
     }),
   }),

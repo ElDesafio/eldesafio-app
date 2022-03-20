@@ -9,4 +9,4 @@ export default {
   'md-dark': '0px 4px 8px rgba(11, 12, 17, 0.9)',
   'lg-dark': '0px 8px 16px rgba(11, 12, 17, 0.9)',
   'xl-dark': '0px 16px 24px rgba(11, 12, 17, 0.9)',
-}
+};

@@ -1,6 +1,6 @@
 const baseStyle = {
   fontWeight: 'semibold',
-}
+};
 
 const sizes = {
   '2xl': {
@@ -31,9 +31,9 @@ const sizes = {
     fontSize: '2xl',
     lineHeight: '2rem',
   },
-}
+};
 
 export default {
   baseStyle,
   sizes,
-}
+};

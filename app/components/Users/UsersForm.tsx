@@ -24,7 +24,7 @@ import { FormInput } from '~/components/Form/FormInput';
 import { FormSelect } from '~/components/Form/FormSelect';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
-import { getUserRoleName, getUserStatusName } from '~/util/utils';
+import { getUserRoleName } from '~/util/utils';
 
 import { FormRichTextEditor } from '../Form/FormRichTextEditor';
 

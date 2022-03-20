@@ -9,13 +9,7 @@ import { range } from 'lodash';
 import { DateTime } from 'luxon';
 import { useEffect } from 'react';
 import type { LoaderFunction } from 'remix';
-import {
-  Outlet,
-  redirect,
-  useLoaderData,
-  useNavigate,
-  useSearchParams,
-} from 'remix';
+import { Outlet, useLoaderData, useNavigate, useSearchParams } from 'remix';
 
 import { Logo } from '~/components/Logo';
 import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';

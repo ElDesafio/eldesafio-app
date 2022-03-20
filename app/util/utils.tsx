@@ -393,7 +393,7 @@ export function formatAttendanceChartBarsData(
 
   Object.keys(helper)
     .sort((a, b) => (Number(a) > Number(b) ? 1 : -1))
-    .forEach((month, index) => {
+    .forEach((month) => {
       const { present, absent, late, excused, rainyDays, totalClasses } =
         helper[month];
 

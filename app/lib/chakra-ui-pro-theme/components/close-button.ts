@@ -5,8 +5,8 @@ const baseStyle = {
   _focusVisible: {
     boxShadow: 'outline',
   },
-}
+};
 
 export default {
   baseStyle,
-}
+};

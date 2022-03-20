@@ -37,7 +37,7 @@ const programSchema = z.object({
       .min(2000),
   ),
   sex: z.nativeEnum(ProgramSex, {
-    errorMap: (issue) => ({
+    errorMap: () => ({
       message: 'Sexo no puede estar vacío',
     }),
   }),
@@ -70,7 +70,7 @@ const programSchema = z.object({
       id: z.number().optional(),
       programId: z.number().optional(),
       day: z.nativeEnum(Weekdays, {
-        errorMap: (issue) => ({
+        errorMap: () => ({
           message: 'Día no puede estar vacío',
         }),
       }),
