@@ -9,7 +9,7 @@
     "build:server": "esbuild --platform=node --format=cjs ./server.ts --outdir=build",
     "dev": "pm2-dev ./other/pm2.config.js",
     "docker": "docker-compose up -d",
-    "docker:update_repo_db": "docker cp ed_local_db:/var/lib/postgresql/data postgres-data/",
+    "docker:update_repo_db": "rm -rf ./postgres-data/{*,.*} & docker cp ed_local_db:/var/lib/postgresql/data postgres-data/",
     "format": "prettier --write .",
     "postinstall": "remix setup node && patch-package",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
