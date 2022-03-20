@@ -86,6 +86,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       includeSearchParam.length > 0 ? includeSearchParam : ['ACTIVE'],
   });
 
+  const activeParticipants = await getProgramParticipants({
+    programId: Number(id),
+    includeStatus: ['ACTIVE'],
+  });
+
+  const activeParticipantsCount = activeParticipants.length;
+
   if (!participants) {
     throw new Error('Participants not found');
   }
@@ -134,6 +141,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     participants,
     totalPercentages,
     isUserAdmin,
+    activeParticipantsCount,
   };
 };
 
@@ -199,13 +207,19 @@ function ClassAttendanceCell({ status }: { status: ClassAttendanceStatus }) {
 }
 
 export default function Attendance() {
-  const { classes, participants, isUserAdmin, totalPercentages } =
-    useLoaderData<{
-      classes: GetProgramClasses;
-      participants: GetProgramParticipants;
-      isUserAdmin: boolean;
-      totalPercentages: Record<string, { present: number; absent: number }>;
-    }>();
+  const {
+    classes,
+    participants,
+    isUserAdmin,
+    totalPercentages,
+    activeParticipantsCount,
+  } = useLoaderData<{
+    classes: GetProgramClasses;
+    participants: GetProgramParticipants;
+    isUserAdmin: boolean;
+    totalPercentages: Record<string, { present: number; absent: number }>;
+    activeParticipantsCount: number;
+  }>();
   const transition = useTransition();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -226,6 +240,7 @@ export default function Attendance() {
 
   options.unshift({ label: 'Todo el año', value: 0 });
 
+  console.log(activeParticipantsCount);
   return (
     <>
       <Stack
@@ -234,9 +249,21 @@ export default function Attendance() {
         justifyContent="space-between"
       >
         <Link to="new">
-          <Button leftIcon={<MdAdd />} colorScheme="blue">
-            Agregar estimulo
-          </Button>
+          <Tooltip
+            hasArrow
+            placement="top"
+            label="No hay participantes activos"
+            isDisabled={activeParticipantsCount > 0}
+            shouldWrapChildren
+          >
+            <Button
+              leftIcon={<MdAdd />}
+              colorScheme="blue"
+              disabled={activeParticipantsCount === 0}
+            >
+              Agregar estimulo
+            </Button>
+          </Tooltip>
         </Link>
         <HStack spacing={6}>
           <FormControl display="flex" alignItems="center">
