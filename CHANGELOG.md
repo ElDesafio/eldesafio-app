@@ -1,3 +1,15 @@
+# v0.9.2 (Sun Mar 20 2022)
+
+#### ⚠️ Pushed to `main`
+
+- empty commit ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.9.1 (Sun Mar 20 2022)
 
 #### ⚠️ Pushed to `main`
