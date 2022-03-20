@@ -1,9 +1,7 @@
 # Welcome to Remix!
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 - [Remix Docs](https://remix.run/docs)
@@ -73,7 +71,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/lucascurti"><img src="https://avatars.githubusercontent.com/u/2811287?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas Curti</b></sub></a><br /><a href="https://github.com/@lucascurti/eldesafio-app/commits?author=lucascurti" title="Documentation">📖</a> <a href="https://github.com/@lucascurti/eldesafio-app/commits?author=lucascurti" title="Code">💻</a> <a href="#infra-lucascurti" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    <td align="center"><a href="https://github.com/lucascurti"><img src="https://avatars.githubusercontent.com/u/2811287?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas Curti</b></sub></a><br /><a href="https://github.com/@lucascurti/eldesafio-app/commits?author=lucascurti" title="Documentation">📖</a> <a href="https://github.com/@lucascurti/eldesafio-app/commits?author=lucascurti" title="Code">💻</a> <a href="#infra-lucascurti" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/@lucascurti/eldesafio-app/commits?author=lucascurti" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
