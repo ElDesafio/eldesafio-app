@@ -9,4 +9,6 @@ node_modules
 /cypress/videos
 /postgres-data
 
+/coverage
+
 newrelic_agent.log
