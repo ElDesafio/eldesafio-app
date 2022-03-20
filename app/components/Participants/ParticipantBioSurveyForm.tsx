@@ -17,7 +17,7 @@ import { FormInput } from '~/components/Form/FormInput';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
 
-import { FormRadioGroup2 } from '../Form/FormRadioGroup';
+import { FormRadioGroup } from '../Form/FormRadioGroup';
 
 const stringErrorMessage = 'Este es un campo requerido';
 
