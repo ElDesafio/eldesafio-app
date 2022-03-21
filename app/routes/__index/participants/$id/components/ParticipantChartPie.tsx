@@ -39,6 +39,10 @@ export function ParticipantChartPie({
     routeData.load(`/api/participant/${id}/attendance/?${params.toString()}`);
   }, [params.toString()]);
 
+  if (routeData.data && routeData.data.length === 0) {
+    return null;
+  }
+
   return (
     <Box width="100%" height="100%" mb={8}>
       <Heading

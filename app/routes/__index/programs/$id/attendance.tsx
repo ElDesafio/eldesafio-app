@@ -241,7 +241,6 @@ export default function Attendance() {
 
   options.unshift({ label: 'Todo el año', value: 0 });
 
-  console.log(activeParticipantsCount);
   return (
     <>
       <Stack

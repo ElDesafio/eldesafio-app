@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   return await getParticipantDiaryEvent({ eventId });
 };
 
-export default function ParticipantDiary() {
+export default function ParticipantDiaryEvent() {
   const event = useLoaderData<GetParticipantDiaryEvent>();
 
   if (!event) {

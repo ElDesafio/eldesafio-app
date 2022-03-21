@@ -21,6 +21,7 @@ import { FormSelect } from '~/components/Form/FormSelect';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
 import type { GetParticipantPrograms } from '~/services/participants.service';
+import { getParticipantDiaryTypeProps } from '~/util/utils';
 
 const diaryEventSchema = zfd.formData({
   title: z.string().nonempty('Título es requerido'),
@@ -39,9 +40,11 @@ export const diaryEventFormValidator = withZod(diaryEventSchema);
 type ProgramFormProps = {
   defaultValues?: Partial<z.infer<typeof diaryEventSchema>>;
   programs: Exclude<GetParticipantPrograms, null>;
+  isAutoEvent?: boolean;
 };
 
 export function ParticipantDiaryEventForm({
+  isAutoEvent = false,
   defaultValues,
   programs,
 }: ProgramFormProps) {
@@ -61,6 +64,86 @@ export function ParticipantDiaryEventForm({
 
   const isSaving = transition.state === 'submitting';
 
+  const eventTypeOptions: { label: string; value: ParticipantDiaryType }[] = [
+    {
+      label: getParticipantDiaryTypeProps(ParticipantDiaryType.INFO)
+        .description,
+      value: ParticipantDiaryType.INFO,
+    },
+    {
+      label: getParticipantDiaryTypeProps(ParticipantDiaryType.MENTORSHIP)
+        .description,
+      value: ParticipantDiaryType.MENTORSHIP,
+    },
+  ];
+
+  if (defaultValues) {
+    eventTypeOptions.push(
+      ...[
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.PROGRAM_STATUS_ACTIVE,
+          ).description,
+          value: ParticipantDiaryType.PROGRAM_STATUS_ACTIVE,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_3_ABSENT,
+          ).description,
+          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_3_ABSENT,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_FAMILY,
+          ).description,
+          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_FAMILY,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_LOW_ATTENDANCE,
+          ).description,
+          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_LOW_ATTENDANCE,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_NO_SHOW,
+          ).description,
+          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_NO_SHOW,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_OTHER,
+          ).description,
+          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_OTHER,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.PROGRAM_STATUS_WAITING,
+          ).description,
+          value: ParticipantDiaryType.PROGRAM_STATUS_WAITING,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.YEAR_STATUS_ACTIVE,
+          ).description,
+          value: ParticipantDiaryType.YEAR_STATUS_ACTIVE,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.YEAR_STATUS_INACTIVE,
+          ).description,
+          value: ParticipantDiaryType.YEAR_STATUS_INACTIVE,
+        },
+        {
+          label: getParticipantDiaryTypeProps(
+            ParticipantDiaryType.YEAR_STATUS_WAITING,
+          ).description,
+          value: ParticipantDiaryType.YEAR_STATUS_WAITING,
+        },
+      ],
+    );
+  }
+
   return (
     <Box px={4} maxWidth="7xl">
       <ValidatedForm
@@ -69,8 +152,13 @@ export function ParticipantDiaryEventForm({
         method="post"
         noValidate
       >
-        <Stack spacing="4" divider={<StackDivider />}>
-          <FieldGroup title="Datos Básicos">
+        <Stack spacing="4">
+          <FieldGroup
+            title="Datos Básicos"
+            visibility={isAutoEvent ? 'hidden' : undefined}
+            position={isAutoEvent ? 'absolute' : undefined}
+            left={isAutoEvent ? '-9999em' : undefined}
+          >
             <VStack width="full" spacing="6" alignItems="flex-start">
               <FormStack width="full">
                 <FormInput name="title" label="Título" isRequired />
@@ -88,22 +176,18 @@ export function ParticipantDiaryEventForm({
                     label="Tipo de evento"
                     isRequired
                     placeholder="Tipo de evento..."
-                    options={[
-                      {
-                        label: 'Información general',
-                        value: ParticipantDiaryType.INFO,
-                      },
-                      {
-                        label: 'Mentoría',
-                        value: ParticipantDiaryType.MENTORSHIP,
-                      },
-                    ]}
+                    options={eventTypeOptions}
                   />
                 </Box>
               </FormStack>
             </VStack>
           </FieldGroup>
-          <FieldGroup title="Programas">
+          <FieldGroup
+            title="Programas"
+            visibility={isAutoEvent ? 'hidden' : undefined}
+            position={isAutoEvent ? 'absolute' : undefined}
+            left={isAutoEvent ? '-9999em' : undefined}
+          >
             <FormStack width="full">
               <FormSelect
                 instanceId="programs-select"

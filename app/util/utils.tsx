@@ -678,6 +678,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'gray',
         variant: 'solid',
         text: 'info',
+        description: 'Información General',
       };
     }
     case ParticipantDiaryType.MENTORSHIP: {
@@ -685,6 +686,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'gray',
         variant: 'solid',
         text: 'mentoría',
+        description: 'Mentoría',
       };
     }
     case ParticipantDiaryType.PROGRAM_STATUS_ACTIVE: {
@@ -692,6 +694,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'blue',
         variant: 'solid',
         text: 'alta',
+        description: 'Alta en Programa',
       };
     }
     case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_3_ABSENT: {
@@ -699,6 +702,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'red',
         variant: 'solid',
         text: 'baja (3 faltas)',
+        description: 'Baja (3 faltas seguidas)',
       };
     }
     case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_FAMILY: {
@@ -706,6 +710,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'red',
         variant: 'solid',
         text: 'baja (situa. familiar)',
+        description: 'Baja (situación familiar)',
       };
     }
     case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_LOW_ATTENDANCE: {
@@ -713,6 +718,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'red',
         variant: 'solid',
         text: 'baja (< 75%)',
+        description: 'Baja (< 75% asistencia)',
       };
     }
     case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_NO_SHOW: {
@@ -720,6 +726,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'red',
         variant: 'solid',
         text: 'baja (no show)',
+        description: 'Baja (no show)',
       };
     }
     case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_OTHER: {
@@ -727,14 +734,23 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'red',
         variant: 'solid',
         text: 'baja',
+        description: 'Baja (otro)',
       };
     }
-    case ParticipantDiaryType.YEAR_STATUS_WAITING:
     case ParticipantDiaryType.PROGRAM_STATUS_WAITING: {
       return {
         tagColor: 'blue',
         variant: 'outline',
         text: 'espera',
+        description: 'Espera (en Programa)',
+      };
+    }
+    case ParticipantDiaryType.YEAR_STATUS_WAITING: {
+      return {
+        tagColor: 'blue',
+        variant: 'outline',
+        text: 'espera',
+        description: 'Espera (en el año)',
       };
     }
     case ParticipantDiaryType.YEAR_STATUS_ACTIVE: {
@@ -742,6 +758,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'blue',
         variant: 'solid',
         text: 'activo',
+        description: 'Activo (en el año)',
       };
     }
     case ParticipantDiaryType.YEAR_STATUS_INACTIVE: {
@@ -749,6 +766,7 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
         tagColor: 'red',
         variant: 'solid',
         text: 'inactivo',
+        description: 'Baja (en el año)',
       };
     }
     default: {

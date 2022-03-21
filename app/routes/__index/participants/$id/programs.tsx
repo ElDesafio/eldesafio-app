@@ -8,6 +8,10 @@ import { z } from 'zod';
 
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import {
+  createParticipantDiaryAutoEvent,
+  updateParticipantYearStatus,
+} from '~/services/participants.service';
 
 import { ProgramBox } from './components/ProgramBox';
 import type { Prisma, Sex } from '.prisma/client';
@@ -93,7 +97,8 @@ export type GetParticipantProgramsByYear = Prisma.PromiseReturnType<
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const url = new URL(request.url);
-  const selectedYear = url.searchParams.get('year') ?? DateTime.now().year;
+  const selectedYear =
+    url.searchParams.get('year') ?? DateTime.now().year.toString();
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participant = await db.participant.findUnique({
@@ -130,93 +135,166 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const programId = z.string().parse(form.get('programId'));
 
+  const program = await db.program.findUnique({
+    where: {
+      id: +programId,
+    },
+    select: {
+      id: true,
+      name: true,
+      year: true,
+    },
+  });
+
+  if (!program) {
+    throw new Error("Couldn't get program");
+  }
+
   switch (form.get('type') as FormTypeAddToProgram) {
     case FormTypeAddToProgram.ACTIVE: {
-      return await db.participantsOnPrograms.upsert({
-        where: {
-          programId_participantId: {
+      return await db.$transaction(async (db) => {
+        await db.participantsOnPrograms.upsert({
+          where: {
+            programId_participantId: {
+              programId: +programId,
+              participantId: +id,
+            },
+          },
+          create: {
+            status: 'ACTIVE',
+            wasEverActive: true,
+            waitingListOrder: null,
+            createdBy: user.id,
+            updatedBy: user.id,
             programId: +programId,
             participantId: +id,
           },
-        },
-        create: {
-          status: 'ACTIVE',
-          wasEverActive: true,
-          waitingListOrder: null,
-          createdBy: user.id,
-          updatedBy: user.id,
-          programId: +programId,
+          update: {
+            status: 'ACTIVE',
+            wasEverActive: true,
+            waitingListOrder: null,
+            updatedBy: user.id,
+          },
+        });
+
+        await createParticipantDiaryAutoEvent({
           participantId: +id,
-        },
-        update: {
-          status: 'ACTIVE',
-          wasEverActive: true,
-          waitingListOrder: null,
-          updatedBy: user.id,
-        },
+          title: `Dado de alta en el programa`,
+          type: 'PROGRAM_STATUS_ACTIVE',
+          programId: +programId,
+          userId: user.id,
+        });
+
+        return await updateParticipantYearStatus({
+          participantId: +id,
+          programId: +programId,
+          year: program?.year,
+          userId: user.id,
+          type: 'PROGRAM_STATUS_ACTIVE',
+        });
       });
     }
     case FormTypeAddToProgram.WAITING: {
-      const waitingList = await db.participantsOnPrograms.findMany({
-        where: {
-          programId: +programId,
-          status: 'WAITING',
-          waitingListOrder: {
-            not: null,
+      return await db.$transaction(async (db) => {
+        // Get the current waiting list for the program
+        const waitingList = await db.participantsOnPrograms.findMany({
+          where: {
+            programId: +programId,
+            status: 'WAITING',
+            waitingListOrder: {
+              not: null,
+            },
           },
-        },
-        orderBy: {
-          waitingListOrder: 'asc',
-        },
-      });
+          orderBy: {
+            waitingListOrder: 'asc',
+          },
+        });
 
-      // Let's start assuming the waiting list is empty.
-      let newWaitingListString = mudder.alphabet.mudder()[0];
+        // Let's start assuming the waiting list is empty.
+        let newWaitingListString = mudder.alphabet.mudder()[0];
 
-      if (waitingList.length > 0) {
-        const lastWaitingListString =
-          waitingList[waitingList.length - 1].waitingListOrder;
-        newWaitingListString = mudder.alphabet.mudder(
-          lastWaitingListString!,
-          '',
-        )[0];
-      }
+        // Create the updated waiting list
+        if (waitingList.length > 0) {
+          const lastWaitingListString =
+            waitingList[waitingList.length - 1].waitingListOrder;
+          newWaitingListString = mudder.alphabet.mudder(
+            lastWaitingListString!,
+            '',
+          )[0];
+        }
 
-      return await db.participantsOnPrograms.upsert({
-        where: {
-          programId_participantId: {
+        // Update or create the participant on the program
+        await db.participantsOnPrograms.upsert({
+          where: {
+            programId_participantId: {
+              programId: +programId,
+              participantId: +id,
+            },
+          },
+          create: {
+            status: 'WAITING',
+            waitingListOrder: newWaitingListString,
+            createdBy: user.id,
+            updatedBy: user.id,
             programId: +programId,
             participantId: +id,
           },
-        },
-        create: {
-          status: 'WAITING',
-          waitingListOrder: newWaitingListString,
-          createdBy: user.id,
-          updatedBy: user.id,
-          programId: +programId,
+          update: {
+            status: 'WAITING',
+            waitingListOrder: newWaitingListString,
+            updatedBy: user.id,
+          },
+        });
+
+        // Create the program event
+        await createParticipantDiaryAutoEvent({
           participantId: +id,
-        },
-        update: {
-          status: 'WAITING',
-          waitingListOrder: newWaitingListString,
-          updatedBy: user.id,
-        },
+          title: `Agregado a la lista de espera`,
+          type: 'PROGRAM_STATUS_WAITING',
+          programId: +programId,
+          userId: user.id,
+        });
+
+        return await updateParticipantYearStatus({
+          participantId: +id,
+          programId: +programId,
+          year: program?.year,
+          userId: user.id,
+          type: 'PROGRAM_STATUS_WAITING',
+        });
       });
     }
     case FormTypeAddToProgram.REMOVE: {
-      return await db.participantsOnPrograms.update({
-        where: {
-          programId_participantId: {
-            programId: +programId,
-            participantId: +id,
+      return await db.$transaction(async (db) => {
+        await db.participantsOnPrograms.update({
+          where: {
+            programId_participantId: {
+              programId: +programId,
+              participantId: +id,
+            },
           },
-        },
-        data: {
-          status: 'INACTIVE',
-          waitingListOrder: null,
-          updatedBy: user.id,
-        },
+          data: {
+            status: 'INACTIVE',
+            waitingListOrder: null,
+            updatedBy: user.id,
+          },
+        });
+
+        await createParticipantDiaryAutoEvent({
+          participantId: +id,
+          title: `Dado de baja del programa`,
+          type: 'PROGRAM_STATUS_INACTIVE_OTHER',
+          programId: +programId,
+          userId: user.id,
+        });
+
+        return await updateParticipantYearStatus({
+          participantId: +id,
+          programId: +programId,
+          year: program?.year,
+          userId: user.id,
+          type: 'PROGRAM_STATUS_INACTIVE_OTHER',
+        });
       });
     }
     default: {

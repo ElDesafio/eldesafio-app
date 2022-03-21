@@ -6,6 +6,7 @@ import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
+import { AlertED } from '~/components/AlertED';
 import {
   diaryEventFormValidator,
   ParticipantDiaryEventForm,
@@ -31,7 +32,9 @@ export let loader: LoaderFunction = async ({ params }) => {
 
   const event = await getParticipantDiaryEvent({ eventId });
 
-  return { programs, event };
+  const isAutoEvent = event?.type !== 'INFO' && event?.type !== 'MENTORSHIP';
+
+  return { programs, event, isAutoEvent };
 };
 
 // ACTION
@@ -77,10 +80,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/participants/${participantId}/diary`);
 };
 
-export default function NewProgram() {
-  const { programs, event } = useLoaderData<{
+export default function ParticipantDiaryEventEdit() {
+  const { programs, event, isAutoEvent } = useLoaderData<{
     programs: GetParticipantPrograms;
     event: GetParticipantDiaryEvent;
+    isAutoEvent: boolean;
   }>();
 
   if (!event) throw new Error("Event doesn't exist");
@@ -95,12 +99,20 @@ export default function NewProgram() {
       >
         <Container maxW="8xl">
           <Heading size="md" mb="0">
-            Crear Evento
+            Editar Evento
           </Heading>
+          {isAutoEvent && (
+            <AlertED
+              small
+              description="Solo se puede editar la descripción porque es un evento automático"
+              my={4}
+            />
+          )}
         </Container>
       </Box>
       <Box as="main" py="0" flex="1">
         <ParticipantDiaryEventForm
+          isAutoEvent={isAutoEvent}
           defaultValues={{
             type: event.type,
             date: DateTime.fromISO(event.date as unknown as string)
@@ -108,7 +120,9 @@ export default function NewProgram() {
               .toISODate(),
             description: event.description ?? undefined,
             title: event.title ?? undefined,
-            programs: programs.map((program) => program.id).join(','),
+            programs: event.programs
+              .map((program) => program.program.id)
+              .join(','),
           }}
           programs={programs}
         />

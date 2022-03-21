@@ -2,9 +2,12 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormLabel,
   Heading,
   HStack,
   Spacer,
+  Switch,
   Table,
   Tag,
   Tbody,
@@ -18,7 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { Link, useLoaderData, useSearchParams } from 'remix';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
@@ -27,14 +30,21 @@ import type { GetParticipantDiary } from '~/services/participants.service';
 import { getParticipantDiary } from '~/services/participants.service';
 import { getFormattedDate, getParticipantDiaryTypeProps } from '~/util/utils';
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
-  return await getParticipantDiary({ participantId: id });
+  const url = new URL(request.url);
+
+  return await getParticipantDiary({
+    participantId: id,
+    includeAutoEvents: url.searchParams.get('showAutoEvents') === 'true',
+  });
 };
 
 export default function ParticipantDiary() {
   const diary = useLoaderData<GetParticipantDiary>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   return (
     <>
       <Flex alignItems="center">
@@ -42,11 +52,30 @@ export default function ParticipantDiary() {
           Diario
         </Heading>
         <Spacer />
-        <Link to="new">
-          <Button size="sm" leftIcon={<MdAdd />} colorScheme="blue">
-            Nuevo Evento
-          </Button>
-        </Link>
+        <HStack spacing={8}>
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="show-inactives" mb="0">
+              Mostrar eventos automáticos
+            </FormLabel>
+            <Switch
+              id="show-auto-events"
+              isChecked={searchParams.get('showAutoEvents') === 'true'}
+              onChange={(event) => {
+                if (event.target.checked) {
+                  searchParams.set('showAutoEvents', 'true');
+                } else {
+                  searchParams.delete('showAutoEvents');
+                }
+                setSearchParams(searchParams);
+              }}
+            />
+          </FormControl>
+          <Link to="new">
+            <Button size="sm" leftIcon={<MdAdd />} colorScheme="blue">
+              Nuevo Evento
+            </Button>
+          </Link>
+        </HStack>
       </Flex>
       <Divider mt="2" mb="8" />
       {diary.length > 0 ? (

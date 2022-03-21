@@ -9,29 +9,34 @@ import {
 type AlertEDProps = {
   title?: string;
   description?: string;
+  small?: boolean;
 };
 
 export function AlertED({
   title,
   description,
+  small = false,
   ...rest
 }: AlertEDProps & AlertProps) {
   return (
     <Alert
       status="info"
-      variant="subtle"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      textAlign="center"
-      height="170px"
+      variant={small ? undefined : 'subtle'}
+      flexDirection={small ? undefined : 'column'}
+      alignItems={small ? undefined : 'center'}
+      justifyContent={small ? undefined : 'center'}
+      textAlign={small ? undefined : 'center'}
+      height={small ? undefined : '170px'}
       rounded="lg"
       colorScheme={
         rest.status === undefined || rest.status === 'info' ? 'gray' : undefined
       }
       {...rest}
     >
-      <AlertIcon boxSize="40px" mr={0} />
+      <AlertIcon
+        boxSize={small ? undefined : '40px'}
+        mr={small ? undefined : 0}
+      />
       {title && (
         <AlertTitle mt={4} fontSize="md">
           {title}
