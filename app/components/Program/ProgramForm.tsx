@@ -133,7 +133,7 @@ export function ProgramForm({
   );
 
   return (
-    <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
+    <Box px={4} maxWidth="7xl">
       <ValidatedForm
         validator={programFormValidator}
         defaultValues={defaultValues}

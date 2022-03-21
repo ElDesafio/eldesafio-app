@@ -180,11 +180,11 @@ enum ParticipantDiaryType {
 model ParticipantDiary {
   id            Int                        @id @default(autoincrement())
   participantId Int
-  participant   Participant                @relation(fields: [participantId], references: [id])
+  participant   Participant                @relation(fields: [participantId], references: [id], onDelete: Cascade)
   type          ParticipantDiaryType
   title         String
   description   String?
-  date          DateTime                   @db.Timestamptz
+  date          DateTime                   @db.Date
   createdAt     DateTime                   @default(now()) @db.Timestamptz
   updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
   createdByUser User                       @relation("CreatedParticipantDiaryByUser", fields: [createdBy], references: [id])
@@ -196,9 +196,9 @@ model ParticipantDiary {
 
 model ParticipantDiaryPrograms {
   participantDiaryId Int
-  participantDiary   ParticipantDiary @relation(fields: [participantDiaryId], references: [id])
+  participantDiary   ParticipantDiary @relation(fields: [participantDiaryId], references: [id], onDelete: Cascade)
   programId          Int
-  program            Program          @relation(fields: [programId], references: [id])
+  program            Program          @relation(fields: [programId], references: [id], onDelete: Cascade)
 
 
   @@id([participantDiaryId, programId])

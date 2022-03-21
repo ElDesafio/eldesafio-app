@@ -68,3 +68,83 @@ export async function getParticipantWithPrograms(id: number) {
 export type GetParticipantWithPrograms = Prisma.PromiseReturnType<
   typeof getParticipantWithPrograms
 >;
+
+export async function getParticipantDiary({
+  participantId,
+}: {
+  participantId: number;
+}) {
+  return await db.participantDiary.findMany({
+    where: { participantId },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+    include: {
+      programs: {
+        select: {
+          program: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetParticipantDiary = Prisma.PromiseReturnType<
+  typeof getParticipantDiary
+>;
+
+export async function getParticipantDiaryEvent({
+  eventId,
+}: {
+  eventId: number;
+}) {
+  return await db.participantDiary.findUnique({
+    where: { id: eventId },
+    include: {
+      programs: {
+        select: {
+          program: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetParticipantDiaryEvent = Prisma.PromiseReturnType<
+  typeof getParticipantDiaryEvent
+>;
+
+export async function getParticipantPrograms({
+  participantId,
+}: {
+  participantId: number;
+}) {
+  const participantsOnPrograms = await db.participantsOnPrograms.findMany({
+    where: { participantId },
+    include: {
+      program: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return participantsOnPrograms.map((participantOnProgram) => ({
+    id: participantOnProgram.program.id,
+    name: participantOnProgram.program.name,
+  }));
+}
+
+export type GetParticipantPrograms = Prisma.PromiseReturnType<
+  typeof getParticipantPrograms
+>;

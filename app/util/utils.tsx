@@ -11,6 +11,7 @@ import {
   BloodType,
   ClassAttendanceStatus,
   FormAnswerOptions,
+  ParticipantDiaryType,
   Roles,
 } from '@prisma/client';
 import type Highcharts from 'highcharts';
@@ -22,54 +23,60 @@ import { z } from 'zod';
 
 import type { GetProgramClasses } from '~/services/classes.service';
 
-export function getAge<T extends boolean>(
+function getAge<T extends boolean>(
   birthday: string,
   asNumber?: T,
 ): T extends true ? number : string;
-export function getAge(
-  birthday: string,
-  asNumber: boolean = false,
-): number | string {
+function getAge(birthday: string, asNumber: boolean = false): number | string {
   const age = Math.floor(
     DateTime.now().diff(DateTime.fromISO(birthday), ['years']).years,
   );
   return asNumber ? (age as number) : (`${age} años` as string);
 }
 
-export function getFormattedDate(date: string): string {
-  return DateTime.fromISO(date)
-    .setLocale('es')
-    .toLocaleString(DateTime.DATE_FULL);
+function getFormattedDate(date: string | Date): string {
+  const cleanDate =
+    typeof date === 'string'
+      ? DateTime.fromISO(date)
+      : DateTime.fromJSDate(date);
+
+  return cleanDate.setLocale('es').toLocaleString(DateTime.DATE_FULL);
 }
 
-export function useSelectedYear() {
+function getFormattedDateTime(date: string | Date): string {
+  const cleanDate =
+    typeof date === 'string'
+      ? DateTime.fromISO(date)
+      : DateTime.fromJSDate(date);
+
+  return cleanDate.setLocale('es').toLocaleString(DateTime.DATETIME_FULL);
+}
+
+function useSelectedYear() {
   let [searchParams] = useSearchParams();
   return searchParams.get('year') ?? DateTime.now().year.toString();
 }
 
-export const schemaCheckbox = z.preprocess(
-  (value) => value === 'true',
-  z.boolean(),
-);
+const schemaCheckbox = z.preprocess((value) => value === 'true', z.boolean());
 
 const emptyStringToUndefined = z.literal('').transform(() => undefined);
 
-export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
+function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
   return schema.optional().or(emptyStringToUndefined);
 }
 
-export enum ProgramSexText {
+enum ProgramSexText {
   MALE = 'varones',
   FEMALE = 'mujeres',
   ALL = 'mixto',
 }
 
-export enum PartcipantSexText {
+enum PartcipantSexText {
   MALE = 'Varón',
   FEMALE = 'Mujer',
 }
 
-export function getNeighborhoodText(neighborhood: Neighborhood) {
+function getNeighborhoodText(neighborhood: Neighborhood) {
   switch (neighborhood) {
     case 'LA_LATA':
       return 'La Lata';
@@ -84,7 +91,7 @@ export function getNeighborhoodText(neighborhood: Neighborhood) {
   }
 }
 
-export function getPhoneBelongsToText(phoneBelongsTo: PhoneBelongsTo) {
+function getPhoneBelongsToText(phoneBelongsTo: PhoneBelongsTo) {
   switch (phoneBelongsTo) {
     case 'FATHER':
       return 'Padre';
@@ -99,7 +106,7 @@ export function getPhoneBelongsToText(phoneBelongsTo: PhoneBelongsTo) {
   }
 }
 
-export function getDayByName(name: Weekdays) {
+function getDayByName(name: Weekdays) {
   switch (name) {
     case 'MONDAY':
       return 'Lunes';
@@ -120,7 +127,7 @@ export function getDayByName(name: Weekdays) {
   }
 }
 
-export function getBloodTypeName(bloodType: BloodType) {
+function getBloodTypeName(bloodType: BloodType) {
   switch (bloodType) {
     case BloodType.AB_NEGATIVE:
       return 'AB-';
@@ -143,7 +150,7 @@ export function getBloodTypeName(bloodType: BloodType) {
   }
 }
 
-export function getUserStatusName(status: UserStatus) {
+function getUserStatusName(status: UserStatus) {
   switch (status) {
     case 'ACTIVE':
       return 'Activo';
@@ -157,7 +164,7 @@ export function getUserStatusName(status: UserStatus) {
   }
 }
 
-export function getUserRoleName(role: Roles, short: boolean = false) {
+function getUserRoleName(role: Roles, short: boolean = false) {
   if (short) {
     switch (role) {
       case Roles.ADMIN:
@@ -186,7 +193,7 @@ export function getUserRoleName(role: Roles, short: boolean = false) {
   }
 }
 
-export function getFormAnswerOptionName(
+function getFormAnswerOptionName(
   answer: FormAnswerOptions,
   isRed?: boolean,
 ): React.ReactNode {
@@ -215,7 +222,7 @@ export function getFormAnswerOptionName(
   }
 }
 
-export function convertStringToNumberForZod(value: unknown) {
+function convertStringToNumberForZod(value: unknown) {
   return typeof value === 'string' && value.length > 0
     ? parseInt(value)
     : undefined;
@@ -232,24 +239,24 @@ function checkUserAndRolesExist(user: UserForRoleCheck) {
   }
 }
 
-export function isAdmin(user: UserForRoleCheck) {
+function isAdmin(user: UserForRoleCheck) {
   checkUserAndRolesExist(user);
   return user?.roles?.some((role) => role.role === Roles.ADMIN);
 }
-export function isFacilitator(user: UserForRoleCheck) {
+function isFacilitator(user: UserForRoleCheck) {
   checkUserAndRolesExist(user);
   return user?.roles?.some((role) => role.role === Roles.FACILITATOR);
 }
-export function isFacilitatorVolunteer(user: UserForRoleCheck) {
+function isFacilitatorVolunteer(user: UserForRoleCheck) {
   checkUserAndRolesExist(user);
   return user?.roles?.some((role) => role.role === Roles.FACILITATOR_VOLUNTEER);
 }
-export function isMentor(user: UserForRoleCheck) {
+function isMentor(user: UserForRoleCheck) {
   checkUserAndRolesExist(user);
   return user?.roles?.some((role) => role.role === Roles.MENTOR);
 }
 
-export function getAttendanceProps(attendance: ClassAttendanceStatus) {
+function getAttendanceProps(attendance: ClassAttendanceStatus) {
   let backgroundColor: string;
   let backgroundColorHex: string;
   let textColor: string;
@@ -326,7 +333,7 @@ export type ClassForChart = {
   }>;
 };
 
-export function formatAttendanceChartBarsData(
+function formatAttendanceChartBarsData(
   classes: GetProgramClasses | ClassForChart[],
 ) {
   // Helper to collect data by month
@@ -529,7 +536,7 @@ export function formatAttendanceChartBarsData(
   return options;
 }
 
-export function formatProgramChartPieData(
+function formatProgramChartPieData(
   classes: GetProgramClasses | ClassForChart[],
 ) {
   // Helper to collect data by month
@@ -663,3 +670,117 @@ export function formatProgramChartPieData(
   };
   return options;
 }
+
+function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
+  switch (type) {
+    case ParticipantDiaryType.INFO: {
+      return {
+        tagColor: 'gray',
+        variant: 'solid',
+        text: 'info',
+      };
+    }
+    case ParticipantDiaryType.MENTORSHIP: {
+      return {
+        tagColor: 'gray',
+        variant: 'solid',
+        text: 'mentoría',
+      };
+    }
+    case ParticipantDiaryType.PROGRAM_STATUS_ACTIVE: {
+      return {
+        tagColor: 'blue',
+        variant: 'solid',
+        text: 'alta',
+      };
+    }
+    case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_3_ABSENT: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'baja (3 faltas)',
+      };
+    }
+    case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_FAMILY: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'baja (situa. familiar)',
+      };
+    }
+    case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_LOW_ATTENDANCE: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'baja (< 75%)',
+      };
+    }
+    case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_NO_SHOW: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'baja (no show)',
+      };
+    }
+    case ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_OTHER: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'baja',
+      };
+    }
+    case ParticipantDiaryType.YEAR_STATUS_WAITING:
+    case ParticipantDiaryType.PROGRAM_STATUS_WAITING: {
+      return {
+        tagColor: 'blue',
+        variant: 'outline',
+        text: 'espera',
+      };
+    }
+    case ParticipantDiaryType.YEAR_STATUS_ACTIVE: {
+      return {
+        tagColor: 'blue',
+        variant: 'solid',
+        text: 'activo',
+      };
+    }
+    case ParticipantDiaryType.YEAR_STATUS_INACTIVE: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'inactivo',
+      };
+    }
+    default: {
+      throw new Error(
+        '[getParticipantDiaryTypeProps] Unknown participant diary type',
+      );
+    }
+  }
+}
+export {
+  asOptionalField,
+  convertStringToNumberForZod,
+  formatAttendanceChartBarsData,
+  formatProgramChartPieData,
+  getAge,
+  getAttendanceProps,
+  getBloodTypeName,
+  getDayByName,
+  getFormAnswerOptionName,
+  getFormattedDate,
+  getFormattedDateTime,
+  getNeighborhoodText,
+  getParticipantDiaryTypeProps,
+  getPhoneBelongsToText,
+  getUserRoleName,
+  getUserStatusName,
+  isAdmin,
+  isFacilitator,
+  isFacilitatorVolunteer,
+  isMentor,
+  PartcipantSexText,
+  ProgramSexText,
+  schemaCheckbox,
+  useSelectedYear,
+};
