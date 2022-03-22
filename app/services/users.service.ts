@@ -1,5 +1,13 @@
 import type { Prisma } from '@prisma/client';
 
+import {
+  isAdmin,
+  isFacilitator,
+  isFacilitatorVolunteer,
+  isMentor,
+} from '~/util/utils';
+
+import { authenticator } from './auth.server';
 import { db } from './db.server';
 
 export async function getUser(id: number) {
@@ -13,17 +21,35 @@ export async function getUser(id: number) {
 
 export type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
-export async function getLoggedInUser(id: number) {
-  return await db.user.findUnique({
-    where: { id },
+/** It checks */
+export async function getLoggedInUser(request: Request) {
+  const authUser = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
+
+  const user = await db.user.findUnique({
+    where: { id: authUser.id },
     select: {
       id: true,
       status: true,
       firstName: true,
       lastName: true,
+      timezone: true,
       roles: true,
     },
   });
+
+  if (!user) {
+    throw new Error('[getLoggedInUser] User not found');
+  }
+
+  return {
+    ...user,
+    isAdmin: isAdmin(user),
+    isFacilitator: isFacilitator(user),
+    isFacilitatorVolunteer: isFacilitatorVolunteer(user),
+    isMentor: isMentor(user),
+  };
 }
 
 export type GetLoggedInUser = Prisma.PromiseReturnType<typeof getLoggedInUser>;

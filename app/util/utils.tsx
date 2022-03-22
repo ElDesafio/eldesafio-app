@@ -34,22 +34,31 @@ function getAge(birthday: string, asNumber: boolean = false): number | string {
   return asNumber ? (age as number) : (`${age} años` as string);
 }
 
-function getFormattedDate(date: string | Date): string {
+type GetFormattedDate = {
+  date: string | Date;
+  timezone?: string;
+  format?: 'DATE_FULL' | 'DATETIME_FULL' | 'TIME_SIMPLE';
+};
+
+function getFormattedDate({
+  date,
+  timezone = 'America/Argentina/Buenos_Aires',
+  format = 'DATE_FULL',
+}: GetFormattedDate): string {
   const cleanDate =
     typeof date === 'string'
       ? DateTime.fromISO(date)
       : DateTime.fromJSDate(date);
 
-  return cleanDate.setLocale('es').toLocaleString(DateTime.DATE_FULL);
-}
+  let finalDate = cleanDate
+    .setZone(timezone)
+    .setLocale('es')
+    .toLocaleString(DateTime[format]);
 
-function getFormattedDateTime(date: string | Date): string {
-  const cleanDate =
-    typeof date === 'string'
-      ? DateTime.fromISO(date)
-      : DateTime.fromJSDate(date);
-
-  return cleanDate.setLocale('es').toLocaleString(DateTime.DATETIME_FULL);
+  if (format === 'TIME_SIMPLE') {
+    finalDate += ' hs';
+  }
+  return finalDate;
 }
 
 function useSelectedYear() {
@@ -787,7 +796,6 @@ export {
   getDayByName,
   getFormAnswerOptionName,
   getFormattedDate,
-  getFormattedDateTime,
   getNeighborhoodText,
   getParticipantDiaryTypeProps,
   getPhoneBelongsToText,

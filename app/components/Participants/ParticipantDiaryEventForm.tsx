@@ -77,7 +77,8 @@ export function ParticipantDiaryEventForm({
     },
   ];
 
-  if (defaultValues) {
+  // A hack to know if it's a new event or not. We only show these options for autoevents
+  if (defaultValues?.date) {
     eventTypeOptions.push(
       ...[
         {
@@ -165,9 +166,9 @@ export function ParticipantDiaryEventForm({
                 <FormInput
                   name="date"
                   label="Fecha del evento"
-                  type="date"
+                  type="datetime-local"
                   isRequired
-                  maxWidth="200px"
+                  maxWidth="260px"
                 />
                 <Box maxWidth="420px" width="420px">
                   <FormSelect

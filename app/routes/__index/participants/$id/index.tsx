@@ -16,7 +16,6 @@ import {
   Tooltip,
   Tr,
 } from '@chakra-ui/react';
-import type { Participant } from '@prisma/client';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
@@ -34,7 +33,6 @@ import {
   getFormattedDate,
   getNeighborhoodText,
   getPhoneBelongsToText,
-  isAdmin,
   PartcipantSexText,
   useSelectedYear,
 } from '~/util/utils';
@@ -47,29 +45,23 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const participant = await getParticipantWithPrograms(+id);
 
-  let authUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const loggedinUser = await getLoggedInUser(request);
 
-  const loggedinUser = await getLoggedInUser(authUser.id);
-
-  if (!loggedinUser) {
-    throw new Error('User not found');
-  }
   if (!participant) {
     throw new Error('Participant not found');
   }
 
-  const isUserAdmin = isAdmin(loggedinUser);
+  const isUserAdmin = loggedinUser.isAdmin;
 
-  return { participant, isUserAdmin };
+  return { participant, isUserAdmin, timezone: loggedinUser.timezone };
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export default function ParticipantGeneral() {
-  const { participant, isUserAdmin } = useLoaderData<{
+  const { participant, isUserAdmin, timezone } = useLoaderData<{
     participant: GetParticipantWithPrograms;
     isUserAdmin: boolean;
+    timezone: string;
   }>();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -165,7 +157,9 @@ export default function ParticipantGeneral() {
                 <Td width="" fontWeight="600">
                   Fecha de nacimiento:
                 </Td>
-                <Td>{getFormattedDate(participant.birthday)}</Td>
+                <Td>
+                  {getFormattedDate({ date: participant.birthday, timezone })}
+                </Td>
               </Tr>
               <Tr>
                 <Td fontWeight="600">Edad:</Td>

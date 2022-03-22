@@ -14,6 +14,7 @@ import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import type { GetParticipantPrograms } from '~/services/participants.service';
 import { getParticipantPrograms } from '~/services/participants.service';
+import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
 export let loader: LoaderFunction = async ({ params }) => {
@@ -26,11 +27,7 @@ export let loader: LoaderFunction = async ({ params }) => {
 
 // ACTION
 export const action: ActionFunction = async ({ request, params }) => {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  const user = await getLoggedInUser(request);
 
   const { id: participantId } = z.object({ id: zfd.numeric() }).parse(params);
 
@@ -52,7 +49,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const event = await db.participantDiary.create({
     data: {
       ...rest,
-      date: DateTime.fromISO(rest.date, { zone: 'utc' }).toJSDate(),
+      date: DateTime.fromISO(rest.date, { zone: user.timezone }).toJSDate(),
       participantId,
       createdBy: user.id,
       updatedBy: user.id,

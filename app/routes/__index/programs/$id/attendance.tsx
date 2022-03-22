@@ -32,7 +32,6 @@ import { Link, useLoaderData, useSearchParams, useTransition } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
-import { FormSelect } from '~/components/Form/FormSelect';
 import { authenticator } from '~/services/auth.server';
 import type { GetProgramClasses } from '~/services/classes.service';
 import { getProgramClasses } from '~/services/classes.service';
@@ -46,9 +45,6 @@ import { AttendanceChartBars } from './components/AttendanceChartBars';
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
-  let authUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
 
   const url = new URL(request.url);
 
@@ -75,11 +71,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error('Class not found');
   }
 
-  const loggedinUser = await getLoggedInUser(authUser.id);
-
-  if (!loggedinUser) {
-    throw new Error('User not found');
-  }
+  const loggedinUser = await getLoggedInUser(request);
 
   const participants = await getProgramParticipants({
     programId: Number(id),
@@ -98,7 +90,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error('Participants not found');
   }
 
-  const isUserAdmin = isAdmin(loggedinUser);
+  const isUserAdmin = loggedinUser.isAdmin;
 
   const totalPercentageHelper: Record<
     string,

@@ -15,13 +15,9 @@ import { db } from '~/services/db.server';
 import type { GetProgramParticipants } from '~/services/programs.service';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
-import { isAdmin } from '~/util/utils';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
-  let authUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
 
   const classes = await getProgramClasses({
     programId: Number(id),
@@ -30,11 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error('Class not found');
   }
 
-  const loggedinUser = await getLoggedInUser(authUser.id);
-
-  if (!loggedinUser) {
-    throw new Error('User not found');
-  }
+  const loggedinUser = await getLoggedInUser(request);
 
   const participants = await getProgramParticipants({
     programId: Number(id),
@@ -45,7 +37,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error('Participants not found');
   }
 
-  const isUserAdmin = isAdmin(loggedinUser);
+  const isUserAdmin = loggedinUser.isAdmin;
 
   return {
     classes,

@@ -35,22 +35,15 @@ import { isAdmin } from '~/util/utils';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { classId } = z.object({ classId: z.string() }).parse(params);
-  let authUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
 
   const classItem = await getClass(+classId);
   if (!classItem) {
     throw new Error('Classes not found');
   }
 
-  const loggedinUser = await getLoggedInUser(authUser.id);
+  const loggedinUser = await getLoggedInUser(request);
 
-  if (!loggedinUser) {
-    throw new Error('User not found');
-  }
-
-  const isUserAdmin = isAdmin(loggedinUser);
+  const isUserAdmin = loggedinUser.isAdmin;
 
   const defaultValues = {
     date: DateTime.fromJSDate(classItem.date).toUTC().toISODate(),

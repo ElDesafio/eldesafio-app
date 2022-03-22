@@ -15,22 +15,29 @@ import {
 import { css } from '@emotion/react';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
+import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import type { GetParticipantDiaryEvent } from '~/services/participants.service';
 import { getParticipantDiaryEvent } from '~/services/participants.service';
+import { getLoggedInUser } from '~/services/users.service';
 import { getFormattedDate, getParticipantDiaryTypeProps } from '~/util/utils';
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
   const { eventId } = z.object({ eventId: zfd.numeric() }).parse(params);
 
-  return await getParticipantDiaryEvent({ eventId });
+  const user = await getLoggedInUser(request);
+
+  const event = await getParticipantDiaryEvent({ eventId });
+
+  return { event, timezone: user.timezone };
 };
 
 export default function ParticipantDiaryEvent() {
-  const event = useLoaderData<GetParticipantDiaryEvent>();
+  const { event, timezone } =
+    useLoaderData<{ event: GetParticipantDiaryEvent; timezone: string }>();
 
   if (!event) {
     throw new Error("The event doesn't exist");
@@ -56,7 +63,17 @@ export default function ParticipantDiaryEvent() {
             <Td width="" fontWeight="600">
               Fecha:
             </Td>
-            <Td>{getFormattedDate(event.date)}</Td>
+            <Td>
+              <ClientOnly>
+                {() =>
+                  getFormattedDate({
+                    date: event.date,
+                    timezone,
+                    format: 'DATETIME_FULL',
+                  })
+                }
+              </ClientOnly>
+            </Td>
           </Tr>
           <Tr>
             <Td fontWeight="600">Tipo:</Td>

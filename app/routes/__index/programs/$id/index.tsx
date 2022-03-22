@@ -52,7 +52,7 @@ import { db } from '~/services/db.server';
 import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
-import { getDayByName, isAdmin, ProgramSexText } from '~/util/utils';
+import { getDayByName, ProgramSexText } from '~/util/utils';
 
 import { ProgramChartPie } from './components/ProgramChartPie';
 
@@ -64,19 +64,13 @@ enum FormTypeWaiting {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
-  let authUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
 
   const program = await getProgram({
     id: Number(id),
     includeParticipants: true,
   });
-  const loggedinUser = await getLoggedInUser(authUser.id);
+  const loggedinUser = await getLoggedInUser(request);
 
-  if (!loggedinUser) {
-    throw new Error('User not found');
-  }
   if (!program) {
     throw new Error('Program not found');
   }
@@ -107,7 +101,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       return 0;
     });
 
-  const isUserAdmin = isAdmin(loggedinUser);
+  const isUserAdmin = loggedinUser.isAdmin;
 
   return {
     program,

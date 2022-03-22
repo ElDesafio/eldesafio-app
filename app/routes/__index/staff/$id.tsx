@@ -24,6 +24,7 @@ import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
+import { AlertED } from '~/components/AlertED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { authenticator } from '~/services/auth.server';
 import type { GetUser } from '~/services/users.service';
@@ -54,18 +55,11 @@ function userStatusHelper(status: UserStatus) {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
-  let authUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
 
   const user = await getUser(Number(id));
-  const loggedinUser = await getLoggedInUser(authUser.id);
+  const loggedinUser = await getLoggedInUser(request);
 
-  if (!loggedinUser) {
-    throw new Error('User not found');
-  }
-
-  const isLoggedinUserAdmin = isAdmin(loggedinUser);
+  const isLoggedinUserAdmin = loggedinUser.isAdmin;
 
   return { user, isLoggedinUserAdmin };
 };
@@ -169,7 +163,11 @@ export default function UserGeneral() {
                           Fecha de nacimiento:
                         </Td>
                         <Td>
-                          {user.birthday && getFormattedDate(user.birthday)}
+                          {user.birthday &&
+                            getFormattedDate({
+                              date: user.birthday,
+                              timezone: user.timezone,
+                            })}
                         </Td>
                       </Tr>
                       <Tr>
@@ -239,10 +237,15 @@ export default function UserGeneral() {
                 Biografía
               </Heading>
               <Divider mt="2" mb="0" />
-              {user.biography && (
+              {user.biography ? (
                 <MarkdownEditor
                   initialContent={user.biography}
                   editable={false}
+                />
+              ) : (
+                <AlertED
+                  title="Vacío"
+                  description="No hay biografía para el usuario."
                 />
               )}
             </>
