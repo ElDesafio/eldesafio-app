@@ -1,3 +1,23 @@
+# v0.10.0 (Tue Mar 22 2022)
+
+### Release Notes
+
+#### 81-add-participant-diary ([#82](https://github.com/ElDesafio/eldesafio-app/pull/82))
+
+- Add Participant Diary
+
+---
+
+#### 🚀 Enhancement
+
+- 81-add-participant-diary [#82](https://github.com/ElDesafio/eldesafio-app/pull/82) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.9.4 (Sun Mar 20 2022)
 
 #### 🔩 Dependency Updates
