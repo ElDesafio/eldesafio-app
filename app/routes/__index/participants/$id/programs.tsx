@@ -1,9 +1,9 @@
-import { SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, useToast } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 import mudder from 'mudder';
 import { useEffect } from 'react';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, useLoaderData, useSearchParams } from 'remix';
+import { json, useActionData, useLoaderData, useSearchParams } from 'remix';
 import { z } from 'zod';
 
 import { authenticator } from '~/services/auth.server';
@@ -12,9 +12,10 @@ import {
   createParticipantDiaryAutoEvent,
   updateParticipantYearStatus,
 } from '~/services/participants.service';
+import { useSelectedYear } from '~/util/utils';
 
 import { ProgramBox } from './components/ProgramBox';
-import type { Prisma, Sex } from '.prisma/client';
+import type { ParticipantDiary, Prisma, Sex } from '.prisma/client';
 import { ProgramSex } from '.prisma/client';
 
 export enum FormTypeAddToProgram {
@@ -305,7 +306,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function ParticipantPrograms() {
   const programs = useLoaderData<GetParticipantProgramsByYear>();
+  const diaryEvent = useActionData<ParticipantDiary | null>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const toast = useToast();
+  let selectedYear = useSelectedYear();
 
   const modalProgramId = searchParams.get('modalProgramId');
 
@@ -318,6 +322,37 @@ export default function ParticipantPrograms() {
       setSearchParams({}, { replace: false });
     }
   }, []);
+
+  useEffect(() => {
+    if (diaryEvent?.type === 'YEAR_STATUS_ACTIVE') {
+      toast({
+        title: `Cambio de estado en ${selectedYear}`,
+        description: 'El estado del participante ha cambiado a ACTIVO',
+        status: 'info',
+
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    if (diaryEvent?.type === 'YEAR_STATUS_INACTIVE') {
+      toast({
+        title: `Cambio de estado en ${selectedYear}`,
+        description: 'El estado del participante ha cambiado a INACTIVO',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    if (diaryEvent?.type === 'YEAR_STATUS_WAITING') {
+      toast({
+        title: `Cambio de estado en ${selectedYear}`,
+        description: 'El estado del participante ha cambiado a EN ESPERA',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [diaryEvent]);
 
   return (
     <>

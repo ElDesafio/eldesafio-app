@@ -184,6 +184,7 @@ model ParticipantDiary {
   type          ParticipantDiaryType
   title         String
   description   String?
+  isAutoEvent   Boolean                    @default(false)
   date          DateTime                   @db.Date
   createdAt     DateTime                   @default(now()) @db.Timestamptz
   updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz

@@ -81,9 +81,7 @@ export async function getParticipantDiary({
   whereAnd.push({ participantId });
   if (!includeAutoEvents) {
     whereAnd.push({
-      type: {
-        in: ['INFO', 'MENTORSHIP'],
-      },
+      isAutoEvent: false,
     });
   }
 
@@ -196,6 +194,7 @@ export async function createParticipantDiaryAutoEvent({
       participantId,
       title,
       type,
+      isAutoEvent: true,
       date: DateTime.utc(+year, +month, +day).toJSDate(),
       createdBy: userId,
       updatedBy: userId,
