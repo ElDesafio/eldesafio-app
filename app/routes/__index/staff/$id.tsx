@@ -55,18 +55,11 @@ function userStatusHelper(status: UserStatus) {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
-  let authUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
 
   const user = await getUser(Number(id));
-  const loggedinUser = await getLoggedInUser(authUser.id);
+  const loggedinUser = await getLoggedInUser(request);
 
-  if (!loggedinUser) {
-    throw new Error('User not found');
-  }
-
-  const isLoggedinUserAdmin = isAdmin(loggedinUser);
+  const isLoggedinUserAdmin = loggedinUser.isAdmin;
 
   return { user, isLoggedinUserAdmin };
 };
@@ -170,7 +163,11 @@ export default function UserGeneral() {
                           Fecha de nacimiento:
                         </Td>
                         <Td>
-                          {user.birthday && getFormattedDate(user.birthday)}
+                          {user.birthday &&
+                            getFormattedDate({
+                              date: user.birthday,
+                              timezone: user.timezone,
+                            })}
                         </Td>
                       </Tr>
                       <Tr>

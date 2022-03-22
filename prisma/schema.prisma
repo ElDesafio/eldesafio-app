@@ -186,7 +186,7 @@ model ParticipantDiary {
   title         String
   description   String?
   isAutoEvent   Boolean                    @default(false)
-  date          DateTime                   @db.Date
+  date          DateTime                   @db.Timestamptz
   createdAt     DateTime                   @default(now()) @db.Timestamptz
   updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
   createdByUser User                       @relation("CreatedParticipantDiaryByUser", fields: [createdBy], references: [id])

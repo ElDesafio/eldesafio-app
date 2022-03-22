@@ -1,15 +1,10 @@
 import type { LoaderFunction } from 'remix';
 import { redirect } from 'remix';
 
-import { authenticator } from '~/services/auth.server';
 import { getLoggedInUser } from '~/services/users.service';
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  const loggedinUser = await getLoggedInUser(user.id);
+  const loggedinUser = await getLoggedInUser(request);
 
   if (loggedinUser?.status === 'INACTIVE') {
     redirect('/logout');

@@ -22,27 +22,36 @@ import {
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData, useSearchParams } from 'remix';
+import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
 import { AlertED } from '~/components/AlertED';
 import type { GetParticipantDiary } from '~/services/participants.service';
 import { getParticipantDiary } from '~/services/participants.service';
+import { getLoggedInUser } from '~/services/users.service';
 import { getFormattedDate, getParticipantDiaryTypeProps } from '~/util/utils';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
+  const user = await getLoggedInUser(request);
+
   const url = new URL(request.url);
 
-  return await getParticipantDiary({
+  const diary = await getParticipantDiary({
     participantId: id,
     includeAutoEvents: url.searchParams.get('showAutoEvents') === 'true',
   });
+
+  const timezone = user.timezone;
+
+  return { diary, timezone };
 };
 
 export default function ParticipantDiary() {
-  const diary = useLoaderData<GetParticipantDiary>();
+  const { diary, timezone } =
+    useLoaderData<{ diary: GetParticipantDiary; timezone: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (
@@ -96,7 +105,24 @@ export default function ParticipantDiary() {
           <Tbody>
             {diary.map((event) => (
               <Tr key={event.id}>
-                <Td whiteSpace="nowrap">{getFormattedDate(event.date)}</Td>
+                <Td whiteSpace="nowrap">
+                  <Text>
+                    <ClientOnly>
+                      {() => getFormattedDate({ date: event.date, timezone })}
+                    </ClientOnly>
+                  </Text>
+                  <Text mt={1} color="gray.500">
+                    <ClientOnly>
+                      {() =>
+                        getFormattedDate({
+                          date: event.date,
+                          timezone,
+                          format: 'TIME_SIMPLE',
+                        })
+                      }
+                    </ClientOnly>
+                  </Text>
+                </Td>
                 <Td>
                   <VStack alignItems="flex-start">
                     <Text fontSize="md" mb={1} fontWeight="500">
