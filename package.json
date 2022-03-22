@@ -106,7 +106,7 @@
     "@typescript-eslint/eslint-plugin": "5.15.0",
     "@typescript-eslint/parser": "5.15.0",
     "@vitejs/plugin-react": "1.2.0",
-    "auto": "10.34.2",
+    "auto": "10.36.5",
     "c8": "7.11.0",
     "cypress": "9.5.2",
     "esbuild": "0.14.27",
