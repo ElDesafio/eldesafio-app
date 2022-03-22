@@ -83,9 +83,13 @@ export default function ParticipantGeneral() {
     throw new Error('El participante no existe.');
   }
 
-  const yearStatus = participant.status.filter(
+  const participantYearStatus = participant.status.filter(
     (status) => status.year === +currentYear,
-  )[0].status;
+  )[0];
+
+  const yearStatus = participantYearStatus
+    ? participantYearStatus.status
+    : 'INACTIVE';
 
   const statusBtnText =
     yearStatus === 'ACTIVE'
