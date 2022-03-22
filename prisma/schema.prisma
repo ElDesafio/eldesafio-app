@@ -35,6 +35,7 @@ model User {
   linkedin                     String?
   skype                        String?
   biography                    String?
+  timezone                     String                   @default("America/Argentina/Buenos_Aires")
   createdAt                    DateTime                 @default(now()) @db.Timestamptz
   updatedAt                    DateTime                 @default(now()) @updatedAt @db.Timestamptz
   createdParticipants          Participant[]            @relation("CreatedParticipantByUser")
