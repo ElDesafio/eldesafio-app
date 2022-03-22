@@ -1,3 +1,15 @@
+# v0.11.0 (Tue Mar 22 2022)
+
+#### 🚀 Enhancement
+
+- Add Timezone for users and fix timezone errors [#94](https://github.com/ElDesafio/eldesafio-app/pull/94) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.10.1 (Tue Mar 22 2022)
 
 #### ⚠️ Pushed to `main`
