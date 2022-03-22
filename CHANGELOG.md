@@ -1,3 +1,19 @@
+# v0.11.1 (Tue Mar 22 2022)
+
+#### 🔩 Dependency Updates
+
+- update dependencies [#95](https://github.com/ElDesafio/eldesafio-app/pull/95) ([@lucascurti](https://github.com/lucascurti))
+
+#### ⚠️ Pushed to `main`
+
+- update renovate config ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.11.0 (Tue Mar 22 2022)
 
 #### 🚀 Enhancement
