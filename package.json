@@ -85,7 +85,7 @@
   "devDependencies": {
     "@auto-it/all-contributors": "10.34.2",
     "@auto-it/first-time-contributor": "10.34.2",
-    "@auto-it/git-tag": "10.34.2",
+    "@auto-it/git-tag": "10.36.5",
     "@auto-it/pr-body-labels": "10.34.2",
     "@auto-it/slack": "10.34.2",
     "@faker-js/faker": "6.0.0",
