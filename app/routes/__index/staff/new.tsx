@@ -63,7 +63,12 @@ export default function NewParticipant() {
         </Container>
       </Box>
 
-      <UserForm />
+      <UserForm
+        defaultValues={{
+          status: 'INVITED',
+          timezone: 'America/Argentina/Buenos_Aires',
+        }}
+      />
     </>
   );
 }

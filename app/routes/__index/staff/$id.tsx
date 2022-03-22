@@ -24,6 +24,7 @@ import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData } from 'remix';
 import { z } from 'zod';
 
+import { AlertED } from '~/components/AlertED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { authenticator } from '~/services/auth.server';
 import type { GetUser } from '~/services/users.service';
@@ -239,10 +240,15 @@ export default function UserGeneral() {
                 Biografía
               </Heading>
               <Divider mt="2" mb="0" />
-              {user.biography && (
+              {user.biography ? (
                 <MarkdownEditor
                   initialContent={user.biography}
                   editable={false}
+                />
+              ) : (
+                <AlertED
+                  title="Vacío"
+                  description="No hay biografía para el usuario."
                 />
               )}
             </>

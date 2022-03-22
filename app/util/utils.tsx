@@ -34,22 +34,34 @@ function getAge(birthday: string, asNumber: boolean = false): number | string {
   return asNumber ? (age as number) : (`${age} años` as string);
 }
 
-function getFormattedDate(date: string | Date): string {
+function getFormattedDate(
+  date: string | Date,
+  timezone = 'America/Argentina/Buenos_Aires',
+): string {
   const cleanDate =
     typeof date === 'string'
       ? DateTime.fromISO(date)
       : DateTime.fromJSDate(date);
 
-  return cleanDate.setLocale('es').toLocaleString(DateTime.DATE_FULL);
+  return cleanDate
+    .setZone(timezone)
+    .setLocale('es')
+    .toLocaleString(DateTime.DATE_FULL);
 }
 
-function getFormattedDateTime(date: string | Date): string {
+function getFormattedDateTime(
+  date: string | Date,
+  timezone = 'America/Argentina/Buenos_Aires',
+): string {
   const cleanDate =
     typeof date === 'string'
       ? DateTime.fromISO(date)
       : DateTime.fromJSDate(date);
 
-  return cleanDate.setLocale('es').toLocaleString(DateTime.DATETIME_FULL);
+  return cleanDate
+    .setZone(timezone)
+    .setLocale('es')
+    .toLocaleString(DateTime.DATETIME_FULL);
 }
 
 function useSelectedYear() {

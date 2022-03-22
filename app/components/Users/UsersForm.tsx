@@ -18,6 +18,7 @@ import { FaFacebookF, FaLinkedinIn, FaSkype, FaTwitter } from 'react-icons/fa';
 import { HiCloudUpload } from 'react-icons/hi';
 import { useNavigate, useTransition } from 'remix';
 import { ValidatedForm } from 'remix-validated-form';
+import timezones from 'tzdata';
 import * as z from 'zod';
 
 import { FieldGroup } from '~/components/FieldGroup';
@@ -56,6 +57,7 @@ const userSchema = z.object({
   linkedin: zStringOptional,
   skype: zStringOptional,
   biography: zStringOptional,
+  timezone: z.string().nonempty('La zona horaria no puede estar vacía'),
   roles: z.preprocess(
     (value) => (value === '' ? null : value),
     z.string().nullable().optional(),
@@ -198,7 +200,7 @@ export function UserForm({
                   </Stack>
                 </FieldGroup>
                 <FieldGroup title="Status">
-                  <FormStack width="full" maxWidth="400px">
+                  <FormStack width="full">
                     <FormSelect
                       instanceId="status-select"
                       helperText="Los usuarios inactivos no pueden acceder a la app. Los invitados son usuarios que todavía no accedieron a la app."
@@ -227,6 +229,17 @@ export function UserForm({
                           value: UserStatus.INVITED,
                         },
                       ]}
+                    />
+                    <FormSelect
+                      instanceId="timezone-select"
+                      helperText="Las fechas del sistema se van a mostrar en esta zona horaria para el usuario."
+                      name="timezone"
+                      label="Zona Horaria"
+                      placeholder="Seleccionar zona horaria"
+                      options={Object.keys(timezones.zones).map((tz) => ({
+                        label: tz,
+                        value: tz,
+                      }))}
                     />
                   </FormStack>
                 </FieldGroup>
