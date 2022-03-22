@@ -1,3 +1,15 @@
+# v0.10.1 (Tue Mar 22 2022)
+
+#### ⚠️ Pushed to `main`
+
+- fix status ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.10.0 (Tue Mar 22 2022)
 
 ### Release Notes
