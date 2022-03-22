@@ -36,6 +36,7 @@ import {
   getPhoneBelongsToText,
   isAdmin,
   PartcipantSexText,
+  useSelectedYear,
 } from '~/util/utils';
 
 import { ParticipantChartBars } from './components/ParticipantChartBars';
@@ -71,6 +72,7 @@ export default function ParticipantGeneral() {
   }>();
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentYear = useSelectedYear();
 
   const hideProgramsIds = searchParams
     .getAll('hidePrograms')
@@ -79,6 +81,29 @@ export default function ParticipantGeneral() {
   if (!participant) {
     throw new Error('El participante no existe.');
   }
+
+  const yearStatus = participant.status.filter(
+    (status) => status.year === +currentYear,
+  )[0].status;
+
+  const statusBtnText =
+    yearStatus === 'ACTIVE'
+      ? 'Activo'
+      : yearStatus === 'WAITING'
+      ? 'Espera'
+      : 'Inactivo';
+  const statusBtnColor =
+    yearStatus === 'ACTIVE'
+      ? 'blue'
+      : yearStatus === 'WAITING'
+      ? 'blue'
+      : 'red';
+  const statusBtnVariant =
+    yearStatus === 'ACTIVE'
+      ? 'solid'
+      : yearStatus === 'WAITING'
+      ? 'outline'
+      : 'solid';
 
   const toggleProgram = (programId: number) => {
     if (hideProgramsIds.includes(programId)) {
@@ -232,11 +257,9 @@ export default function ParticipantGeneral() {
           order={{ base: 1, lg: 2 }}
         >
           <Avatar size="2xl" src={participant.picture || undefined} />
-          <Box>
-            <HStack spacing="5">
-              <Button>Activo</Button>
-            </HStack>
-          </Box>
+          <Button variant={statusBtnVariant} colorScheme={statusBtnColor}>
+            {statusBtnText}
+          </Button>
         </Stack>
       </Stack>
       <Flex alignItems="center">

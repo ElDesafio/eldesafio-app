@@ -27,6 +27,7 @@ export async function getParticipantWithPrograms(id: number) {
   const participant = await db.participant.findUnique({
     where: { id: +id },
     include: {
+      status: true,
       programs: {
         select: {
           status: true,
