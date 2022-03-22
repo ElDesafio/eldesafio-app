@@ -65,6 +65,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   return { participant, isUserAdmin };
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export default function ParticipantGeneral() {
   const { participant, isUserAdmin } = useLoaderData<{
     participant: GetParticipantWithPrograms;
