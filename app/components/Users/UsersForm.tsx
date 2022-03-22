@@ -12,11 +12,12 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Roles, UserStatus } from '@prisma/client';
+import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
 import { FaFacebookF, FaLinkedinIn, FaSkype, FaTwitter } from 'react-icons/fa';
 import { HiCloudUpload } from 'react-icons/hi';
 import { useNavigate, useTransition } from 'remix';
-import { ValidatedForm, withZod } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
 import { FieldGroup } from '~/components/FieldGroup';

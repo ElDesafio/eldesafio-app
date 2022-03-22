@@ -57,7 +57,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   });
 
-  const fieldValues = programFormValidator.validate(
+  const fieldValues = await programFormValidator.validate(
     Object.fromEntries(await request.formData()),
   );
   if (fieldValues.error) return validationError(fieldValues.error);

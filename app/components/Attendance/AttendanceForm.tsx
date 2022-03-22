@@ -15,8 +15,9 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { ClassAttendanceStatus } from '@prisma/client';
+import { withZod } from '@remix-validated-form/with-zod';
 import { Link, useNavigate, useSearchParams, useTransition } from 'remix';
-import { ValidatedForm, withZod } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
 import { FormCheckbox } from '~/components/Form/FormCheckbox';

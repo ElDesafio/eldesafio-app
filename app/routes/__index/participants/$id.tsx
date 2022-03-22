@@ -8,6 +8,7 @@ import {
 import type { LoaderFunction } from 'remix';
 import { Outlet, useLoaderData, useLocation, useResolvedPath } from 'remix';
 import { z } from 'zod';
+import { zfd } from 'zod-form-data';
 
 import { TabLink } from '~/components/TabLink';
 import { db } from '~/services/db.server';
@@ -28,7 +29,7 @@ export async function getParticipant(id: number) {
 export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const { id } = z.object({ id: z.string() }).parse(params);
+  const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   return await getParticipant(+id);
 };
@@ -69,16 +70,6 @@ export default function Participant() {
               Programas
             </TabLink>
             <TabLink
-              to="health"
-              aria-current={
-                location.pathname.includes(useResolvedPath('health').pathname)
-                  ? 'page'
-                  : undefined
-              }
-            >
-              Datos Médicos
-            </TabLink>
-            <TabLink
               to="diary"
               aria-current={
                 location.pathname.includes(useResolvedPath('diary').pathname)
@@ -111,6 +102,16 @@ export default function Participant() {
               }
             >
               Cuestionario
+            </TabLink>
+            <TabLink
+              to="health"
+              aria-current={
+                location.pathname.includes(useResolvedPath('health').pathname)
+                  ? 'page'
+                  : undefined
+              }
+            >
+              Datos Médicos
             </TabLink>
             <TabLink
               to="family"

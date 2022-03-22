@@ -7,9 +7,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { BloodType, FormAnswerOptions } from '@prisma/client';
+import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
 import { useNavigate, useTransition } from 'remix';
-import { ValidatedForm, withZod } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
 import { FieldGroup } from '~/components/FieldGroup';

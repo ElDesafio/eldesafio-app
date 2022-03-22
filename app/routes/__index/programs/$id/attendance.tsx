@@ -23,6 +23,7 @@ import {
 } from '@chakra-ui/react';
 import type { ClassAttendanceStatus } from '@prisma/client';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
+import { Select } from 'chakra-react-select';
 import { DateTime, Info } from 'luxon';
 import { FaCloudRain } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
@@ -240,7 +241,6 @@ export default function Attendance() {
 
   options.unshift({ label: 'Todo el año', value: 0 });
 
-  console.log(activeParticipantsCount);
   return (
     <>
       <Stack
@@ -298,7 +298,7 @@ export default function Attendance() {
             />
           </FormControl>
           <Box minWidth="200px" width="200px">
-            <FormSelect
+            <Select
               name="months"
               instanceId="months-select"
               placeholder="Seleccionar mes..."
@@ -310,6 +310,18 @@ export default function Attendance() {
                 }
               }}
               options={options}
+              chakraStyles={{
+                dropdownIndicator: (provided) => ({
+                  ...provided,
+                  bg: 'transparent',
+                  px: 2,
+                  cursor: 'inherit',
+                }),
+                indicatorSeparator: (provided) => ({
+                  ...provided,
+                  display: 'none',
+                }),
+              }}
             />
           </Box>
         </HStack>

@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import type { LoaderFunction } from 'remix';
 import { Outlet, useLoaderData, useNavigate, useSearchParams } from 'remix';
 
+import { AlertED } from '~/components/AlertED';
 import { Logo } from '~/components/Logo';
 import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
 import { NavMenu } from '~/components/NavMenu';
@@ -46,6 +47,8 @@ export default function Dashboard() {
   let selectedYear = useSelectedYear();
   const socket = useSocket();
   const navigate = useNavigate();
+
+  const showNotCurrentYear = selectedYear !== DateTime.now().year.toString();
 
   useEffect(() => {
     if (!socket) return;
@@ -124,6 +127,13 @@ export default function Dashboard() {
           </HStack>
         </Flex>
       </Flex>
+      {showNotCurrentYear && (
+        <AlertED
+          status="warning"
+          small
+          description="Ojo! Estás navegando información que no es de este año. Se recomienda no hacer cambios en años anteriores."
+        />
+      )}
 
       <Outlet />
     </Flex>

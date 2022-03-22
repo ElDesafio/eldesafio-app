@@ -32,9 +32,26 @@ export function ParticipantChartBars({
     routeData.load(`/api/participant/${id}/attendance/?${params.toString()}`);
   }, [params.toString()]);
 
+  if (routeData.data && routeData.data.length === 0) {
+    return (
+      <AlertED
+        mt={8}
+        title="Vacío"
+        description="No hay clases para el participante. Los gráficos se van a mostrar cuando el participante tenga al menos 1 clase."
+      >
+        {' '}
+      </AlertED>
+    );
+  }
+
   return (
     <Box width="full" mt={8}>
-      <Skeleton width="full" isLoaded={!!routeData.data} minHeight="400px">
+      <Skeleton
+        width="full"
+        isLoaded={!!routeData.data}
+        minHeight="400px"
+        borderRadius="lg"
+      >
         {routeData?.data ? (
           <HighchartsReact
             highcharts={Highcharts}

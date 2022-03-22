@@ -53,6 +53,8 @@ model User {
   roles                        UserRoles[]
   createdClasses               Class[]                  @relation("CreatedClassByUser")
   updatedClasses               Class[]                  @relation("UpdatedClassByUser")
+  createdParticipantDiary      ParticipantDiary[]       @relation("CreatedParticipantDiaryByUser")
+  updatedParticipantDiary      ParticipantDiary[]       @relation("UpdatedParticipantDiaryByUser")
 }
 
 enum Roles {
@@ -148,15 +150,59 @@ model Participant {
   health                     ParticipantHealth?
   status                     ParticipantStatus[]
   classes                    ParticipantsOnClasses[]  @relation("ParticipantsOnClassesByParticipant")
+  ParticipantDiary           ParticipantDiary[]
 }
 
 model ParticipantStatus {
   year          Int
   participantId Int
-  status        ParticipantYearStatus
+  status        ParticipantYearStatus @default(value: INACTIVE)
   participant   Participant           @relation(fields: [participantId], references: [id])
 
   @@id([year, participantId])
+}
+
+enum ParticipantDiaryType {
+  YEAR_STATUS_ACTIVE
+  YEAR_STATUS_WAITING
+  YEAR_STATUS_INACTIVE
+  PROGRAM_STATUS_ACTIVE
+  PROGRAM_STATUS_WAITING
+  PROGRAM_STATUS_INACTIVE_NO_SHOW
+  PROGRAM_STATUS_INACTIVE_LOW_ATTENDANCE
+  PROGRAM_STATUS_INACTIVE_FAMILY
+  PROGRAM_STATUS_INACTIVE_3_ABSENT
+  PROGRAM_STATUS_INACTIVE_OTHER
+  INFO
+  MENTORSHIP
+}
+
+model ParticipantDiary {
+  id            Int                        @id @default(autoincrement())
+  participantId Int
+  participant   Participant                @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  type          ParticipantDiaryType
+  title         String
+  description   String?
+  isAutoEvent   Boolean                    @default(false)
+  date          DateTime                   @db.Date
+  createdAt     DateTime                   @default(now()) @db.Timestamptz
+  updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
+  createdByUser User                       @relation("CreatedParticipantDiaryByUser", fields: [createdBy], references: [id])
+  createdBy     Int
+  updatedByUser User                       @relation("UpdatedParticipantDiaryByUser", fields: [updatedBy], references: [id])
+  updatedBy     Int
+  programs      ParticipantDiaryPrograms[]
+}
+
+model ParticipantDiaryPrograms {
+  participantDiaryId Int
+  participantDiary   ParticipantDiary @relation(fields: [participantDiaryId], references: [id], onDelete: Cascade)
+  programId          Int
+  program            Program          @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+
+  @@id([participantDiaryId, programId])
 }
 
 enum BloodType {
@@ -258,25 +304,26 @@ enum Weekdays {
 }
 
 model Program {
-  id            Int                      @id @default(autoincrement())
-  name          String
-  description   String?
-  year          Int
-  seats         Int
-  ageFrom       Int
-  ageTo         Int
-  ageByYear     Boolean                  @default(false)
-  sex           ProgramSex
-  createdByUser User                     @relation("CreatedProgramByUser", fields: [createdBy], references: [id])
-  createdBy     Int
-  updatedByUser User                     @relation("UpdatedProgramByUser", fields: [updatedBy], references: [id])
-  updatedBy     Int
-  createdAt     DateTime                 @default(now()) @db.Timestamptz
-  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamptz
-  participants  ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByProgram")
-  programDays   ProgramDays[]            @relation("ProgramDaysByProgram")
-  educators     UsersOnPrograms[]        @relation("UserOnProgramsByProgram")
-  classes       Class[]                  @relation("ClassByProgram")
+  id                 Int                        @id @default(autoincrement())
+  name               String
+  description        String?
+  year               Int
+  seats              Int
+  ageFrom            Int
+  ageTo              Int
+  ageByYear          Boolean                    @default(false)
+  sex                ProgramSex
+  createdByUser      User                       @relation("CreatedProgramByUser", fields: [createdBy], references: [id])
+  createdBy          Int
+  updatedByUser      User                       @relation("UpdatedProgramByUser", fields: [updatedBy], references: [id])
+  updatedBy          Int
+  createdAt          DateTime                   @default(now()) @db.Timestamptz
+  updatedAt          DateTime                   @default(now()) @updatedAt @db.Timestamptz
+  participants       ParticipantsOnPrograms[]   @relation("ParticipantOnProgramsByProgram")
+  programDays        ProgramDays[]              @relation("ProgramDaysByProgram")
+  educators          UsersOnPrograms[]          @relation("UserOnProgramsByProgram")
+  classes            Class[]                    @relation("ClassByProgram")
+  participantDiaries ParticipantDiaryPrograms[]
 }
 
 model UsersOnPrograms {

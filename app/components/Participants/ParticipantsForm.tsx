@@ -11,10 +11,11 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from '@prisma/client';
+import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
 import { useNavigate, useTransition } from 'remix';
-import { ValidatedForm, withZod } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
 import { FieldGroup } from '~/components/FieldGroup';

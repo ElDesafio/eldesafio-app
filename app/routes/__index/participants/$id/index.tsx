@@ -36,6 +36,7 @@ import {
   getPhoneBelongsToText,
   isAdmin,
   PartcipantSexText,
+  useSelectedYear,
 } from '~/util/utils';
 
 import { ParticipantChartBars } from './components/ParticipantChartBars';
@@ -64,6 +65,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   return { participant, isUserAdmin };
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export default function ParticipantGeneral() {
   const { participant, isUserAdmin } = useLoaderData<{
     participant: GetParticipantWithPrograms;
@@ -71,6 +73,7 @@ export default function ParticipantGeneral() {
   }>();
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentYear = useSelectedYear();
 
   const hideProgramsIds = searchParams
     .getAll('hidePrograms')
@@ -79,6 +82,29 @@ export default function ParticipantGeneral() {
   if (!participant) {
     throw new Error('El participante no existe.');
   }
+
+  const yearStatus = participant.status.filter(
+    (status) => status.year === +currentYear,
+  )[0].status;
+
+  const statusBtnText =
+    yearStatus === 'ACTIVE'
+      ? 'Activo'
+      : yearStatus === 'WAITING'
+      ? 'Espera'
+      : 'Inactivo';
+  const statusBtnColor =
+    yearStatus === 'ACTIVE'
+      ? 'blue'
+      : yearStatus === 'WAITING'
+      ? 'blue'
+      : 'red';
+  const statusBtnVariant =
+    yearStatus === 'ACTIVE'
+      ? 'solid'
+      : yearStatus === 'WAITING'
+      ? 'outline'
+      : 'solid';
 
   const toggleProgram = (programId: number) => {
     if (hideProgramsIds.includes(programId)) {
@@ -232,11 +258,9 @@ export default function ParticipantGeneral() {
           order={{ base: 1, lg: 2 }}
         >
           <Avatar size="2xl" src={participant.picture || undefined} />
-          <Box>
-            <HStack spacing="5">
-              <Button>Activo</Button>
-            </HStack>
-          </Box>
+          <Button variant={statusBtnVariant} colorScheme={statusBtnColor}>
+            {statusBtnText}
+          </Button>
         </Stack>
       </Stack>
       <Flex alignItems="center">
@@ -246,114 +270,129 @@ export default function ParticipantGeneral() {
         <Spacer />
       </Flex>
       <Divider mt="2" mb="8" />
-      <Stack
-        direction={{ base: 'column', lg: 'row' }}
-        spacing={6}
-        justifyContent="space-between"
-        alignItems="flex-start"
-      >
-        <Table className="general-info-table" variant="simple">
-          <Tbody>
-            {participant.programs.active.length > 0 && (
-              <Tr>
-                <Td width="" fontWeight="600">
-                  Activo:
-                </Td>
-                <Td>
-                  <HStack spacing="1">
-                    {participant.programs.active.map((program) => (
-                      <Button
-                        key={program.id}
-                        size="xs"
-                        colorScheme={
-                          hideProgramsIds.includes(program.id) ? 'gray' : 'blue'
-                        }
-                        onClick={() => toggleProgram(program.id)}
-                        color={
-                          hideProgramsIds.includes(program.id)
-                            ? 'gray'
-                            : undefined
-                        }
-                      >
-                        {program.name}
-                      </Button>
-                    ))}
-                  </HStack>
-                </Td>
-              </Tr>
-            )}
-            {participant.programs.waiting.length > 0 && (
-              <Tr>
-                <Td width="" fontWeight="600">
-                  En Espera:
-                </Td>
-                <Td>
-                  <HStack spacing="1">
-                    {participant.programs.waiting.map((program) => (
-                      <Button
-                        key={program.id}
-                        size="xs"
-                        colorScheme={
-                          hideProgramsIds.includes(program.id) ? 'gray' : 'blue'
-                        }
-                        variant={
-                          hideProgramsIds.includes(program.id)
-                            ? 'solid'
-                            : 'outline'
-                        }
-                        onClick={() => toggleProgram(program.id)}
-                        color={
-                          hideProgramsIds.includes(program.id)
-                            ? 'gray'
-                            : undefined
-                        }
-                      >
-                        {program.name}
-                      </Button>
-                    ))}
-                  </HStack>
-                </Td>
-              </Tr>
-            )}
-            {participant.programs.inactive.length > 0 && (
-              <Tr>
-                <Td width="" fontWeight="600">
-                  Dado de Baja:
-                </Td>
-                <Td>
-                  <HStack spacing="1">
-                    {participant.programs.inactive.map((program) => (
-                      <Button
-                        key={program.id}
-                        size="xs"
-                        colorScheme={
-                          hideProgramsIds.includes(program.id) ? 'gray' : 'red'
-                        }
-                        onClick={() => toggleProgram(program.id)}
-                        color={
-                          hideProgramsIds.includes(program.id)
-                            ? 'gray'
-                            : undefined
-                        }
-                      >
-                        {program.name}
-                      </Button>
-                    ))}
-                  </HStack>
-                </Td>
-              </Tr>
-            )}
-          </Tbody>
-        </Table>
-        <ParticipantChartPie
-          allProgramsIds={participant.allProgramsIds}
-          hideProgramsIds={hideProgramsIds}
+      {participant.allProgramsIds.length > 0 ? (
+        <>
+          <Stack
+            direction={{ base: 'column', lg: 'row' }}
+            spacing={6}
+            justifyContent="space-between"
+            alignItems="flex-start"
+          >
+            <Table className="general-info-table" variant="simple">
+              <Tbody>
+                {participant.programs.active.length > 0 && (
+                  <Tr>
+                    <Td width="" fontWeight="600">
+                      Activo:
+                    </Td>
+                    <Td>
+                      <HStack spacing="1">
+                        {participant.programs.active.map((program) => (
+                          <Button
+                            key={program.id}
+                            size="xs"
+                            colorScheme={
+                              hideProgramsIds.includes(program.id)
+                                ? 'gray'
+                                : 'blue'
+                            }
+                            onClick={() => toggleProgram(program.id)}
+                            color={
+                              hideProgramsIds.includes(program.id)
+                                ? 'gray'
+                                : undefined
+                            }
+                          >
+                            {program.name}
+                          </Button>
+                        ))}
+                      </HStack>
+                    </Td>
+                  </Tr>
+                )}
+                {participant.programs.waiting.length > 0 && (
+                  <Tr>
+                    <Td width="" fontWeight="600">
+                      En Espera:
+                    </Td>
+                    <Td>
+                      <HStack spacing="1">
+                        {participant.programs.waiting.map((program) => (
+                          <Button
+                            key={program.id}
+                            size="xs"
+                            colorScheme={
+                              hideProgramsIds.includes(program.id)
+                                ? 'gray'
+                                : 'blue'
+                            }
+                            variant={
+                              hideProgramsIds.includes(program.id)
+                                ? 'solid'
+                                : 'outline'
+                            }
+                            onClick={() => toggleProgram(program.id)}
+                            color={
+                              hideProgramsIds.includes(program.id)
+                                ? 'gray'
+                                : undefined
+                            }
+                          >
+                            {program.name}
+                          </Button>
+                        ))}
+                      </HStack>
+                    </Td>
+                  </Tr>
+                )}
+                {participant.programs.inactive.length > 0 && (
+                  <Tr>
+                    <Td width="" fontWeight="600">
+                      Dado de Baja:
+                    </Td>
+                    <Td>
+                      <HStack spacing="1">
+                        {participant.programs.inactive.map((program) => (
+                          <Button
+                            key={program.id}
+                            size="xs"
+                            colorScheme={
+                              hideProgramsIds.includes(program.id)
+                                ? 'gray'
+                                : 'red'
+                            }
+                            onClick={() => toggleProgram(program.id)}
+                            color={
+                              hideProgramsIds.includes(program.id)
+                                ? 'gray'
+                                : undefined
+                            }
+                          >
+                            {program.name}
+                          </Button>
+                        ))}
+                      </HStack>
+                    </Td>
+                  </Tr>
+                )}
+              </Tbody>
+            </Table>
+            <ParticipantChartPie
+              allProgramsIds={participant.allProgramsIds}
+              hideProgramsIds={hideProgramsIds}
+            />
+          </Stack>
+          <ParticipantChartBars
+            allProgramsIds={participant.allProgramsIds}
+            hideProgramsIds={hideProgramsIds}
+          />
+        </>
+      ) : (
+        <AlertED
+          title="Vacío"
+          description="El participante no está en ningún programa"
         />
-      </Stack>
-      <ParticipantChartBars
-        allProgramsIds={participant.allProgramsIds}
-        hideProgramsIds={hideProgramsIds}
-      />
+      )}
     </>
   );
 }

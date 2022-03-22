@@ -17,7 +17,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (!user) throw json('Unauthorized', { status: 403 });
 
-  const fieldValues = participantFormValidator.validate(
+  const fieldValues = await participantFormValidator.validate(
     Object.fromEntries(await request.formData()),
   );
   if (fieldValues.error) return validationError(fieldValues.error);
