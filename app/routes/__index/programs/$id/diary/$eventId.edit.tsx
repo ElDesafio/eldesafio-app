@@ -1,26 +1,26 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import { redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
 import { AlertED } from '~/components/AlertED';
+import { diaryEventFormValidator } from '~/components/Participants/ParticipantDiaryEventForm';
 import {
-  diaryEventFormValidator,
-  ParticipantDiaryEventForm,
-} from '~/components/Participants/ParticipantDiaryEventForm';
-import { authenticator } from '~/services/auth.server';
+  ProgramDiaryEventForm,
+  programDiaryEventFormValidator,
+} from '~/components/Program/ProgramDiaryEventForm';
 import { db } from '~/services/db.server';
 import type {
-  GetParticipantDiaryEvent,
-  GetParticipantPrograms,
-} from '~/services/participants.service';
+  GetProgramDiaryEvent,
+  GetProgramParticipants,
+} from '~/services/programs.service';
 import {
-  getParticipantDiaryEvent,
-  getParticipantPrograms,
-} from '~/services/participants.service';
+  getProgramDiaryEvent,
+  getProgramParticipants,
+} from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
@@ -31,55 +31,58 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 
   const user = await getLoggedInUser(request);
 
-  const programs = await getParticipantPrograms({ participantId: id });
+  const participants = await getProgramParticipants({
+    programId: id,
+    includeStatus: ['ACTIVE', 'INACTIVE', 'WAITING'],
+  });
 
-  const event = await getParticipantDiaryEvent({ eventId });
+  const event = await getProgramDiaryEvent({ eventId });
 
-  return { programs, event, timezone: user.timezone };
+  return { participants, event, timezone: user.timezone };
 };
 
 // ACTION
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getLoggedInUser(request);
-  const { id: participantId, eventId } = z
+  const { id: programId, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
 
   const formData = Object.fromEntries(await request.formData());
 
-  const fieldValues = await diaryEventFormValidator.validate(formData);
+  const fieldValues = await programDiaryEventFormValidator.validate(formData);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const { programs, ...rest } = fieldValues.data;
+  const { participants, ...rest } = fieldValues.data;
 
-  const programsArray =
-    typeof programs === 'string'
-      ? programs.split(',').map((id) => ({
-          programId: Number(id),
+  const participantsArray =
+    typeof participants === 'string'
+      ? participants.split(',').map((id) => ({
+          participantId: Number(id),
         }))
       : [];
 
-  const event = await db.participantDiary.update({
+  const event = await db.programDiary.update({
     where: { id: eventId },
     data: {
       ...rest,
       date: DateTime.fromISO(rest.date, { zone: user.timezone }).toJSDate(),
       updatedBy: user.id,
-      programs: {
+      participants: {
         deleteMany: {},
-        create: programsArray,
+        create: participantsArray,
       },
     },
   });
 
-  return redirect(`/participants/${participantId}/diary`);
+  return redirect(`/programs/${programId}/diary`);
 };
 
 export default function ParticipantDiaryEventEdit() {
-  const { programs, event, timezone } = useLoaderData<{
-    programs: GetParticipantPrograms;
-    event: GetParticipantDiaryEvent;
+  const { participants, event, timezone } = useLoaderData<{
+    participants: GetProgramParticipants;
+    event: GetProgramDiaryEvent;
     timezone: string;
   }>();
 
@@ -107,7 +110,7 @@ export default function ParticipantDiaryEventEdit() {
         </Container>
       </Box>
       <Box as="main" py="0" flex="1">
-        <ParticipantDiaryEventForm
+        <ProgramDiaryEventForm
           isAutoEvent={event.isAutoEvent}
           defaultValues={{
             type: event.type,
@@ -116,11 +119,11 @@ export default function ParticipantDiaryEventEdit() {
               .toFormat(`yyyy-MM-dd'T'HH:mm`),
             description: event.description ?? undefined,
             title: event.title ?? undefined,
-            programs: event.programs
-              .map((program) => program.program.id)
+            participants: event.participants
+              .map((participant) => participant.participant.id)
               .join(','),
           }}
-          programs={programs}
+          participants={participants}
         />
       </Box>
     </>

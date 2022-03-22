@@ -115,3 +115,64 @@ export async function getProgramParticipants({
 export type GetProgramParticipants = Prisma.PromiseReturnType<
   typeof getProgramParticipants
 >;
+
+export async function getProgramDiary({
+  programId,
+  includeAutoEvents = false,
+}: {
+  programId: number;
+  includeAutoEvents?: boolean;
+}) {
+  const whereAnd: Array<Prisma.ProgramDiaryWhereInput> = [];
+  whereAnd.push({ programId });
+  if (!includeAutoEvents) {
+    whereAnd.push({
+      isAutoEvent: false,
+    });
+  }
+
+  return await db.programDiary.findMany({
+    where: { AND: whereAnd },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+    include: {
+      participants: {
+        select: {
+          participant: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              picture: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetProgramDiary = Prisma.PromiseReturnType<typeof getProgramDiary>;
+
+export async function getProgramDiaryEvent({ eventId }: { eventId: number }) {
+  return await db.programDiary.findUnique({
+    where: { id: eventId },
+    include: {
+      participants: {
+        select: {
+          participant: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              picture: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetProgramDiaryEvent = Prisma.PromiseReturnType<
+  typeof getProgramDiaryEvent
+>;

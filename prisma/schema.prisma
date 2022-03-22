@@ -56,6 +56,8 @@ model User {
   updatedClasses               Class[]                  @relation("UpdatedClassByUser")
   createdParticipantDiary      ParticipantDiary[]       @relation("CreatedParticipantDiaryByUser")
   updatedParticipantDiary      ParticipantDiary[]       @relation("UpdatedParticipantDiaryByUser")
+  createdProgramDiary          ProgramDiary[]           @relation("CreatedProgramDiaryByUser")
+  updatedProgramDiary          ProgramDiary[]           @relation("UpdatedProgramDiaryByUser")
 }
 
 enum Roles {
@@ -114,7 +116,7 @@ enum ParticipantYearStatus {
 }
 
 model Participant {
-  id                         Int                      @id @default(autoincrement())
+  id                         Int                        @id @default(autoincrement())
   firstName                  String
   lastName                   String
   birthday                   String
@@ -127,31 +129,32 @@ model Participant {
   picture                    String?
   medicalInsurance           String?
   phone1                     String?
-  phone1HasWhatsapp          Boolean                  @default(false)
+  phone1HasWhatsapp          Boolean                    @default(false)
   phone1BelongsTo            PhoneBelongsTo?
   phone2                     String?
-  phone2HasWhatsapp          Boolean                  @default(false)
+  phone2HasWhatsapp          Boolean                    @default(false)
   phone2BelongsTo            PhoneBelongsTo?
   biography                  String?
-  school                     School?                  @relation(fields: [schoolId], references: [id])
-  notSchooled                Boolean                  @default(false)
+  school                     School?                    @relation(fields: [schoolId], references: [id])
+  notSchooled                Boolean                    @default(false)
   schoolYear                 SchoolYear?
-  presentedDNI               Boolean                  @default(false)
-  presentedHealthCertificate Boolean                  @default(false)
+  presentedDNI               Boolean                    @default(false)
+  presentedHealthCertificate Boolean                    @default(false)
   healthCertificateDate      String?
-  createdByUser              User                     @relation("CreatedParticipantByUser", fields: [createdBy], references: [id])
+  createdByUser              User                       @relation("CreatedParticipantByUser", fields: [createdBy], references: [id])
   createdBy                  Int
-  updatedByUser              User                     @relation("UpdatedParticipantByUser", fields: [updatedBy], references: [id])
+  updatedByUser              User                       @relation("UpdatedParticipantByUser", fields: [updatedBy], references: [id])
   updatedBy                  Int
-  createdAt                  DateTime                 @default(now()) @db.Timestamptz
-  updatedAt                  DateTime                 @default(now()) @updatedAt @db.Timestamptz
+  createdAt                  DateTime                   @default(now()) @db.Timestamptz
+  updatedAt                  DateTime                   @default(now()) @updatedAt @db.Timestamptz
   surveyBiography            SurveyBiography?
-  programs                   ParticipantsOnPrograms[] @relation("ParticipantOnProgramsByParticipant")
+  programs                   ParticipantsOnPrograms[]   @relation("ParticipantOnProgramsByParticipant")
   schoolId                   Int?
   health                     ParticipantHealth?
   status                     ParticipantStatus[]
-  classes                    ParticipantsOnClasses[]  @relation("ParticipantsOnClassesByParticipant")
-  ParticipantDiary           ParticipantDiary[]
+  classes                    ParticipantsOnClasses[]    @relation("ParticipantsOnClassesByParticipant")
+  diary                      ParticipantDiary[]
+  ProgramDiaryParticipants   ProgramDiaryParticipants[]
 }
 
 model ParticipantStatus {
@@ -288,6 +291,37 @@ model SurveyBiography {
   updatedAt                     DateTime           @default(now()) @updatedAt @db.Timestamptz
 }
 
+enum ProgramDiaryType {
+  INFO
+}
+
+model ProgramDiary {
+  id            Int                        @id @default(autoincrement())
+  programId     Int
+  program       Program                    @relation(fields: [programId], references: [id])
+  type          ProgramDiaryType
+  title         String
+  description   String?
+  isAutoEvent   Boolean                    @default(false)
+  date          DateTime                   @db.Timestamptz
+  createdAt     DateTime                   @default(now()) @db.Timestamptz
+  updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
+  createdBy     Int
+  createdByUser User                       @relation("CreatedProgramDiaryByUser", fields: [createdBy], references: [id])
+  updatedBy     Int
+  updatedByUser User                       @relation("UpdatedProgramDiaryByUser", fields: [updatedBy], references: [id])
+  participants  ProgramDiaryParticipants[]
+}
+
+model ProgramDiaryParticipants {
+  programDiaryId Int
+  programDiary   ProgramDiary @relation(fields: [programDiaryId], references: [id], onDelete: Cascade)
+  participantId  Int
+  participant    Participant  @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@id([programDiaryId, participantId])
+}
+
 enum ProgramSex {
   MALE
   FEMALE
@@ -325,6 +359,7 @@ model Program {
   educators          UsersOnPrograms[]          @relation("UserOnProgramsByProgram")
   classes            Class[]                    @relation("ClassByProgram")
   participantDiaries ParticipantDiaryPrograms[]
+  programDiaries     ProgramDiary[]
 }
 
 model UsersOnPrograms {
