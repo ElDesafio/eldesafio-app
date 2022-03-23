@@ -9,8 +9,10 @@ import {
   Spacer,
   Stack,
   Table,
+  TableCaption,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -69,6 +71,13 @@ export default function Participants() {
             {participants.length > 0 ? (
               <Box border="1px solid" borderColor="gray.100" borderRadius="lg">
                 <Table fontSize="sm">
+                  <TableCaption alignItems="center" my={2}>
+                    Cantidad de participantes:{' '}
+                    <Text as="span" fontWeight="semibold">
+                      {participants.length}
+                    </Text>
+                  </TableCaption>
+
                   <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
                     <Tr>
                       <Th whiteSpace="nowrap" scope="col">
