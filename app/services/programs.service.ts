@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
+import { DateTime } from 'luxon';
 
 import { db } from './db.server';
 
@@ -114,4 +115,102 @@ export async function getProgramParticipants({
 
 export type GetProgramParticipants = Prisma.PromiseReturnType<
   typeof getProgramParticipants
+>;
+
+export async function getProgramDiary({
+  programId,
+  includeAutoEvents = false,
+  year,
+}: {
+  programId: number;
+  includeAutoEvents?: boolean;
+  year: number;
+}) {
+  const whereAnd: Array<Prisma.ProgramDiaryWhereInput> = [];
+  whereAnd.push({
+    programId,
+    date: {
+      gte: DateTime.fromObject({ year, month: 1, day: 1 }).toJSDate(),
+      lte: DateTime.fromObject({ year, month: 12, day: 31 }).toJSDate(),
+    },
+  });
+  if (!includeAutoEvents) {
+    whereAnd.push({
+      isAutoEvent: false,
+    });
+  }
+
+  const programDiary = await db.programDiary.findMany({
+    where: { AND: whereAnd },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+    include: {
+      participants: {
+        select: {
+          participant: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              picture: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const participantsDiary = await db.participantDiary.findMany({
+    where: {
+      isAutoEvent: includeAutoEvents === true ? undefined : false,
+      date: {
+        gte: DateTime.fromObject({ year, month: 1, day: 1 }).toJSDate(),
+        lte: DateTime.fromObject({ year, month: 12, day: 31 }).toJSDate(),
+      },
+      programs: {
+        some: {
+          programId,
+        },
+      },
+    },
+    include: {
+      participant: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          picture: true,
+        },
+      },
+    },
+  });
+
+  return [...programDiary, ...participantsDiary].sort(
+    (a, b) => b.date.getTime() - a.date.getTime(),
+  );
+}
+
+export type GetProgramDiary = Prisma.PromiseReturnType<typeof getProgramDiary>;
+
+export async function getProgramDiaryEvent({ eventId }: { eventId: number }) {
+  return await db.programDiary.findUnique({
+    where: { id: eventId },
+    include: {
+      participants: {
+        select: {
+          participant: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              picture: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetProgramDiaryEvent = Prisma.PromiseReturnType<
+  typeof getProgramDiaryEvent
 >;

@@ -35,9 +35,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 
   const event = await getParticipantDiaryEvent({ eventId });
 
-  const isAutoEvent = event?.type !== 'INFO' && event?.type !== 'MENTORSHIP';
-
-  return { programs, event, isAutoEvent, timezone: user.timezone };
+  return { programs, event, timezone: user.timezone };
 };
 
 // ACTION
@@ -79,10 +77,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function ParticipantDiaryEventEdit() {
-  const { programs, event, isAutoEvent, timezone } = useLoaderData<{
+  const { programs, event, timezone } = useLoaderData<{
     programs: GetParticipantPrograms;
     event: GetParticipantDiaryEvent;
-    isAutoEvent: boolean;
     timezone: string;
   }>();
 
@@ -100,7 +97,7 @@ export default function ParticipantDiaryEventEdit() {
           <Heading size="md" mb="0">
             Editar Evento
           </Heading>
-          {isAutoEvent && (
+          {event.isAutoEvent && (
             <AlertED
               small
               description="Solo se puede editar la descripción porque es un evento automático"
@@ -111,7 +108,7 @@ export default function ParticipantDiaryEventEdit() {
       </Box>
       <Box as="main" py="0" flex="1">
         <ParticipantDiaryEventForm
-          isAutoEvent={isAutoEvent}
+          isAutoEvent={event.isAutoEvent}
           defaultValues={{
             type: event.type,
             date: DateTime.fromISO(event.date as unknown as string)

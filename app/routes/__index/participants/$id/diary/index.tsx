@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Divider,
   Flex,
@@ -6,6 +7,7 @@ import {
   FormLabel,
   Heading,
   HStack,
+  IconButton,
   Spacer,
   Switch,
   Table,
@@ -15,11 +17,13 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import { MdAdd } from 'react-icons/md';
+import { DateTime } from 'luxon';
+import { MdAdd, MdSchool } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData, useSearchParams } from 'remix';
 import { ClientOnly } from 'remix-utils';
@@ -39,9 +43,15 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const url = new URL(request.url);
 
+  const selectedYear = Number(
+    url.searchParams.get('year') ?? DateTime.now().year.toString(),
+  );
+
   const diary = await getParticipantDiary({
     participantId: id,
     includeAutoEvents: url.searchParams.get('showAutoEvents') === 'true',
+    includeProgramEvents: true,
+    year: selectedYear,
   });
 
   const timezone = user.timezone;
@@ -88,72 +98,118 @@ export default function ParticipantDiary() {
       </Flex>
       <Divider mt="2" mb="8" />
       {diary.length > 0 ? (
-        <Table borderWidth="1px" size="sm">
-          <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
-            <Tr>
-              <Th whiteSpace="nowrap" scope="col" width="200px">
-                FECHA
-              </Th>
-              <Th whiteSpace="nowrap" scope="col">
-                DESCRIPCIÓN
-              </Th>
-              <Th whiteSpace="nowrap" scope="col" width="1%">
-                TIPO
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {diary.map((event) => (
-              <Tr key={event.id}>
-                <Td whiteSpace="nowrap">
-                  <Text>
-                    <ClientOnly>
-                      {() => getFormattedDate({ date: event.date, timezone })}
-                    </ClientOnly>
-                  </Text>
-                  <Text mt={1} color="gray.500">
-                    <ClientOnly>
-                      {() =>
-                        getFormattedDate({
-                          date: event.date,
-                          timezone,
-                          format: 'TIME_SIMPLE',
-                        })
-                      }
-                    </ClientOnly>
-                  </Text>
-                </Td>
-                <Td>
-                  <VStack alignItems="flex-start">
-                    <Text fontSize="md" mb={1} fontWeight="500">
-                      <Link to={`${event.id}`}>{event.title}</Link>
-                    </Text>
-                    <HStack spacing={1}>
-                      {event.programs.map(({ program }) => (
-                        <Link key={program.id} to={`/programs/${program.id}`}>
-                          <Tag size="sm" variant="outline" colorScheme="gray">
-                            {program.name}
-                          </Tag>
-                        </Link>
-                      ))}
-                    </HStack>
-                  </VStack>
-                </Td>
-                <Td>
-                  <Tag
-                    size="sm"
-                    variant={getParticipantDiaryTypeProps(event.type).variant}
-                    colorScheme={
-                      getParticipantDiaryTypeProps(event.type).tagColor
-                    }
-                  >
-                    {getParticipantDiaryTypeProps(event.type).text}
-                  </Tag>
-                </Td>
+        <Box border="1px solid" borderColor="gray.100" borderRadius="lg">
+          <Table size="sm">
+            <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
+              <Tr>
+                <Th whiteSpace="nowrap" scope="col" width="200px">
+                  FECHA
+                </Th>
+                <Th whiteSpace="nowrap" scope="col">
+                  DESCRIPCIÓN
+                </Th>
+                <Th whiteSpace="nowrap" scope="col" width="1%">
+                  TIPO
+                </Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {diary.map((event) => (
+                <Tr
+                  key={'programs' in event ? event.id : `program-${event.id}`}
+                >
+                  <Td whiteSpace="nowrap">
+                    <Text>
+                      <ClientOnly>
+                        {() => getFormattedDate({ date: event.date, timezone })}
+                      </ClientOnly>
+                    </Text>
+                    <Text mt={1} color="gray.500">
+                      <ClientOnly>
+                        {() =>
+                          getFormattedDate({
+                            date: event.date,
+                            timezone,
+                            format: 'TIME_SIMPLE',
+                          })
+                        }
+                      </ClientOnly>
+                    </Text>
+                  </Td>
+                  <Td>
+                    <VStack alignItems="flex-start">
+                      <Text fontSize="md" mb={1} fontWeight="500">
+                        <Link
+                          to={
+                            'programs' in event
+                              ? `${event.id}`
+                              : `/programs/${event.programId}/diary/${event.id}`
+                          }
+                        >
+                          {event.title}
+                        </Link>
+                      </Text>
+                      <HStack spacing={1}>
+                        {/* If there are programs in the event, it means it's a Participant event. If not, it's a Program event */}
+                        {'programs' in event &&
+                          event.programs.map(({ program }) => (
+                            <Link
+                              key={program.id}
+                              to={`/programs/${program.id}`}
+                            >
+                              <Tag
+                                size="sm"
+                                variant="outline"
+                                colorScheme="gray"
+                              >
+                                {program.name}
+                              </Tag>
+                            </Link>
+                          ))}
+                        {!('programs' in event) && (
+                          <Link to={`/programs/${event.programId}`}>
+                            <Tag size="sm" variant="outline" colorScheme="gray">
+                              {event.program.name}
+                            </Tag>
+                          </Link>
+                        )}
+                      </HStack>
+                    </VStack>
+                  </Td>
+                  <Td>
+                    <HStack spacing={1}>
+                      <Tag
+                        size="sm"
+                        variant={
+                          getParticipantDiaryTypeProps(event.type).variant
+                        }
+                        colorScheme={
+                          getParticipantDiaryTypeProps(event.type).tagColor
+                        }
+                      >
+                        {getParticipantDiaryTypeProps(event.type).text}
+                      </Tag>
+                      {!('programs' in event) && (
+                        <Tooltip
+                          placement="top-start"
+                          label="Es un evento en el diario del programa"
+                        >
+                          <IconButton
+                            fontSize="lg"
+                            variant="link"
+                            size="sm"
+                            aria-label="Evento en el diario del programa"
+                            icon={<MdSchool />}
+                          />
+                        </Tooltip>
+                      )}
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
       ) : (
         <AlertED
           title="Vacío"
