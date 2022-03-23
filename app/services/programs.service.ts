@@ -131,7 +131,7 @@ export async function getProgramDiary({
     });
   }
 
-  return await db.programDiary.findMany({
+  const programDiary = await db.programDiary.findMany({
     where: { AND: whereAnd },
     orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
     include: {
@@ -149,6 +149,31 @@ export async function getProgramDiary({
       },
     },
   });
+
+  const participantsDiary = await db.participantDiary.findMany({
+    where: {
+      isAutoEvent: includeAutoEvents === true ? undefined : false,
+      programs: {
+        some: {
+          programId,
+        },
+      },
+    },
+    include: {
+      participant: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          picture: true,
+        },
+      },
+    },
+  });
+
+  return [...programDiary, ...participantsDiary].sort(
+    (a, b) => b.date.getTime() - a.date.getTime(),
+  );
 }
 
 export type GetProgramDiary = Prisma.PromiseReturnType<typeof getProgramDiary>;

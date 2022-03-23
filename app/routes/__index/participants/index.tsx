@@ -5,7 +5,7 @@ import {
   Container,
   Flex,
   Heading,
-  Img,
+  Link as ChakraLink,
   Spacer,
   Stack,
   Table,
@@ -95,9 +95,12 @@ export default function Participants() {
                           </Box>
                           <Box>
                             <Box fontSize="sm" fontWeight="medium">
-                              <Link to={`/participants/${participant.id}`}>
+                              <ChakraLink
+                                as={Link}
+                                to={`/participants/${participant.id}`}
+                              >
                                 {participant.firstName} {participant.lastName}
-                              </Link>
+                              </ChakraLink>
                             </Box>
                             <Box fontSize="sm" color="gray.500">
                               cambiareste@correo.com

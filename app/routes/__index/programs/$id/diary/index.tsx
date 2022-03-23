@@ -7,6 +7,8 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Icon,
+  IconButton,
   Link as ChakraLink,
   Spacer,
   Switch,
@@ -17,11 +19,12 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdPerson } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData, useSearchParams } from 'remix';
 import { ClientOnly } from 'remix-utils';
@@ -129,35 +132,77 @@ export default function ParticipantDiary() {
                 <Td>
                   <VStack alignItems="flex-start">
                     <Text fontSize="md" mb={1} fontWeight="500">
-                      <ChakraLink as={Link} to={`${event.id}`}>
-                        {event.title}
+                      <ChakraLink
+                        as={Link}
+                        to={
+                          'participants' in event
+                            ? `${event.id}`
+                            : `/participants/${event.participantId}/diary/${event.id}`
+                        }
+                      >
+                        {event.title}{' '}
+                        {!('participants' in event) && (
+                          <Text as="span" color="gray.500" fontSize="sm">
+                            ({event.participant.firstName}{' '}
+                            {event.participant.lastName})
+                          </Text>
+                        )}
                       </ChakraLink>
                     </Text>
                     <HStack spacing={1}>
                       <AvatarGroup>
-                        {event.participants.map(({ participant }) => (
-                          <TooltipAvatar
-                            size="sm"
-                            key={participant.id}
-                            linkTo={`/participants/${participant.id}`}
-                            name={`${participant.firstName} ${participant.lastName}`}
-                            src={participant.picture ?? undefined}
-                          />
-                        ))}
+                        {/* If there are participants in the event, it means it's a Program event. If not, it's a Participant event */}
+                        {'participants' in event &&
+                          event.participants.map(({ participant }) => (
+                            <TooltipAvatar
+                              size="sm"
+                              key={participant.id}
+                              linkTo={`/participants/${participant.id}`}
+                              name={`${participant.firstName} ${participant.lastName}`}
+                              src={participant.picture ?? undefined}
+                            />
+                          ))}
+                        {!('participants' in event) && (
+                          <Link to={`/participants/${event.participantId}`}>
+                            <TooltipAvatar
+                              size="sm"
+                              key={event.participant.id}
+                              linkTo={`/participants/${event.participant.id}`}
+                              name={`${event.participant.firstName} ${event.participant.lastName}`}
+                              src={event.participant.picture ?? undefined}
+                            />
+                          </Link>
+                        )}
                       </AvatarGroup>
                     </HStack>
                   </VStack>
                 </Td>
                 <Td>
-                  <Tag
-                    size="sm"
-                    variant={getParticipantDiaryTypeProps(event.type).variant}
-                    colorScheme={
-                      getParticipantDiaryTypeProps(event.type).tagColor
-                    }
-                  >
-                    {getParticipantDiaryTypeProps(event.type).text}
-                  </Tag>
+                  <HStack spacing={1}>
+                    <Tag
+                      size="sm"
+                      variant={getParticipantDiaryTypeProps(event.type).variant}
+                      colorScheme={
+                        getParticipantDiaryTypeProps(event.type).tagColor
+                      }
+                    >
+                      {getParticipantDiaryTypeProps(event.type).text}
+                    </Tag>
+                    {!('participants' in event) && (
+                      <Tooltip
+                        placement="top-start"
+                        label="Es un evento en el diario del participante"
+                      >
+                        <IconButton
+                          fontSize="lg"
+                          variant="link"
+                          size="sm"
+                          aria-label="Evento en el diario del participante"
+                          icon={<MdPerson />}
+                        />
+                      </Tooltip>
+                    )}
+                  </HStack>
                 </Td>
               </Tr>
             ))}

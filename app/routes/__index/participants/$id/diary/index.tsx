@@ -6,6 +6,7 @@ import {
   FormLabel,
   Heading,
   HStack,
+  IconButton,
   Spacer,
   Switch,
   Table,
@@ -15,11 +16,12 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdSchool } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData, useSearchParams } from 'remix';
 import { ClientOnly } from 'remix-utils';
@@ -42,6 +44,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const diary = await getParticipantDiary({
     participantId: id,
     includeAutoEvents: url.searchParams.get('showAutoEvents') === 'true',
+    includeProgramEvents: true,
   });
 
   const timezone = user.timezone;
@@ -126,29 +129,62 @@ export default function ParticipantDiary() {
                 <Td>
                   <VStack alignItems="flex-start">
                     <Text fontSize="md" mb={1} fontWeight="500">
-                      <Link to={`${event.id}`}>{event.title}</Link>
+                      <Link
+                        to={
+                          'programs' in event
+                            ? `${event.id}`
+                            : `/programs/${event.programId}/diary/${event.id}`
+                        }
+                      >
+                        {event.title}
+                      </Link>
                     </Text>
                     <HStack spacing={1}>
-                      {event.programs.map(({ program }) => (
-                        <Link key={program.id} to={`/programs/${program.id}`}>
+                      {/* If there are programs in the event, it means it's a Participant event. If not, it's a Program event */}
+                      {'programs' in event &&
+                        event.programs.map(({ program }) => (
+                          <Link key={program.id} to={`/programs/${program.id}`}>
+                            <Tag size="sm" variant="outline" colorScheme="gray">
+                              {program.name}
+                            </Tag>
+                          </Link>
+                        ))}
+                      {!('programs' in event) && (
+                        <Link to={`/programs/${event.programId}`}>
                           <Tag size="sm" variant="outline" colorScheme="gray">
-                            {program.name}
+                            {event.program.name}
                           </Tag>
                         </Link>
-                      ))}
+                      )}
                     </HStack>
                   </VStack>
                 </Td>
                 <Td>
-                  <Tag
-                    size="sm"
-                    variant={getParticipantDiaryTypeProps(event.type).variant}
-                    colorScheme={
-                      getParticipantDiaryTypeProps(event.type).tagColor
-                    }
-                  >
-                    {getParticipantDiaryTypeProps(event.type).text}
-                  </Tag>
+                  <HStack spacing={1}>
+                    <Tag
+                      size="sm"
+                      variant={getParticipantDiaryTypeProps(event.type).variant}
+                      colorScheme={
+                        getParticipantDiaryTypeProps(event.type).tagColor
+                      }
+                    >
+                      {getParticipantDiaryTypeProps(event.type).text}
+                    </Tag>
+                    {!('programs' in event) && (
+                      <Tooltip
+                        placement="top-start"
+                        label="Es un evento en el diario del programa"
+                      >
+                        <IconButton
+                          fontSize="lg"
+                          variant="link"
+                          size="sm"
+                          aria-label="Evento en el diario del programa"
+                          icon={<MdSchool />}
+                        />
+                      </Tooltip>
+                    )}
+                  </HStack>
                 </Td>
               </Tr>
             ))}

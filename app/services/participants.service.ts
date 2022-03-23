@@ -74,9 +74,11 @@ export type GetParticipantWithPrograms = Prisma.PromiseReturnType<
 export async function getParticipantDiary({
   participantId,
   includeAutoEvents = false,
+  includeProgramEvents = false,
 }: {
   participantId: number;
   includeAutoEvents?: boolean;
+  includeProgramEvents?: boolean;
 }) {
   const whereAnd: Array<Prisma.ParticipantDiaryWhereInput> = [];
   whereAnd.push({ participantId });
@@ -86,7 +88,7 @@ export async function getParticipantDiary({
     });
   }
 
-  return await db.participantDiary.findMany({
+  const participantDiary = await db.participantDiary.findMany({
     where: { AND: whereAnd },
     orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
     include: {
@@ -102,6 +104,30 @@ export async function getParticipantDiary({
       },
     },
   });
+
+  const programEvents = includeProgramEvents
+    ? await db.programDiary.findMany({
+        where: {
+          participants: {
+            some: {
+              participantId,
+            },
+          },
+        },
+        include: {
+          program: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      })
+    : [];
+
+  return [...participantDiary, ...programEvents].sort(
+    (a, b) => b.date.getTime() - a.date.getTime(),
+  );
 }
 
 export type GetParticipantDiary = Prisma.PromiseReturnType<
