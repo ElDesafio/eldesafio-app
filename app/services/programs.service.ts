@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
+import { DateTime } from 'luxon';
 
 import { db } from './db.server';
 
@@ -119,12 +120,20 @@ export type GetProgramParticipants = Prisma.PromiseReturnType<
 export async function getProgramDiary({
   programId,
   includeAutoEvents = false,
+  year,
 }: {
   programId: number;
   includeAutoEvents?: boolean;
+  year: number;
 }) {
   const whereAnd: Array<Prisma.ProgramDiaryWhereInput> = [];
-  whereAnd.push({ programId });
+  whereAnd.push({
+    programId,
+    date: {
+      gte: DateTime.fromObject({ year, month: 1, day: 1 }).toJSDate(),
+      lte: DateTime.fromObject({ year, month: 12, day: 31 }).toJSDate(),
+    },
+  });
   if (!includeAutoEvents) {
     whereAnd.push({
       isAutoEvent: false,
@@ -153,6 +162,10 @@ export async function getProgramDiary({
   const participantsDiary = await db.participantDiary.findMany({
     where: {
       isAutoEvent: includeAutoEvents === true ? undefined : false,
+      date: {
+        gte: DateTime.fromObject({ year, month: 1, day: 1 }).toJSDate(),
+        lte: DateTime.fromObject({ year, month: 12, day: 31 }).toJSDate(),
+      },
       programs: {
         some: {
           programId,

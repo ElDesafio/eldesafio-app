@@ -75,13 +75,22 @@ export async function getParticipantDiary({
   participantId,
   includeAutoEvents = false,
   includeProgramEvents = false,
+  year,
 }: {
   participantId: number;
   includeAutoEvents?: boolean;
   includeProgramEvents?: boolean;
+  year: number;
 }) {
+  console.log(year);
   const whereAnd: Array<Prisma.ParticipantDiaryWhereInput> = [];
-  whereAnd.push({ participantId });
+  whereAnd.push({
+    participantId,
+    date: {
+      gte: DateTime.fromObject({ year, month: 1, day: 1 }).toJSDate(),
+      lte: DateTime.fromObject({ year, month: 12, day: 31 }).toJSDate(),
+    },
+  });
   if (!includeAutoEvents) {
     whereAnd.push({
       isAutoEvent: false,
@@ -112,6 +121,10 @@ export async function getParticipantDiary({
             some: {
               participantId,
             },
+          },
+          date: {
+            gte: DateTime.fromObject({ year, month: 1, day: 1 }).toJSDate(),
+            lte: DateTime.fromObject({ year, month: 12, day: 31 }).toJSDate(),
           },
         },
         include: {

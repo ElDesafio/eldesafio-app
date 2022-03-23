@@ -21,6 +21,7 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import { DateTime } from 'luxon';
 import { MdAdd, MdSchool } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData, useSearchParams } from 'remix';
@@ -41,10 +42,15 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const url = new URL(request.url);
 
+  const selectedYear = Number(
+    url.searchParams.get('year') ?? DateTime.now().year.toString(),
+  );
+
   const diary = await getParticipantDiary({
     participantId: id,
     includeAutoEvents: url.searchParams.get('showAutoEvents') === 'true',
     includeProgramEvents: true,
+    year: selectedYear,
   });
 
   const timezone = user.timezone;
@@ -107,7 +113,7 @@ export default function ParticipantDiary() {
           </Thead>
           <Tbody>
             {diary.map((event) => (
-              <Tr key={event.id}>
+              <Tr key={'programs' in event ? event.id : `program-${event.id}`}>
                 <Td whiteSpace="nowrap">
                   <Text>
                     <ClientOnly>

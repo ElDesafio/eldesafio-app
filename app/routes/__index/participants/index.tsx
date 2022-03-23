@@ -91,6 +91,8 @@ export default function Participants() {
                             <Avatar
                               size="md"
                               src={participant.picture || undefined}
+                              // showBorder
+                              // borderColor="red"
                             />
                           </Box>
                           <Box>
