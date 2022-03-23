@@ -5,7 +5,7 @@ import {
   Container,
   Flex,
   Heading,
-  Img,
+  Link as ChakraLink,
   Spacer,
   Stack,
   Table,
@@ -67,57 +67,64 @@ export default function Participants() {
             overflowX="auto"
           >
             {participants.length > 0 ? (
-              <Table borderWidth="1px" fontSize="sm">
-                <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
-                  <Tr>
-                    <Th whiteSpace="nowrap" scope="col">
-                      PARTICIPANTE
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      EDAD
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      DNI
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col" />
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {participants.map((participant) => (
-                    <Tr key={participant.id}>
-                      <Td whiteSpace="nowrap">
-                        <Stack direction="row" spacing="4" align="center">
-                          <Box flexShrink={0}>
-                            <Avatar
-                              size="md"
-                              src={participant.picture || undefined}
-                            />
-                          </Box>
-                          <Box>
-                            <Box fontSize="sm" fontWeight="medium">
-                              <Link to={`/participants/${participant.id}`}>
-                                {participant.firstName} {participant.lastName}
-                              </Link>
-                            </Box>
-                            <Box fontSize="sm" color="gray.500">
-                              cambiareste@correo.com
-                            </Box>
-                          </Box>
-                        </Stack>
-                      </Td>
-                      <Td>{getAge(participant.birthday)}</Td>
-                      <Td>{participant.dni}</Td>
-                      <Td textAlign="right">
-                        <Link to={`${participant.id}/edit`}>
-                          <Button variant="link" colorScheme="blue">
-                            Edit
-                          </Button>
-                        </Link>
-                      </Td>
+              <Box border="1px solid" borderColor="gray.100" borderRadius="lg">
+                <Table fontSize="sm">
+                  <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
+                    <Tr>
+                      <Th whiteSpace="nowrap" scope="col">
+                        PARTICIPANTE
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        EDAD
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        DNI
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col" />
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+                  </Thead>
+                  <Tbody>
+                    {participants.map((participant) => (
+                      <Tr key={participant.id}>
+                        <Td whiteSpace="nowrap">
+                          <Stack direction="row" spacing="4" align="center">
+                            <Box flexShrink={0}>
+                              <Avatar
+                                size="md"
+                                src={participant.picture || undefined}
+                                // showBorder
+                                // borderColor="red"
+                              />
+                            </Box>
+                            <Box>
+                              <Box fontSize="sm" fontWeight="medium">
+                                <ChakraLink
+                                  as={Link}
+                                  to={`/participants/${participant.id}`}
+                                >
+                                  {participant.firstName} {participant.lastName}
+                                </ChakraLink>
+                              </Box>
+                              <Box fontSize="sm" color="gray.500">
+                                cambiareste@correo.com
+                              </Box>
+                            </Box>
+                          </Stack>
+                        </Td>
+                        <Td>{getAge(participant.birthday)}</Td>
+                        <Td>{participant.dni}</Td>
+                        <Td textAlign="right">
+                          <Link to={`${participant.id}/edit`}>
+                            <Button variant="link" colorScheme="blue">
+                              Edit
+                            </Button>
+                          </Link>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
             ) : (
               <AlertED
                 title="Vacío"

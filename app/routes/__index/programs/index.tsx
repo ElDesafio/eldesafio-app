@@ -71,48 +71,50 @@ export default function Programs() {
             overflowX="auto"
           >
             {programs.length > 0 ? (
-              <Table borderWidth="1px" fontSize="sm">
-                <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
-                  <Tr>
-                    <Th whiteSpace="nowrap" scope="col">
-                      NOMBRE
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      ASISTENCIAS
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      CUPOS
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      PARTICIPANTES
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      EDAD
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {programs.map((program) => (
-                    <Tr key={program.id}>
-                      <Td whiteSpace="nowrap">
-                        <ChakraLink
-                          as={Link}
-                          to={`${program.id}`}
-                          fontWeight="medium"
-                        >
-                          {program.name}
-                        </ChakraLink>
-                      </Td>
-                      <Td>asistencias 20%</Td>
-                      <Td>{program.seats}</Td>
-                      <Td>20 / 0</Td>
-                      <Td>
-                        {program.ageFrom} a {program.ageTo} años
-                      </Td>
+              <Box border="1px solid" borderColor="gray.100" borderRadius="lg">
+                <Table fontSize="sm">
+                  <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
+                    <Tr>
+                      <Th whiteSpace="nowrap" scope="col">
+                        NOMBRE
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        ASISTENCIAS
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        CUPOS
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        PARTICIPANTES
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        EDAD
+                      </Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+                  </Thead>
+                  <Tbody>
+                    {programs.map((program) => (
+                      <Tr key={program.id}>
+                        <Td whiteSpace="nowrap">
+                          <ChakraLink
+                            as={Link}
+                            to={`${program.id}`}
+                            fontWeight="medium"
+                          >
+                            {program.name}
+                          </ChakraLink>
+                        </Td>
+                        <Td>asistencias 20%</Td>
+                        <Td>{program.seats}</Td>
+                        <Td>20 / 0</Td>
+                        <Td>
+                          {program.ageFrom} a {program.ageTo} años
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
             ) : (
               <AlertED
                 title="Vacío"
