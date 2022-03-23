@@ -105,6 +105,7 @@ export default function Dashboard() {
             {/* <Notification display={{ base: "none", lg: "inline-flex" }} /> */}
             <Select
               maxWidth="100px"
+              borderRadius="md"
               size="sm"
               marginRight="3"
               value={selectedYear}

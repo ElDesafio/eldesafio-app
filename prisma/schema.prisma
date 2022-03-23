@@ -120,7 +120,7 @@ model Participant {
   firstName                  String
   lastName                   String
   birthday                   String
-  dni                        String
+  dni                        String                     @unique
   sex                        Sex
   email                      String?
   neighborhood               Neighborhood?
