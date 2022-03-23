@@ -1,3 +1,15 @@
+# v0.12.0 (Wed Mar 23 2022)
+
+#### 🚀 Enhancement
+
+- Create program diary [#103](https://github.com/ElDesafio/eldesafio-app/pull/103) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.11.1 (Tue Mar 22 2022)
 
 #### 🔩 Dependency Updates
