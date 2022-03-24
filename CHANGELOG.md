@@ -1,3 +1,16 @@
+# v0.12.2 (Thu Mar 24 2022)
+
+#### 🔩 Dependency Updates
+
+- Update dependencies (non-major) [#104](https://github.com/ElDesafio/eldesafio-app/pull/104) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 2
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v0.12.1 (Wed Mar 23 2022)
 
 #### 🔩 Dependency Updates
