@@ -220,7 +220,7 @@ export default function Dashboard() {
                 control: (provided) => ({
                   ...provided,
                   borderRadius: 'md',
-                  width: '250px',
+                  minWidth: '250px',
                   bg: 'white',
                   color: 'gray.800',
                 }),
