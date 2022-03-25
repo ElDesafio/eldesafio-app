@@ -56,6 +56,7 @@ module.exports = {
     'prettier/prettier': 2,
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
+    'no-case-declarations': 'error',
     indent: 'off',
     semi: 0,
     'comma-dangle': 0,
