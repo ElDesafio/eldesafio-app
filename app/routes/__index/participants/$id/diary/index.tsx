@@ -22,7 +22,6 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import { DateTime } from 'luxon';
 import { MdAdd, MdSchool } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData, useSearchParams } from 'remix';
@@ -34,7 +33,11 @@ import { AlertED } from '~/components/AlertED';
 import type { GetParticipantDiary } from '~/services/participants.service';
 import { getParticipantDiary } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
-import { getFormattedDate, getParticipantDiaryTypeProps } from '~/util/utils';
+import {
+  getFormattedDate,
+  getParticipantDiaryTypeProps,
+  getSelectedYearFromRequest,
+} from '~/util/utils';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
@@ -43,9 +46,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const url = new URL(request.url);
 
-  const selectedYear = Number(
-    url.searchParams.get('year') ?? DateTime.now().year.toString(),
-  );
+  const selectedYear = getSelectedYearFromRequest(request);
 
   const diary = await getParticipantDiary({
     participantId: id,
