@@ -18,8 +18,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     .map((word) => (word.trim().length > 0 ? `${word.trim()}:*` : ''))
     .join(' | ');
 
-  console.log(cleanValue);
-
   const participants = await db.participant.findMany({
     where: {
       OR: [
@@ -30,6 +28,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           lastName: {
             search: cleanValue,
           },
+          // dni: {
+          //   search: cleanValue.replace(/[^\d.-]/g, ''),
+          // },
         },
       ],
     },
