@@ -114,7 +114,7 @@ const LoadingIndicator = (props: LoadingIndicatorProps<GlobalSearchResult>) => (
 // Empty React component required by Remix
 export default function Dashboard() {
   let user = useLoaderData<GetUser>();
-  let [, setSearchParams] = useSearchParams();
+  let [searchParams, setSearchParams] = useSearchParams();
   let selectedYear = useSelectedYear();
   const socket = useSocket();
   const navigate = useNavigate();
@@ -245,10 +245,8 @@ export default function Dashboard() {
               value={selectedYear}
               onChange={(event) => {
                 const selectedValue = event.currentTarget.value;
-                const currentYear = DateTime.now().year.toString();
-                const newSearchparams: { year: string } | {} =
-                  selectedValue === currentYear ? {} : { year: selectedValue };
-                setSearchParams(newSearchparams);
+                searchParams.set('year', selectedValue);
+                setSearchParams(searchParams);
               }}
             >
               {years.map((year) => (

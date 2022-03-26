@@ -91,7 +91,6 @@ export async function getParticipantDiary({
   includeProgramEvents?: boolean;
   year: number;
 }) {
-  console.log(year);
   const whereAnd: Array<Prisma.ParticipantDiaryWhereInput> = [];
   whereAnd.push({
     participantId,
