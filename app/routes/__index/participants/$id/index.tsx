@@ -33,6 +33,7 @@ import {
   getFormattedDate,
   getNeighborhoodText,
   getPhoneBelongsToText,
+  getSelectedYearFromRequest,
   PartcipantSexText,
   useSelectedYear,
 } from '~/util/utils';
@@ -43,7 +44,9 @@ import { ParticipantChartPie } from './components/ParticipantChartPie';
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const participant = await getParticipantWithPrograms(+id);
+  const selectedYear = getSelectedYearFromRequest(request);
+
+  const participant = await getParticipantWithPrograms(+id, selectedYear);
 
   const loggedinUser = await getLoggedInUser(request);
 
@@ -65,7 +68,7 @@ export default function ParticipantGeneral() {
   }>();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentYear = useSelectedYear();
+  // const currentYear = useSelectedYear();
 
   const hideProgramsIds = searchParams
     .getAll('hidePrograms')
@@ -75,32 +78,41 @@ export default function ParticipantGeneral() {
     throw new Error('El participante no existe.');
   }
 
-  const participantYearStatus = participant.status.filter(
-    (status) => status.year === +currentYear,
-  )[0];
+  // const participantYearStatus = participant.status.filter(
+  //   (status) => status.year === +currentYear,
+  // )[0];
 
-  const yearStatus = participantYearStatus
-    ? participantYearStatus.status
-    : 'INACTIVE';
+  let statusBtnText: string;
+  let statusBtnColor: string;
+  let statusBtnVariant: string;
 
-  const statusBtnText =
-    yearStatus === 'ACTIVE'
-      ? 'Activo'
-      : yearStatus === 'WAITING'
-      ? 'Espera'
-      : 'Inactivo';
-  const statusBtnColor =
-    yearStatus === 'ACTIVE'
-      ? 'blue'
-      : yearStatus === 'WAITING'
-      ? 'blue'
-      : 'red';
-  const statusBtnVariant =
-    yearStatus === 'ACTIVE'
-      ? 'solid'
-      : yearStatus === 'WAITING'
-      ? 'outline'
-      : 'solid';
+  switch (participant.yearStatus) {
+    case 'ACTIVE': {
+      statusBtnText = 'Activo';
+      statusBtnColor = 'blue';
+      statusBtnVariant = 'solid';
+      break;
+    }
+    case 'INACTIVE': {
+      statusBtnText = 'Inactivo';
+      statusBtnColor = 'red';
+      statusBtnVariant = 'solid';
+      break;
+    }
+    case 'WAITING': {
+      statusBtnText = 'Espera';
+      statusBtnColor = 'blue';
+      statusBtnVariant = 'outline';
+      break;
+    }
+
+    default: {
+      statusBtnText = 'No participó';
+      statusBtnColor = 'gray';
+      statusBtnVariant = 'solid';
+      break;
+    }
+  }
 
   const toggleProgram = (programId: number) => {
     if (hideProgramsIds.includes(programId)) {

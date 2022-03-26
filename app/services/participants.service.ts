@@ -23,12 +23,17 @@ export type GetParticipantBioSurvey = Prisma.PromiseReturnType<
   typeof getParticipantBioSurvey
 >;
 
-export async function getParticipantWithPrograms(id: number) {
+export async function getParticipantWithPrograms(id: number, year: number) {
   const participant = await db.participant.findUnique({
     where: { id: +id },
     include: {
       status: true,
       programs: {
+        where: {
+          program: {
+            year,
+          },
+        },
         select: {
           status: true,
           program: {
@@ -54,8 +59,11 @@ export async function getParticipantWithPrograms(id: number) {
     status: program.status,
   }));
 
+  const yearStatus = rest.status.filter((status) => status.year === year)[0];
+
   return {
     ...rest,
+    yearStatus: yearStatus ? yearStatus.status : undefined,
     allProgramsIds: cleanPrograms.map((program) => program.id),
     programs: {
       active: cleanPrograms.filter((program) => program.status === 'ACTIVE'),
