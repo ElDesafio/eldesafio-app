@@ -1,6 +1,7 @@
 import type { AvatarProps } from '@chakra-ui/react';
 import { Avatar, Tooltip } from '@chakra-ui/react';
-import { Link } from 'remix';
+
+import { LinkED } from './LinkED';
 
 export const TooltipAvatar = ({
   linkTo,
@@ -8,9 +9,9 @@ export const TooltipAvatar = ({
 }: AvatarProps & { linkTo?: string }) => (
   <Tooltip label={props.name}>
     {linkTo !== undefined ? (
-      <Link to={linkTo}>
+      <LinkED to={linkTo}>
         <Avatar {...props} />
-      </Link>
+      </LinkED>
     ) : (
       <Avatar {...props} />
     )}

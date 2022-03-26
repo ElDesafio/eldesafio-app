@@ -28,17 +28,17 @@ import { DateTime, Info } from 'luxon';
 import { FaCloudRain } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData, useSearchParams, useTransition } from 'remix';
+import { useLoaderData, useSearchParams, useTransition } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
-import { authenticator } from '~/services/auth.server';
+import { LinkED } from '~/components/LinkED';
 import type { GetProgramClasses } from '~/services/classes.service';
 import { getProgramClasses } from '~/services/classes.service';
 import type { GetProgramParticipants } from '~/services/programs.service';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
-import { getAge, getAttendanceProps, isAdmin } from '~/util/utils';
+import { getAge, getAttendanceProps } from '~/util/utils';
 
 import { AttendanceChartBars } from './components/AttendanceChartBars';
 
@@ -170,7 +170,7 @@ function ClassDateHeader({
         <br />
         {dateLuxon.year}
       </Text>
-      <Link
+      <LinkED
         to={`${classId}/edit${
           selectedMonth != null ? `?month=${selectedMonth}` : ''
         } `}
@@ -178,7 +178,7 @@ function ClassDateHeader({
         <Button variant="solid" colorScheme="gray" size="xs" pr={1} pl={1}>
           Editar
         </Button>
-      </Link>
+      </LinkED>
     </Box>
   );
 }
@@ -240,7 +240,7 @@ export default function Attendance() {
         spacing="6"
         justifyContent="space-between"
       >
-        <Link to="new">
+        <LinkED to="new">
           <Tooltip
             hasArrow
             placement="top"
@@ -256,7 +256,7 @@ export default function Attendance() {
               Agregar estimulo
             </Button>
           </Tooltip>
-        </Link>
+        </LinkED>
         <HStack spacing={6}>
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="show-inactives" mb="0">
@@ -388,9 +388,11 @@ export default function Attendance() {
                       </Box>
                       <Box>
                         <Box fontSize="sm" fontWeight="medium">
-                          <Link to={`/participants/${attendant.participantId}`}>
+                          <LinkED
+                            to={`/participants/${attendant.participantId}`}
+                          >
                             {attendant.firstName} {attendant.lastName}
-                          </Link>
+                          </LinkED>
                         </Box>
                         <Box fontSize="sm" color="gray.500">
                           {getAge(attendant.birthday)}

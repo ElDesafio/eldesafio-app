@@ -19,12 +19,11 @@ import {
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
-import { Link, useLoaderData, useSearchParams } from 'remix';
+import { useLoaderData, useSearchParams } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
-import { authenticator } from '~/services/auth.server';
-import { db } from '~/services/db.server';
+import { LinkED } from '~/components/LinkED';
 import type { GetParticipantWithPrograms } from '~/services/participants.service';
 import { getParticipantWithPrograms } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
@@ -35,7 +34,6 @@ import {
   getPhoneBelongsToText,
   getSelectedYearFromRequest,
   PartcipantSexText,
-  useSelectedYear,
 } from '~/util/utils';
 
 import { ParticipantChartBars } from './components/ParticipantChartBars';
@@ -143,11 +141,11 @@ export default function ParticipantGeneral() {
         </Heading>
         <Spacer />
         {isUserAdmin && (
-          <Link to="edit">
+          <LinkED to="edit">
             <Button size="sm" leftIcon={<MdEdit />} colorScheme="blue">
               Editar
             </Button>
-          </Link>
+          </LinkED>
         )}
       </Flex>
       <Divider mt="2" mb="8" />

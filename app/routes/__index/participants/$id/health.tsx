@@ -7,10 +7,11 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import type { GetParticipantHealth } from '~/services/participants.service';
 import { getParticipantHealth } from '~/services/participants.service';
 import { getBloodTypeName, getFormAnswerOptionName } from '~/util/utils';
@@ -292,9 +293,9 @@ export default function ParticipantHealth() {
         <AlertED title="Vacío" description="No hay datos de salud" />
       )}
       <Stack direction="row" mt={6} justifyContent="center" width="full">
-        <Link to="edit">
+        <LinkED to="edit">
           <Button colorScheme="blue">Editar</Button>
-        </Link>
+        </LinkED>
       </Stack>
     </div>
   );

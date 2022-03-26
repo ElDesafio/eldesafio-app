@@ -1,6 +1,7 @@
 import type { HTMLChakraProps } from '@chakra-ui/react';
 import { chakra, useColorModeValue as mode } from '@chakra-ui/react';
-import { Link as RemixLink } from 'remix';
+
+import { LinkED } from './LinkED';
 
 export const TabLink = (props: HTMLChakraProps<'a'> & { to?: string }) => (
   <chakra.a
@@ -17,7 +18,7 @@ export const TabLink = (props: HTMLChakraProps<'a'> & { to?: string }) => (
       color: mode('blue.600', 'blue.400'),
       borderColor: 'currentColor',
     }}
-    as={props.to ? RemixLink : undefined}
+    as={props.to ? LinkED : undefined}
     {...props}
     to={props.to}
   />

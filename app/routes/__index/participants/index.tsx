@@ -20,9 +20,10 @@ import {
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 import { getAge } from '~/util/utils';
 
@@ -50,11 +51,11 @@ export default function Participants() {
               Participantes
             </Heading>
             <Spacer />
-            <Link to="new">
+            <LinkED to="new">
               <Button leftIcon={<MdAdd />} colorScheme="blue">
                 Nuevo
               </Button>
-            </Link>
+            </LinkED>
           </Flex>
         </Container>
       </Box>
@@ -108,7 +109,7 @@ export default function Participants() {
                             <Box>
                               <Box fontSize="sm" fontWeight="medium">
                                 <ChakraLink
-                                  as={Link}
+                                  as={LinkED}
                                   to={`/participants/${participant.id}`}
                                 >
                                   {participant.firstName} {participant.lastName}
@@ -123,11 +124,11 @@ export default function Participants() {
                         <Td>{getAge(participant.birthday)}</Td>
                         <Td>{participant.dni}</Td>
                         <Td textAlign="right">
-                          <Link to={`${participant.id}/edit`}>
+                          <LinkED to={`${participant.id}/edit`}>
                             <Button variant="link" colorScheme="blue">
                               Edit
                             </Button>
-                          </Link>
+                          </LinkED>
                         </Td>
                       </Tr>
                     ))}

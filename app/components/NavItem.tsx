@@ -1,6 +1,7 @@
 import { Box, HStack } from '@chakra-ui/react';
 import type * as React from 'react';
-import { Link as RemixLink } from 'remix';
+
+import { LinkED } from './LinkED';
 
 interface NavItemProps {
   to?: string;
@@ -16,7 +17,7 @@ const DesktopNavItem = (props: DesktopNavItemProps) => {
   const { icon, label, to = '#', active } = props;
   return (
     <HStack
-      as={RemixLink}
+      as={LinkED}
       aria-current={active ? 'page' : undefined}
       spacing="2"
       px="3"
@@ -42,7 +43,7 @@ const MobileNavItem = (props: NavItemProps) => {
   const { label, to = '#', active } = props;
   return (
     <Box
-      as={RemixLink}
+      as={LinkED}
       display="block"
       to={to}
       px="3"

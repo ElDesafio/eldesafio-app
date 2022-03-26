@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { ClassAttendanceStatus } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
-import { Link, useNavigate, useSearchParams, useTransition } from 'remix';
+import { useNavigate, useSearchParams, useTransition } from 'remix';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -30,6 +30,7 @@ import { getAge, schemaCheckbox } from '~/util/utils';
 
 import { AlertED } from '../AlertED';
 import { FormRadioAttendance } from '../Form/FormRadioAttendance';
+import { LinkED } from '../LinkED';
 
 export const attendanceSchema = z.object({
   date: z.string().nonempty('Fecha no puede estar vacía'),
@@ -139,9 +140,9 @@ export function AttendanceForm({
                     </Box>
                     <Box>
                       <Box fontWeight="medium">
-                        <Link to={`/participants/${attendant.participantId}`}>
+                        <LinkED to={`/participants/${attendant.participantId}`}>
                           {attendant.firstName} {attendant.lastName}
-                        </Link>
+                        </LinkED>
                       </Box>
                       <Box color="gray.500">{getAge(attendant.birthday)}</Box>
                     </Box>

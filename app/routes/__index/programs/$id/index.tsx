@@ -38,7 +38,6 @@ import type { ActionFunction, LoaderFunction } from 'remix';
 import {
   Form,
   json,
-  Link,
   PrefetchPageLinks,
   useLoaderData,
   useTransition,
@@ -46,6 +45,7 @@ import {
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
@@ -256,11 +256,11 @@ export default function ProgramGeneral() {
         </Heading>
         <Spacer />
         {isUserAdmin && (
-          <Link to="edit">
+          <LinkED to="edit">
             <Button size="sm" leftIcon={<MdEdit />} colorScheme="blue">
               Editar
             </Button>
-          </Link>
+          </LinkED>
         )}
       </Flex>
 
@@ -407,7 +407,7 @@ export default function ProgramGeneral() {
                   <Tr key={participant.participantId}>
                     <Td>
                       <ChakraLink
-                        as={Link}
+                        as={LinkED}
                         to={`/participants/${participant.participantId}`}
                       >
                         {participant.participant.firstName}{' '}
@@ -446,7 +446,7 @@ export default function ProgramGeneral() {
                     <Td>
                       {index + 1}.{' '}
                       <ChakraLink
-                        as={Link}
+                        as={LinkED}
                         to={`/participants/${participant.participantId}`}
                       >
                         {participant.participant.firstName}{' '}
@@ -616,7 +616,7 @@ export default function ProgramGeneral() {
                   <Tr key={participant.participantId}>
                     <Td>
                       <ChakraLink
-                        as={Link}
+                        as={LinkED}
                         to={`/participants/${participant.participantId}`}
                       >
                         {participant.participant.firstName}{' '}

@@ -8,7 +8,6 @@ import {
   FormLabel,
   Heading,
   HStack,
-  Icon,
   IconButton,
   Link as ChakraLink,
   Spacer,
@@ -27,12 +26,13 @@ import {
 } from '@chakra-ui/react';
 import { MdAdd, MdPerson } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData, useSearchParams } from 'remix';
+import { useLoaderData, useSearchParams } from 'remix';
 import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import { TooltipAvatar } from '~/components/TooltipAvatar';
 import type { GetProgramDiary } from '~/services/programs.service';
 import { getProgramDiary } from '~/services/programs.service';
@@ -93,11 +93,11 @@ export default function ParticipantDiary() {
               }}
             />
           </FormControl>
-          <Link to="new">
+          <LinkED to="new">
             <Button size="sm" leftIcon={<MdAdd />} colorScheme="blue">
               Nuevo Evento
             </Button>
-          </Link>
+          </LinkED>
         </HStack>
       </Flex>
       <Divider mt="2" mb="8" />
@@ -148,7 +148,7 @@ export default function ParticipantDiary() {
                     <VStack alignItems="flex-start">
                       <Text fontSize="md" mb={1} fontWeight="500">
                         <ChakraLink
-                          as={Link}
+                          as={LinkED}
                           to={
                             'participants' in event
                               ? `${event.id}`
@@ -178,7 +178,7 @@ export default function ParticipantDiary() {
                               />
                             ))}
                           {!('participants' in event) && (
-                            <Link to={`/participants/${event.participantId}`}>
+                            <LinkED to={`/participants/${event.participantId}`}>
                               <TooltipAvatar
                                 size="sm"
                                 key={event.participant.id}
@@ -186,7 +186,7 @@ export default function ParticipantDiary() {
                                 name={`${event.participant.firstName} ${event.participant.lastName}`}
                                 src={event.participant.picture ?? undefined}
                               />
-                            </Link>
+                            </LinkED>
                           )}
                         </AvatarGroup>
                       </HStack>
