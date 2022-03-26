@@ -317,7 +317,8 @@ export default function ParticipantPrograms() {
       modalProgramId != null &&
       !programs.map((program) => program.id).includes(+modalProgramId)
     ) {
-      setSearchParams({}, { replace: false });
+      searchParams.delete('modalProgramId');
+      setSearchParams(searchParams, { replace: true });
     }
   }, []);
 

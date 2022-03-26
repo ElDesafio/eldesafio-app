@@ -86,20 +86,20 @@ export default function ParticipantGeneral() {
   let statusBtnColor: string;
   let statusBtnVariant: string;
 
-  switch (participant.yearStatus) {
-    case 'ACTIVE': {
+  switch (true) {
+    case participant.yearStatus === 'ACTIVE': {
       statusBtnText = 'Activo';
       statusBtnColor = 'blue';
       statusBtnVariant = 'solid';
       break;
     }
-    case 'INACTIVE': {
+    case participant.yearStatus === 'INACTIVE' && participant.wasEverActive: {
       statusBtnText = 'Inactivo';
       statusBtnColor = 'red';
       statusBtnVariant = 'solid';
       break;
     }
-    case 'WAITING': {
+    case participant.yearStatus === 'WAITING': {
       statusBtnText = 'Espera';
       statusBtnColor = 'blue';
       statusBtnVariant = 'outline';

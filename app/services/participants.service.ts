@@ -64,6 +64,7 @@ export async function getParticipantWithPrograms(id: number, year: number) {
   return {
     ...rest,
     yearStatus: yearStatus ? yearStatus.status : undefined,
+    wasEverActive: !!yearStatus?.wasEverActive,
     allProgramsIds: cleanPrograms.map((program) => program.id),
     programs: {
       active: cleanPrograms.filter((program) => program.status === 'ACTIVE'),
@@ -329,9 +330,11 @@ export async function updateParticipantYearStatus({
         status: 'ACTIVE',
         participantId,
         year,
+        wasEverActive: true,
       },
       update: {
         status: 'ACTIVE',
+        wasEverActive: true,
       },
     });
     return await createParticipantDiaryAutoEvent({

@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { Form, useMatches, useParams, useTransition } from 'remix';
+import { Form, useLocation, useMatches, useParams, useTransition } from 'remix';
 
 import type { GetParticipant } from '../../$id';
 import { FormTypeAddToProgram } from '../programs';
@@ -28,6 +28,7 @@ export function RemoveFromProgramModal({
   programId,
 }: RemoveFromProgramModalProps) {
   const { id } = useParams();
+  const location = useLocation();
 
   const participant = useMatches().find(
     (m) => m.pathname === `/participants/${id}`,
@@ -58,7 +59,7 @@ export function RemoveFromProgramModal({
 
         <ModalFooter>
           <Flex direction="row" justifyContent="space-between" width="100%">
-            <Form method="post" reloadDocument>
+            <Form method="post">
               <input
                 name="type"
                 type="hidden"
@@ -87,7 +88,7 @@ export function RemoveFromProgramModal({
               >
                 Cerrar
               </Button>
-              <Form method="post" reloadDocument>
+              <Form method="post">
                 <input
                   name="type"
                   type="hidden"
