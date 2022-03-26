@@ -785,6 +785,12 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
     }
   }
 }
+
+function getSelectedYearFromRequest(request: Request) {
+  const url = new URL(request.url);
+  return Number(url.searchParams.get('year') ?? DateTime.now().year.toString());
+}
+
 export {
   asOptionalField,
   convertStringToNumberForZod,
@@ -799,6 +805,7 @@ export {
   getNeighborhoodText,
   getParticipantDiaryTypeProps,
   getPhoneBelongsToText,
+  getSelectedYearFromRequest,
   getUserRoleName,
   getUserStatusName,
   isAdmin,

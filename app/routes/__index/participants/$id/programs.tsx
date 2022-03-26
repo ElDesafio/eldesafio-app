@@ -12,7 +12,7 @@ import {
   createParticipantDiaryAutoEvent,
   updateParticipantYearStatus,
 } from '~/services/participants.service';
-import { useSelectedYear } from '~/util/utils';
+import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
 import { ProgramBox } from './components/ProgramBox';
 import type { ParticipantDiary, Prisma, Sex } from '.prisma/client';
@@ -97,10 +97,8 @@ export type GetParticipantProgramsByYear = Prisma.PromiseReturnType<
 >;
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const url = new URL(request.url);
-  const selectedYear =
-    url.searchParams.get('year') ?? DateTime.now().year.toString();
   const { id } = z.object({ id: z.string() }).parse(params);
+  const selectedYear = getSelectedYearFromRequest(request);
 
   const participant = await db.participant.findUnique({
     where: {
