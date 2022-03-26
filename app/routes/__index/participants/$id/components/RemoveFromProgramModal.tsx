@@ -28,7 +28,11 @@ export function RemoveFromProgramModal({
   programId,
 }: RemoveFromProgramModalProps) {
   const { id } = useParams();
-  const location = useLocation();
+  const { pathname, search } = useLocation();
+
+  const searchParams = new URLSearchParams(search);
+  searchParams.delete('removeFromProgramId');
+  const actionURL = pathname + '?' + searchParams.toString();
 
   const participant = useMatches().find(
     (m) => m.pathname === `/participants/${id}`,
@@ -59,7 +63,7 @@ export function RemoveFromProgramModal({
 
         <ModalFooter>
           <Flex direction="row" justifyContent="space-between" width="100%">
-            <Form method="post">
+            <Form method="post" action={actionURL}>
               <input
                 name="type"
                 type="hidden"
@@ -88,7 +92,7 @@ export function RemoveFromProgramModal({
               >
                 Cerrar
               </Button>
-              <Form method="post">
+              <Form method="post" action={actionURL}>
                 <input
                   name="type"
                   type="hidden"
