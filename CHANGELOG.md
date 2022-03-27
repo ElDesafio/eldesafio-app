@@ -1,3 +1,15 @@
+# v0.13.0 (Sun Mar 27 2022)
+
+#### 🚀 Enhancement
+
+- Mark participants as Inactive for the year [#107](https://github.com/ElDesafio/eldesafio-app/pull/107) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.12.2 (Thu Mar 24 2022)
 
 #### 🔩 Dependency Updates
