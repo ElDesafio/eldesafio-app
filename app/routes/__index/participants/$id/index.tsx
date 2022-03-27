@@ -16,6 +16,7 @@ import {
   Tooltip,
   Tr,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import type { ActionFunction, LoaderFunction } from 'remix';
@@ -168,7 +169,7 @@ export default function ParticipantGeneral() {
     isUserAdmin: boolean;
     timezone: string;
   }>();
-
+  const [btnHover, setBtnHover] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const currentYear = useSelectedYear();
 
@@ -187,6 +188,8 @@ export default function ParticipantGeneral() {
   let statusBtnText: string;
   let statusBtnColor: string;
   let statusBtnVariant: string;
+  let tooltipText = `Dar de baja a ${participant.firstName} en el año ${currentYear}`;
+  let inactiveModalEnabled = true;
 
   switch (true) {
     case participant.yearStatus === 'ACTIVE': {
@@ -199,6 +202,8 @@ export default function ParticipantGeneral() {
       statusBtnText = 'Inactivo';
       statusBtnColor = 'red';
       statusBtnVariant = 'solid';
+      tooltipText = 'Para activar al participante agregarlo a algún programa';
+      inactiveModalEnabled = false;
       break;
     }
     case participant.yearStatus === 'WAITING': {
@@ -212,8 +217,20 @@ export default function ParticipantGeneral() {
       statusBtnText = 'No participó';
       statusBtnColor = 'gray';
       statusBtnVariant = 'solid';
+      tooltipText = 'Para activar al participante agregarlo a algún programa';
+      inactiveModalEnabled = false;
       break;
     }
+  }
+
+  if (
+    (participant.yearStatus === 'ACTIVE' ||
+      participant.yearStatus === 'WAITING') &&
+    btnHover
+  ) {
+    statusBtnText = 'Dar de baja';
+    statusBtnColor = 'red';
+    statusBtnVariant = 'solid';
   }
 
   const toggleProgram = (programId: number) => {
@@ -370,17 +387,17 @@ export default function ParticipantGeneral() {
           order={{ base: 1, lg: 2 }}
         >
           <Avatar size="2xl" src={participant.picture || undefined} />
-          <Tooltip
-            placement="top-end"
-            hasArrow
-            label={`Dar de baja a ${participant.firstName} en el año ${currentYear}`}
-          >
+          <Tooltip placement="top-end" hasArrow label={tooltipText}>
             <Button
               variant={statusBtnVariant}
               colorScheme={statusBtnColor}
+              onMouseEnter={() => setBtnHover(true)}
+              onMouseLeave={() => setBtnHover(false)}
               onClick={() => {
-                searchParams.set('inactiveModal', 'true');
-                setSearchParams(searchParams, { replace: true });
+                if (inactiveModalEnabled) {
+                  searchParams.set('inactiveModal', 'true');
+                  setSearchParams(searchParams, { replace: true });
+                }
               }}
             >
               {statusBtnText}
