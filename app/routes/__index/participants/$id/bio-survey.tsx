@@ -8,10 +8,11 @@ import {
 } from '@chakra-ui/react';
 import { FormAnswerOptions } from '@prisma/client';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import type { GetParticipantBioSurvey } from '~/services/participants.service';
 import { getParticipantBioSurvey } from '~/services/participants.service';
 import { getFormAnswerOptionName } from '~/util/utils';
@@ -194,9 +195,9 @@ export default function ParticipantHealth() {
         <AlertED title="Vacío" description="No hay datos biográficos" />
       )}
       <Stack direction="row" mt={6} justifyContent="center" width="full">
-        <Link to="edit">
+        <LinkED to="edit">
           <Button colorScheme="blue">Editar</Button>
-        </Link>
+        </LinkED>
       </Stack>
     </div>
   );

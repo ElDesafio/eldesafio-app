@@ -15,9 +15,10 @@ import {
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 
 import type { School } from '.prisma/client';
@@ -42,11 +43,11 @@ export default function Programs() {
               Escuelas
             </Heading>
             <Spacer />
-            <Link to="new">
+            <LinkED to="new">
               <Button leftIcon={<MdAdd />} colorScheme="blue">
                 Nueva
               </Button>
-            </Link>
+            </LinkED>
           </Flex>
         </Container>
       </Box>
@@ -85,11 +86,11 @@ export default function Programs() {
                       </Td>
                       <Td>{school.phone}</Td>
                       <Td textAlign="right">
-                        <Link to={`${school.id}/edit`}>
+                        <LinkED to={`${school.id}/edit`}>
                           <Button variant="link" colorScheme="blue">
                             Edit
                           </Button>
-                        </Link>
+                        </LinkED>
                       </Td>
                     </Tr>
                   ))}

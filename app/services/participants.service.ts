@@ -23,12 +23,17 @@ export type GetParticipantBioSurvey = Prisma.PromiseReturnType<
   typeof getParticipantBioSurvey
 >;
 
-export async function getParticipantWithPrograms(id: number) {
+export async function getParticipantWithPrograms(id: number, year: number) {
   const participant = await db.participant.findUnique({
     where: { id: +id },
     include: {
       status: true,
       programs: {
+        where: {
+          program: {
+            year,
+          },
+        },
         select: {
           status: true,
           program: {
@@ -54,8 +59,12 @@ export async function getParticipantWithPrograms(id: number) {
     status: program.status,
   }));
 
+  const yearStatus = rest.status.filter((status) => status.year === year)[0];
+
   return {
     ...rest,
+    yearStatus: yearStatus ? yearStatus.status : undefined,
+    wasEverActive: !!yearStatus?.wasEverActive,
     allProgramsIds: cleanPrograms.map((program) => program.id),
     programs: {
       active: cleanPrograms.filter((program) => program.status === 'ACTIVE'),
@@ -82,7 +91,6 @@ export async function getParticipantDiary({
   includeProgramEvents?: boolean;
   year: number;
 }) {
-  console.log(year);
   const whereAnd: Array<Prisma.ParticipantDiaryWhereInput> = [];
   whereAnd.push({
     participantId,
@@ -206,19 +214,15 @@ export async function createParticipantDiaryAutoEvent({
   userId,
   title,
   type,
+  description,
 }: {
   participantId: number;
   programId?: number;
   userId: number;
   title: string;
   type: ParticipantDiaryType;
+  description?: string;
 }) {
-  const [year, month, day] = DateTime.local({
-    zone: 'America/Argentina/Buenos_Aires',
-  })
-    .toISODate()
-    .split('-');
-
   const programs:
     | Prisma.ParticipantDiaryProgramsCreateNestedManyWithoutParticipantDiaryInput
     | undefined = programId
@@ -235,7 +239,8 @@ export async function createParticipantDiaryAutoEvent({
       title,
       type,
       isAutoEvent: true,
-      date: DateTime.utc(+year, +month, +day).toJSDate(),
+      description,
+      date: DateTime.utc().toJSDate(),
       createdBy: userId,
       updatedBy: userId,
       programs,
@@ -321,9 +326,11 @@ export async function updateParticipantYearStatus({
         status: 'ACTIVE',
         participantId,
         year,
+        wasEverActive: true,
       },
       update: {
         status: 'ACTIVE',
+        wasEverActive: true,
       },
     });
     return await createParticipantDiaryAutoEvent({

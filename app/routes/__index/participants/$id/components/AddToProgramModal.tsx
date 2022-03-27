@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { Form, useMatches, useParams, useTransition } from 'remix';
+import { Form, useLocation, useMatches, useParams, useTransition } from 'remix';
 
 import type { GetParticipant } from '../../$id';
 import { FormTypeAddToProgram } from '../programs';
@@ -30,6 +30,11 @@ export function AddToProgramModal({
   isOnWaitingList,
 }: AddToProgramModalProps) {
   const { id } = useParams();
+  const { pathname, search } = useLocation();
+
+  const searchParams = new URLSearchParams(search);
+  searchParams.delete('addToProgramId');
+  const actionURL = pathname + '?' + searchParams.toString();
 
   const participant = useMatches().find(
     (m) => m.pathname === `/participants/${id}`,
@@ -64,7 +69,7 @@ export function AddToProgramModal({
         <ModalFooter>
           <Flex direction="row" justifyContent="space-between" width="100%">
             {isOnWaitingList ? (
-              <Form method="post">
+              <Form method="post" action={actionURL}>
                 <input
                   name="type"
                   type="hidden"
@@ -84,7 +89,7 @@ export function AddToProgramModal({
                 </Button>
               </Form>
             ) : (
-              <Form method="post">
+              <Form method="post" action={actionURL}>
                 <input
                   name="type"
                   type="hidden"
@@ -114,7 +119,7 @@ export function AddToProgramModal({
               >
                 Cerrar
               </Button>
-              <Form method="post">
+              <Form method="post" action={actionURL}>
                 <input
                   name="type"
                   type="hidden"

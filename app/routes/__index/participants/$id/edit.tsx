@@ -1,4 +1,5 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import { DateTime } from 'luxon';
 import type { ActionFunction, LoaderFunction } from 'remix';
 import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
@@ -72,7 +73,16 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect(`/participants/${id}`);
+  const url = new URL(request.url);
+  const selectedYear = url.searchParams.get('year');
+
+  let returnURL = `/participants/${id}`;
+
+  if (selectedYear) {
+    returnURL += `?year=${selectedYear}`;
+  }
+
+  return redirect(returnURL);
 };
 
 export default function EditParticipant() {

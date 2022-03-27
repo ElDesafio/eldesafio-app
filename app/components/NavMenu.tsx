@@ -1,8 +1,8 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Box, Flex, HStack } from '@chakra-ui/react';
 import { AiOutlineTeam } from 'react-icons/ai';
-import { FaSchool } from 'react-icons/fa';
-import { MdGroup, MdOutlineFamilyRestroom, MdSchool } from 'react-icons/md';
+import { FaChild, FaSchool } from 'react-icons/fa';
+import { MdOutlineFamilyRestroom, MdSchool } from 'react-icons/md';
 import { useLocation } from 'remix';
 
 import { NavItem } from './NavItem';
@@ -14,7 +14,7 @@ const MobileNavMenu = (props: { isOpen?: boolean }) => {
       label: 'Participantes',
       to: '/participants',
       active: location.pathname.startsWith('/participants'),
-      icon: <MdGroup />,
+      icon: <FaChild />,
     },
     {
       label: 'Programas',
@@ -84,7 +84,7 @@ const DesktopNavMenu = () => {
       label: 'Participantes',
       to: '/participants',
       active: location.pathname.startsWith('/participants'),
-      icon: <MdGroup />,
+      icon: <FaChild />,
     },
     {
       label: 'Programas',

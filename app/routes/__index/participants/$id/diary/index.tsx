@@ -22,19 +22,23 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import { DateTime } from 'luxon';
 import { MdAdd, MdSchool } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData, useSearchParams } from 'remix';
+import { useLoaderData, useSearchParams } from 'remix';
 import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import type { GetParticipantDiary } from '~/services/participants.service';
 import { getParticipantDiary } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
-import { getFormattedDate, getParticipantDiaryTypeProps } from '~/util/utils';
+import {
+  getFormattedDate,
+  getParticipantDiaryTypeProps,
+  getSelectedYearFromRequest,
+} from '~/util/utils';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
@@ -43,9 +47,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const url = new URL(request.url);
 
-  const selectedYear = Number(
-    url.searchParams.get('year') ?? DateTime.now().year.toString(),
-  );
+  const selectedYear = getSelectedYearFromRequest(request);
 
   const diary = await getParticipantDiary({
     participantId: id,
@@ -89,11 +91,11 @@ export default function ParticipantDiary() {
               }}
             />
           </FormControl>
-          <Link to="new">
+          <LinkED to="new">
             <Button size="sm" leftIcon={<MdAdd />} colorScheme="blue">
               Nuevo Evento
             </Button>
-          </Link>
+          </LinkED>
         </HStack>
       </Flex>
       <Divider mt="2" mb="8" />
@@ -139,7 +141,7 @@ export default function ParticipantDiary() {
                   <Td>
                     <VStack alignItems="flex-start">
                       <Text fontSize="md" mb={1} fontWeight="500">
-                        <Link
+                        <LinkED
                           to={
                             'programs' in event
                               ? `${event.id}`
@@ -147,13 +149,13 @@ export default function ParticipantDiary() {
                           }
                         >
                           {event.title}
-                        </Link>
+                        </LinkED>
                       </Text>
                       <HStack spacing={1}>
                         {/* If there are programs in the event, it means it's a Participant event. If not, it's a Program event */}
                         {'programs' in event &&
                           event.programs.map(({ program }) => (
-                            <Link
+                            <LinkED
                               key={program.id}
                               to={`/programs/${program.id}`}
                             >
@@ -164,14 +166,14 @@ export default function ParticipantDiary() {
                               >
                                 {program.name}
                               </Tag>
-                            </Link>
+                            </LinkED>
                           ))}
                         {!('programs' in event) && (
-                          <Link to={`/programs/${event.programId}`}>
+                          <LinkED to={`/programs/${event.programId}`}>
                             <Tag size="sm" variant="outline" colorScheme="gray">
                               {event.program.name}
                             </Tag>
-                          </Link>
+                          </LinkED>
                         )}
                       </HStack>
                     </VStack>
@@ -180,6 +182,7 @@ export default function ParticipantDiary() {
                     <HStack spacing={1}>
                       <Tag
                         size="sm"
+                        whiteSpace="nowrap"
                         variant={
                           getParticipantDiaryTypeProps(event.type).variant
                         }

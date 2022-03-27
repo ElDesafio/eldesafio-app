@@ -120,7 +120,7 @@ model Participant {
   firstName                  String
   lastName                   String
   birthday                   String
-  dni                        String
+  dni                        String                     @unique
   sex                        Sex
   email                      String?
   neighborhood               Neighborhood?
@@ -160,8 +160,9 @@ model Participant {
 model ParticipantStatus {
   year          Int
   participantId Int
-  status        ParticipantYearStatus @default(value: INACTIVE)
   participant   Participant           @relation(fields: [participantId], references: [id])
+  status        ParticipantYearStatus @default(value: INACTIVE)
+  wasEverActive Boolean               @default(value: false)
 
   @@id([year, participantId])
 }

@@ -14,7 +14,7 @@ import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
-import { useNavigate, useTransition } from 'remix';
+import { useLocation, useNavigate, useTransition } from 'remix';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -98,6 +98,9 @@ export function ParticipantForm({
   );
   let navigate = useNavigate();
 
+  const { pathname, search } = useLocation();
+  const actionURL = pathname + search;
+
   const transition = useTransition();
 
   const isSaving = transition.state === 'submitting';
@@ -108,6 +111,7 @@ export function ParticipantForm({
         validator={participantFormValidator}
         defaultValues={defaultValues}
         method="post"
+        action={actionURL}
         noValidate
       >
         <Stack spacing="4" divider={<StackDivider />}>

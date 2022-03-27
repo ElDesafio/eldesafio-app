@@ -15,11 +15,12 @@ import {
 } from '@chakra-ui/react';
 import { css } from '@emotion/react';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
+import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { TooltipAvatar } from '~/components/TooltipAvatar';
 import type { GetProgramDiaryEvent } from '~/services/programs.service';
@@ -52,11 +53,11 @@ export default function ParticipantDiaryEvent() {
           {event.title}
         </Heading>
         <Spacer />
-        <Link to="edit">
+        <LinkED to="edit">
           <Button size="sm" colorScheme="blue">
             Editar
           </Button>
-        </Link>
+        </LinkED>
       </Flex>
       <Divider mt="2" mb="8" />
       <Table className="general-info-table" variant="simple">

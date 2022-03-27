@@ -21,20 +21,15 @@ import type { UserStatus } from '@prisma/client';
 import { Roles } from '@prisma/client';
 import { MdEdit } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
+import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
-import { authenticator } from '~/services/auth.server';
 import type { GetUser } from '~/services/users.service';
 import { getLoggedInUser, getUser } from '~/services/users.service';
-import {
-  getAge,
-  getFormattedDate,
-  getUserRoleName,
-  isAdmin,
-} from '~/util/utils';
+import { getAge, getFormattedDate, getUserRoleName } from '~/util/utils';
 
 function userStatusHelper(status: UserStatus) {
   switch (status) {
@@ -87,11 +82,11 @@ export default function UserGeneral() {
             </Heading>
             <Spacer />
             {isLoggedinUserAdmin && (
-              <Link to="edit">
+              <LinkED to="edit">
                 <Button leftIcon={<MdEdit />} colorScheme="blue">
                   Editar
                 </Button>
-              </Link>
+              </LinkED>
             )}
           </Flex>
         </Container>

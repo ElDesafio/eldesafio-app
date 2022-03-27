@@ -47,16 +47,11 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
         value={`${program.id}`} // This is not really used, but it's required for CheckboxCard
         onClick={() => {
           if (isActive) {
-            setSearchParams(
-              { removeFromProgramId: id.toString() },
-              { replace: true },
-            );
+            searchParams.set('removeFromProgramId', id.toString());
           } else {
-            setSearchParams(
-              { addToProgramId: id.toString() },
-              { replace: true },
-            );
+            searchParams.set('addToProgramId', id.toString());
           }
+          setSearchParams(searchParams, { replace: true });
         }}
         maxWidth="400px"
         checkboxProps={{
@@ -106,14 +101,20 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
       </CheckboxCard>
       <AddToProgramModal
         isOpen={addToProgramId === id.toString()}
-        onClose={() => setSearchParams({}, { replace: true })}
+        onClose={() => {
+          searchParams.delete('addToProgramId');
+          setSearchParams(searchParams, { replace: true });
+        }}
         programId={id}
         programName={name}
         isOnWaitingList={isOnWaitingList}
       />
       <RemoveFromProgramModal
         isOpen={removeFromProgramId === id.toString()}
-        onClose={() => setSearchParams({}, { replace: true })}
+        onClose={() => {
+          searchParams.delete('removeFromProgramId');
+          setSearchParams(searchParams, { replace: true });
+        }}
         programId={id}
         programName={name}
       />

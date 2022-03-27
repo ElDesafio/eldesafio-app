@@ -22,8 +22,9 @@ import type { Prisma } from '@prisma/client';
 import { Roles } from '@prisma/client';
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 
+import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 import { getUserRoleName } from '~/util/utils';
 
@@ -59,11 +60,11 @@ export default function Participants() {
               Staff
             </Heading>
             <Spacer />
-            <Link to="new">
+            <LinkED to="new">
               <Button leftIcon={<MdAdd />} colorScheme="blue">
                 Nuevo
               </Button>
-            </Link>
+            </LinkED>
           </Flex>
         </Container>
       </Box>
@@ -105,7 +106,7 @@ export default function Participants() {
                         </Box>
                         <Box>
                           <ChakraLink
-                            as={Link}
+                            as={LinkED}
                             to={`${user.id}`}
                             fontWeight="medium"
                           >
@@ -147,11 +148,11 @@ export default function Participants() {
                     <Td>{user.phone1}</Td>
                     <Td>{user.phone2}</Td>
                     <Td textAlign="right">
-                      <Link to={`${user.id}/edit`}>
+                      <LinkED to={`${user.id}/edit`}>
                         <Button variant="link" colorScheme="blue">
                           Edit
                         </Button>
-                      </Link>
+                      </LinkED>
                     </Td>
                   </Tr>
                 ))}

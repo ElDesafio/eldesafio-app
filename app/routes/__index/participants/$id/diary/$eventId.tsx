@@ -14,11 +14,12 @@ import {
 } from '@chakra-ui/react';
 import { css } from '@emotion/react';
 import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
+import { useLoaderData } from 'remix';
 import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
+import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import type { GetParticipantDiaryEvent } from '~/services/participants.service';
 import { getParticipantDiaryEvent } from '~/services/participants.service';
@@ -50,11 +51,11 @@ export default function ParticipantDiaryEvent() {
           {event.title}
         </Heading>
         <Spacer />
-        <Link to="edit">
+        <LinkED to="edit">
           <Button size="sm" colorScheme="blue">
             Editar
           </Button>
-        </Link>
+        </LinkED>
       </Flex>
       <Divider mt="2" mb="8" />
       <Table className="general-info-table" variant="simple">
@@ -93,11 +94,11 @@ export default function ParticipantDiaryEvent() {
               {' '}
               <HStack spacing={1}>
                 {event.programs.map(({ program }) => (
-                  <Link key={program.id} to={`/programs/${program.id}`}>
+                  <LinkED key={program.id} to={`/programs/${program.id}`}>
                     <Tag size="sm" variant="outline" colorScheme="gray">
                       {program.name}
                     </Tag>
-                  </Link>
+                  </LinkED>
                 ))}
               </HStack>
             </Td>
