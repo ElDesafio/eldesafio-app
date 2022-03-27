@@ -182,6 +182,7 @@ export default function ParticipantDiary() {
                     <HStack spacing={1}>
                       <Tag
                         size="sm"
+                        whiteSpace="nowrap"
                         variant={
                           getParticipantDiaryTypeProps(event.type).variant
                         }

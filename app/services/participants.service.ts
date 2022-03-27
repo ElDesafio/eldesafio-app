@@ -214,19 +214,15 @@ export async function createParticipantDiaryAutoEvent({
   userId,
   title,
   type,
+  description,
 }: {
   participantId: number;
   programId?: number;
   userId: number;
   title: string;
   type: ParticipantDiaryType;
+  description?: string;
 }) {
-  const [year, month, day] = DateTime.local({
-    zone: 'America/Argentina/Buenos_Aires',
-  })
-    .toISODate()
-    .split('-');
-
   const programs:
     | Prisma.ParticipantDiaryProgramsCreateNestedManyWithoutParticipantDiaryInput
     | undefined = programId
@@ -243,7 +239,8 @@ export async function createParticipantDiaryAutoEvent({
       title,
       type,
       isAutoEvent: true,
-      date: DateTime.utc(+year, +month, +day).toJSDate(),
+      description,
+      date: DateTime.utc().toJSDate(),
       createdBy: userId,
       updatedBy: userId,
       programs,

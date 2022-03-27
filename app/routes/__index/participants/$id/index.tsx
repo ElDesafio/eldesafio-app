@@ -16,16 +16,22 @@ import {
   Tooltip,
   Tr,
 } from '@chakra-ui/react';
-import type { LoaderFunction } from '@remix-run/server-runtime';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
-import { useLoaderData, useSearchParams } from 'remix';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { json, redirect, useLoaderData, useSearchParams } from 'remix';
+import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
+import { authenticator } from '~/services/auth.server';
+import { db } from '~/services/db.server';
 import type { GetParticipantWithPrograms } from '~/services/participants.service';
-import { getParticipantWithPrograms } from '~/services/participants.service';
+import {
+  createParticipantDiaryAutoEvent,
+  getParticipantWithPrograms,
+} from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
 import {
   getAge,
@@ -34,8 +40,13 @@ import {
   getPhoneBelongsToText,
   getSelectedYearFromRequest,
   PartcipantSexText,
+  useSelectedYear,
 } from '~/util/utils';
 
+import {
+  InactiveModal,
+  inactiveModalValidator,
+} from './components/InactiveModal';
 import { ParticipantChartBars } from './components/ParticipantChartBars';
 import { ParticipantChartPie } from './components/ParticipantChartPie';
 
@@ -57,6 +68,99 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   return { participant, isUserAdmin, timezone: loggedinUser.timezone };
 };
 
+// ACTION
+export const action: ActionFunction = async ({ request, params }) => {
+  const { id } = z.object({ id: z.string() }).parse(params);
+
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
+
+  if (!user) throw json('Unauthorized', { status: 403 });
+
+  const formData = Object.fromEntries(await request.formData());
+
+  const fieldValues = await inactiveModalValidator.validate(formData);
+
+  if (fieldValues.error) return validationError(fieldValues.error);
+
+  const { description, year, type } = fieldValues.data;
+
+  await db.$transaction(async (db) => {
+    const programs = await db.participantsOnPrograms.findMany({
+      where: {
+        participantId: +id,
+        program: {
+          year: +year,
+        },
+      },
+      select: {
+        programId: true,
+      },
+    });
+
+    programs.forEach(async (program) => {
+      await db.participantsOnPrograms.update({
+        where: {
+          programId_participantId: {
+            programId: program.programId,
+            participantId: +id,
+          },
+        },
+        data: {
+          status: 'INACTIVE',
+          waitingListOrder: null,
+          updatedBy: user.id,
+        },
+      });
+      await createParticipantDiaryAutoEvent({
+        participantId: +id,
+        title: `Dado de baja del programa`,
+        type,
+        programId: program.programId,
+        userId: user.id,
+        description: description ?? undefined,
+      });
+    });
+
+    await db.participantStatus.upsert({
+      where: {
+        year_participantId: {
+          participantId: +id,
+          year,
+        },
+      },
+      create: {
+        status: 'INACTIVE',
+        participantId: +id,
+        year,
+      },
+      update: {
+        status: 'INACTIVE',
+      },
+    });
+
+    return await createParticipantDiaryAutoEvent({
+      participantId: +id,
+      userId: user.id,
+      type: 'YEAR_STATUS_INACTIVE',
+      title: `El estado del participante en el año ${year} fue cambiado a: inactivo`,
+      description: description ?? undefined,
+    });
+  });
+
+  const url = new URL(request.url);
+  const selectedYear = url.searchParams.get('year');
+
+  let returnURL = `/participants/${id}`;
+
+  if (selectedYear) {
+    returnURL += `?year=${selectedYear}`;
+  }
+
+  return redirect(returnURL);
+};
+
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export default function ParticipantGeneral() {
   const { participant, isUserAdmin, timezone } = useLoaderData<{
@@ -66,7 +170,7 @@ export default function ParticipantGeneral() {
   }>();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  // const currentYear = useSelectedYear();
+  const currentYear = useSelectedYear();
 
   const hideProgramsIds = searchParams
     .getAll('hidePrograms')
@@ -266,9 +370,22 @@ export default function ParticipantGeneral() {
           order={{ base: 1, lg: 2 }}
         >
           <Avatar size="2xl" src={participant.picture || undefined} />
-          <Button variant={statusBtnVariant} colorScheme={statusBtnColor}>
-            {statusBtnText}
-          </Button>
+          <Tooltip
+            placement="top-end"
+            hasArrow
+            label={`Dar de baja a ${participant.firstName} en el año ${currentYear}`}
+          >
+            <Button
+              variant={statusBtnVariant}
+              colorScheme={statusBtnColor}
+              onClick={() => {
+                searchParams.set('inactiveModal', 'true');
+                setSearchParams(searchParams, { replace: true });
+              }}
+            >
+              {statusBtnText}
+            </Button>
+          </Tooltip>
         </Stack>
       </Stack>
       <Flex alignItems="center">
@@ -401,6 +518,18 @@ export default function ParticipantGeneral() {
           description="El participante no está en ningún programa"
         />
       )}
+      <InactiveModal
+        isOpen={searchParams.has('inactiveModal')}
+        onClose={() => {
+          searchParams.delete('inactiveModal');
+          setSearchParams(searchParams, { replace: true });
+        }}
+        participant={{
+          id: participant.id,
+          firstName: participant.firstName,
+          lastName: participant.lastName,
+        }}
+      />
     </>
   );
 }
