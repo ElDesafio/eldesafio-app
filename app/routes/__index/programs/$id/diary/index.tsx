@@ -64,8 +64,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export default function ParticipantDiary() {
-  const { diary, timezone } =
-    useLoaderData<{ diary: GetProgramDiary; timezone: string }>();
+  const { diary, timezone } = useLoaderData<{
+    diary: GetProgramDiary;
+    timezone: string;
+  }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (
