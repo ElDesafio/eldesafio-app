@@ -1,3 +1,15 @@
+# v0.14.0 (Mon Mar 28 2022)
+
+#### 🚀 Enhancement
+
+- Add-parent-commitment [#108](https://github.com/ElDesafio/eldesafio-app/pull/108) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.13.0 (Sun Mar 27 2022)
 
 #### 🚀 Enhancement
