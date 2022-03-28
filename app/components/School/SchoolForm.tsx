@@ -9,7 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { useNavigate } from 'remix';
+import { useNavigate, useTransition } from 'remix';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -57,6 +57,10 @@ export function SchoolForm({
 }) {
   let navigate = useNavigate();
 
+  const transition = useTransition();
+
+  const isSaving = transition.state === 'submitting';
+
   return (
     <Box as="main" py="8" flex="1">
       <Container maxW="8xl" id="xxx">
@@ -66,7 +70,7 @@ export function SchoolForm({
           rounded="lg"
           shadow="base"
         >
-          <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
+          <Box px={4} maxWidth="full">
             <ValidatedForm
               validator={schoolFormValidator}
               defaultValues={defaultValues}
@@ -114,10 +118,10 @@ export function SchoolForm({
                 </FieldGroup>
               </Stack>
               <HStack width="full" justifyContent="center" mt="8">
-                <FormSubmitButton />
                 <Button variant="outline" onClick={() => navigate(-1)}>
                   Cancelar
                 </Button>
+                <FormSubmitButton isLoading={isSaving} />
               </HStack>
             </ValidatedForm>
           </Box>
