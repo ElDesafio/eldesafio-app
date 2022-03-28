@@ -28,6 +28,11 @@ export async function getParticipantWithPrograms(id: number, year: number) {
     where: { id: +id },
     include: {
       status: true,
+      commitment: {
+        where: {
+          year,
+        },
+      },
       programs: {
         where: {
           program: {
@@ -51,7 +56,7 @@ export async function getParticipantWithPrograms(id: number, year: number) {
     return undefined;
   }
 
-  const { programs, ...rest } = participant;
+  const { programs, commitment, ...rest } = participant;
 
   const cleanPrograms = programs.map((program) => ({
     id: program.program.id,
@@ -63,6 +68,7 @@ export async function getParticipantWithPrograms(id: number, year: number) {
 
   return {
     ...rest,
+    commitment: commitment[0] ? commitment[0] : undefined,
     yearStatus: yearStatus ? yearStatus.status : undefined,
     wasEverActive: !!yearStatus?.wasEverActive,
     allProgramsIds: cleanPrograms.map((program) => program.id),

@@ -155,6 +155,36 @@ model Participant {
   classes                    ParticipantsOnClasses[]    @relation("ParticipantsOnClassesByParticipant")
   diary                      ParticipantDiary[]
   ProgramDiaryParticipants   ProgramDiaryParticipants[]
+  commitment                 ParticipantCommitment[]
+}
+
+model ParticipantCommitment {
+  year                 Int
+  participantId        Int
+  participant          Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  commitmentVolunteer  Boolean     @default(false)
+  commitmentDonation   Boolean     @default(false)
+  aprilStatus          Boolean?
+  aprilDescription     String?
+  mayStatus            Boolean?
+  mayDescription       String?
+  juneStatus           Boolean?
+  juneDescription      String?
+  julyStatus           Boolean?
+  julyDescription      String?
+  augustStatus         Boolean?
+  augustDescription    String?
+  septemberStatus      Boolean?
+  septemberDescription String?
+  octoberStatus        Boolean?
+  octoberDescription   String?
+  novemberStatus       Boolean?
+  novemberDescription  String?
+  decemberStatus       Boolean?
+  decemberDescription  String?
+
+
+  @@id([year, participantId])
 }
 
 model ParticipantStatus {

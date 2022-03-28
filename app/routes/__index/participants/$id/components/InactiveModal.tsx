@@ -68,8 +68,6 @@ export function InactiveModal({ isOpen, onClose }: InactiveModalProps) {
   searchParams.delete('inactiveModal');
   const actionURL = pathname + '?index&' + searchParams.toString();
 
-  console.log(actionURL);
-
   const participant = useMatches().find(
     (m) => m.pathname === `/participants/${id}`,
   )?.data as GetParticipant;
@@ -78,17 +76,8 @@ export function InactiveModal({ isOpen, onClose }: InactiveModalProps) {
 
   const transition = useTransition();
 
-  const isRemoving =
-    transition?.submission?.formData.get('type') ===
-    FormTypeAddToProgram.REMOVE;
-
-  const isAddingToWaitingList =
-    transition?.submission?.formData.get('type') ===
-    FormTypeAddToProgram.WAITING;
-
-  const isAdding =
-    transition?.submission?.formData.get('type') ===
-    FormTypeAddToProgram.ACTIVE;
+  const isChangingStatus =
+    transition?.submission?.formData.get('formType') === 'changeYearStatus';
 
   const eventTypeOptions: { label: string; value: ParticipantDiaryType }[] = [
     {
@@ -183,12 +172,13 @@ export function InactiveModal({ isOpen, onClose }: InactiveModalProps) {
                 Cerrar
               </Button>
               <input name="year" type="hidden" value={selectedYear} />
+              <input name="formType" type="hidden" value="changeYearStatus" />
               <Button
                 type="submit"
                 tabIndex={1}
                 size="sm"
                 colorScheme="red"
-                isLoading={isAdding}
+                isLoading={isChangingStatus}
               >
                 Dar de baja
               </Button>
