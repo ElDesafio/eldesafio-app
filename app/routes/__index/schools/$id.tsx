@@ -1,37 +1,27 @@
 import {
-  Avatar,
   Box,
   Button,
   Container,
   Divider,
   Flex,
   Heading,
-  HStack,
   Spacer,
   Stack,
   Table,
-  Tag,
-  TagLabel,
   Tbody,
   Td,
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { UserStatus } from '@prisma/client';
-import { Roles } from '@prisma/client';
 import { MdEdit } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
 import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
-import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
-import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import type { GetSchool } from '~/services/school.service';
 import { getSchool } from '~/services/school.service';
-import type { GetUser } from '~/services/users.service';
-import { getLoggedInUser, getUser } from '~/services/users.service';
-import { getAge, getFormattedDate, getUserRoleName } from '~/util/utils';
+import { getLoggedInUser } from '~/services/users.service';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -44,8 +34,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function UserGeneral() {
-  const { school, isAdmin } =
-    useLoaderData<{ school: GetSchool; isAdmin: boolean }>();
+  const { school, isAdmin } = useLoaderData<{
+    school: GetSchool;
+    isAdmin: boolean;
+  }>();
 
   if (!school) {
     throw new Error("School doesn't exist");

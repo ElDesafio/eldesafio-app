@@ -39,8 +39,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export default function ParticipantDiaryEvent() {
-  const { event, timezone } =
-    useLoaderData<{ event: GetProgramDiaryEvent; timezone: string }>();
+  const { event, timezone } = useLoaderData<{
+    event: GetProgramDiaryEvent;
+    timezone: string;
+  }>();
 
   if (!event) {
     throw new Error("The event doesn't exist");

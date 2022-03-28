@@ -60,8 +60,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function UserGeneral() {
-  const { user, isLoggedinUserAdmin } =
-    useLoaderData<{ user: GetUser; isLoggedinUserAdmin: boolean }>();
+  const { user, isLoggedinUserAdmin } = useLoaderData<{
+    user: GetUser;
+    isLoggedinUserAdmin: boolean;
+  }>();
 
   if (!user) {
     throw new Error("User doesn't exist");
