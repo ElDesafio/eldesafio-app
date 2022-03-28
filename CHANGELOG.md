@@ -1,3 +1,17 @@
+# v0.15.1 (Mon Mar 28 2022)
+
+#### 🔩 Dependency Updates
+
+- Update dependencies (non-major) [#105](https://github.com/ElDesafio/eldesafio-app/pull/105) ([@renovate-bot](https://github.com/renovate-bot) [@lucascurti](https://github.com/lucascurti) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 3
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v0.15.0 (Mon Mar 28 2022)
 
 #### 🚀 Enhancement
