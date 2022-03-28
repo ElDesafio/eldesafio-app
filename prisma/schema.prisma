@@ -180,8 +180,8 @@ model ParticipantCommitment {
   octoberDescription   String?
   novemberStatus       Boolean?
   novemberDescription  String?
-  decembreStatus       Boolean?
-  decembreDescription  String?
+  decemberStatus       Boolean?
+  decemberDescription  String?
 
 
   @@id([year, participantId])

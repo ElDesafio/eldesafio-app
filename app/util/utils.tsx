@@ -791,8 +791,87 @@ function getSelectedYearFromRequest(request: Request) {
   return Number(url.searchParams.get('year') ?? DateTime.now().year.toString());
 }
 
+let monthName: string;
+let statusKey: string;
+let descriptionKey: string;
+
+export type CommitmentTableMonth =
+  | 'april'
+  | 'may'
+  | 'june'
+  | 'july'
+  | 'august'
+  | 'september'
+  | 'october'
+  | 'november'
+  | 'december';
+
+function commitmentTableProps(month: CommitmentTableMonth) {
+  switch (month) {
+    case 'april': {
+      monthName = 'abr';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'may': {
+      monthName = 'may';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'june': {
+      monthName = 'jun';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'july': {
+      monthName = 'jul';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'august': {
+      monthName = 'ago';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'september': {
+      monthName = 'sep';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'october': {
+      monthName = 'oct';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'november': {
+      monthName = 'nov';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    case 'december': {
+      monthName = 'dec';
+      statusKey = `${month}Status`;
+      descriptionKey = `${month}Description`;
+      break;
+    }
+    default:
+      throw new Error('[commitmentTableProps] Unknown month');
+  }
+
+  return { monthName, statusKey, descriptionKey };
+}
+
 export {
   asOptionalField,
+  commitmentTableProps,
   convertStringToNumberForZod,
   formatAttendanceChartBarsData,
   formatProgramChartPieData,

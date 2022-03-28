@@ -46,6 +46,7 @@ import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { FormSwitch } from '~/components/Form/FormSwitch';
+import { FormTextArea } from '~/components/Form/FormTextArea';
 import { LinkED } from '~/components/LinkED';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
@@ -55,7 +56,9 @@ import {
   getParticipantWithPrograms,
 } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
+import type { CommitmentTableMonth } from '~/util/utils';
 import {
+  commitmentTableProps,
   convertStringToNumberForZod,
   getAge,
   getFormattedDate,
@@ -73,8 +76,6 @@ import {
 } from './components/InactiveModal';
 import { ParticipantChartBars } from './components/ParticipantChartBars';
 import { ParticipantChartPie } from './components/ParticipantChartPie';
-
-type FormType = 'changeYearStatus' | 'modifyCommitment';
 
 const commitmentSchema = z
   .object({
@@ -94,6 +95,20 @@ const commitmentSchema = z
     },
   );
 export const commitmentValidator = withZod(commitmentSchema);
+
+const commitmentMonthSchema = z.object({
+  status: schemaCheckbox,
+  description: z.preprocess(
+    (value) => (value === '' ? null : value),
+    z.string().nullable(),
+  ),
+  year: z.preprocess(
+    convertStringToNumberForZod,
+    z.number({ required_error: 'El año no puede estar vacío' }).positive(),
+  ),
+  month: z.string(),
+});
+export const commitmentMonthValidator = withZod(commitmentMonthSchema);
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
@@ -117,6 +132,8 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
+  let returnToYear: number | undefined = undefined;
+
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
@@ -124,12 +141,38 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!user) throw json('Unauthorized', { status: 403 });
 
   const formData = Object.fromEntries(await request.formData());
+
+  if (formData.formType === 'modifyCommitmentMonth') {
+    const fieldValues = await commitmentMonthValidator.validate(formData);
+
+    if (fieldValues.error) return validationError(fieldValues.error);
+
+    const { status, description, month, year } = fieldValues.data;
+
+    returnToYear = year;
+
+    await db.participantCommitment.update({
+      where: {
+        year_participantId: {
+          participantId: +id,
+          year,
+        },
+      },
+      data: {
+        [`${month}Status`]: status,
+        [`${month}Description`]: description,
+      },
+    });
+  }
+
   if (formData.formType === 'modifyCommitment') {
     const fieldValues = await commitmentValidator.validate(formData);
 
     if (fieldValues.error) return validationError(fieldValues.error);
 
     const { commitmentVolunteer, commitmentDonation, year } = fieldValues.data;
+
+    returnToYear = year;
 
     await db.participantCommitment.upsert({
       where: {
@@ -157,6 +200,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (fieldValues.error) return validationError(fieldValues.error);
 
     const { description, year, type } = fieldValues.data;
+
+    returnToYear = year;
 
     await db.$transaction(async (db) => {
       const programs = await db.participantsOnPrograms.findMany({
@@ -223,7 +268,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   const url = new URL(request.url);
-  const selectedYear = url.searchParams.get('year');
+  const selectedYear = url.searchParams.get('year') || (returnToYear ?? null);
 
   let returnURL = `/participants/${id}`;
 
@@ -326,6 +371,10 @@ export default function ParticipantGeneral() {
 
   const isModifyingCommitment =
     transition?.submission?.formData.get('formType') === `modifyCommitment`;
+
+  const isModifyingCommitmentMonth =
+    transition?.submission?.formData.get('formType') ===
+    `modifyCommitmentMonth`;
 
   return (
     <>
@@ -646,6 +695,7 @@ export default function ParticipantGeneral() {
           Compromiso de los padres {selectedYear}
         </Heading>
         <Popover
+          key={`popover-commitment-${selectedYear}-${participant.id}`}
           returnFocusOnClose={false}
           placement="left-end"
           closeOnBlur={true}
@@ -722,18 +772,18 @@ export default function ParticipantGeneral() {
             <Thead bg="gray.50">
               <Tr>
                 {[
-                  'abr',
+                  'april',
                   'may',
-                  'jun',
-                  'jul',
-                  'ago',
-                  'sep',
-                  'oct',
-                  'nov',
-                  'dic',
+                  'june',
+                  'july',
+                  'august',
+                  'september',
+                  'october',
+                  'november',
+                  'december',
                 ].map((month) => (
                   <Th
-                    key={month}
+                    key={`${month}-${selectedYear}`}
                     whiteSpace="nowrap"
                     scope="col"
                     width="60px"
@@ -744,17 +794,91 @@ export default function ParticipantGeneral() {
                     pr={1}
                     pl={1}
                   >
-                    {month}
+                    {
+                      commitmentTableProps(month as CommitmentTableMonth)
+                        .monthName
+                    }
                     <br />
-                    <Button
-                      variant="solid"
-                      colorScheme="gray"
-                      size="xs"
-                      pr={1}
-                      pl={1}
+                    <Popover
+                      returnFocusOnClose={false}
+                      placement="left-end"
+                      closeOnBlur={true}
                     >
-                      Editar
-                    </Button>
+                      <PopoverTrigger>
+                        <Button
+                          variant="solid"
+                          colorScheme="gray"
+                          size="xs"
+                          pr={1}
+                          pl={1}
+                        >
+                          Editar
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <ValidatedForm
+                          validator={commitmentMonthValidator}
+                          defaultValues={{
+                            status:
+                              participant.commitment?.[
+                                `${month}Status` as keyof typeof participant.commitment.aprilStatus
+                              ],
+                            description:
+                              participant.commitment?.[
+                                `${month}Description` as keyof typeof participant.commitment.aprilDescription
+                              ],
+                          }}
+                          method="post"
+                          noValidate
+                        >
+                          <PopoverHeader fontWeight="semibold" fontSize="md">
+                            Compromiso{' '}
+                            {
+                              commitmentTableProps(
+                                month as CommitmentTableMonth,
+                              ).monthName
+                            }
+                            -{selectedYear}
+                          </PopoverHeader>
+                          <PopoverArrow />
+                          <PopoverCloseButton />
+                          <PopoverBody textAlign="left">
+                            <FormSwitch
+                              name="status"
+                              label="¿Cumplieron con el compromiso?"
+                              value="true"
+                              mb={2}
+                            />
+                            <FormTextArea
+                              name="description"
+                              label="Comentario"
+                            />
+                            <input
+                              name="year"
+                              type="hidden"
+                              value={selectedYear}
+                            />
+                            <input name="month" type="hidden" value={month} />
+                            <input
+                              name="formType"
+                              type="hidden"
+                              value="modifyCommitmentMonth"
+                            />
+                          </PopoverBody>
+                          <PopoverFooter d="flex" justifyContent="flex-end">
+                            <ButtonGroup size="sm">
+                              <Button
+                                type="submit"
+                                colorScheme="blue"
+                                isLoading={isModifyingCommitmentMonth}
+                              >
+                                Modificar
+                              </Button>
+                            </ButtonGroup>
+                          </PopoverFooter>
+                        </ValidatedForm>
+                      </PopoverContent>
+                    </Popover>
                   </Th>
                 ))}
               </Tr>
@@ -770,7 +894,7 @@ export default function ParticipantGeneral() {
                   'septemberStatus',
                   'octoberStatus',
                   'novemberStatus',
-                  'decembreStatus',
+                  'decemberStatus',
                 ].map((status) => (
                   <Td key={status} textAlign="center" fontSize="lg">
                     {participant.commitment ? (
