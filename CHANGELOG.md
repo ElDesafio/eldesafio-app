@@ -1,3 +1,15 @@
+# v0.15.0 (Mon Mar 28 2022)
+
+#### 🚀 Enhancement
+
+- add school view [#109](https://github.com/ElDesafio/eldesafio-app/pull/109) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.14.0 (Mon Mar 28 2022)
 
 #### 🚀 Enhancement
