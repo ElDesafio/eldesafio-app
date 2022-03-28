@@ -4,6 +4,7 @@ import {
   Container,
   Flex,
   Heading,
+  Link as ChakraLink,
   Spacer,
   Table,
   Tbody,
@@ -15,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { MdAdd } from 'react-icons/md';
 import type { LoaderFunction } from 'remix';
-import { useLoaderData } from 'remix';
+import { Link, useLoaderData } from 'remix';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
@@ -62,40 +63,38 @@ export default function Programs() {
             overflowX="auto"
           >
             {schools.length > 0 ? (
-              <Table borderWidth="1px" fontSize="sm">
-                <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
-                  <Tr>
-                    <Th whiteSpace="nowrap" scope="col">
-                      NOMBRE
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      DIRECCIÓN
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col">
-                      TELÉFONO
-                    </Th>
-                    <Th whiteSpace="nowrap" scope="col" />
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {schools.map((school) => (
-                    <Tr key={school.id}>
-                      <Td whiteSpace="nowrap">{school.name}</Td>
-                      <Td>
-                        {school.address} ({school.city})
-                      </Td>
-                      <Td>{school.phone}</Td>
-                      <Td textAlign="right">
-                        <LinkED to={`${school.id}/edit`}>
-                          <Button variant="link" colorScheme="blue">
-                            Edit
-                          </Button>
-                        </LinkED>
-                      </Td>
+              <Box border="1px solid" borderColor="gray.100" borderRadius="lg">
+                <Table fontSize="sm">
+                  <Thead bg={useColorModeValue('gray.50', 'gray.800')}>
+                    <Tr>
+                      <Th whiteSpace="nowrap" scope="col">
+                        NOMBRE
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        DIRECCIÓN
+                      </Th>
+                      <Th whiteSpace="nowrap" scope="col">
+                        TELÉFONO
+                      </Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+                  </Thead>
+                  <Tbody>
+                    {schools.map((school) => (
+                      <Tr key={school.id}>
+                        <Td whiteSpace="nowrap">
+                          <ChakraLink as={Link} to={`${school.id}`}>
+                            {school.name}
+                          </ChakraLink>
+                        </Td>
+                        <Td>
+                          {school.address} ({school.city})
+                        </Td>
+                        <Td>{school.phone}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
             ) : (
               <AlertED title="Vacío" description="No hay escuelas" />
             )}

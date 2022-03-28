@@ -106,7 +106,7 @@ export function ParticipantForm({
   const isSaving = transition.state === 'submitting';
 
   return (
-    <Box px={{ base: '4', md: '10' }} maxWidth="7xl">
+    <Box px="4" maxWidth="full">
       <ValidatedForm
         validator={participantFormValidator}
         defaultValues={defaultValues}
