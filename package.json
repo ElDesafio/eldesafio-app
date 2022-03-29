@@ -93,7 +93,7 @@
     "@testing-library/cypress": "8.0.2",
     "@testing-library/jest-dom": "5.16.3",
     "@testing-library/react": "12.1.4",
-    "@testing-library/user-event": "13.5.0",
+    "@testing-library/user-event": "14.0.0",
     "@types/compression": "1.7.2",
     "@types/eslint": "8.4.1",
     "@types/express": "4.17.13",
