@@ -1,3 +1,17 @@
+# v0.15.2 (Tue Mar 29 2022)
+
+#### 🔩 Dependency Updates
+
+- Update dependency @testing-library/user-event to v14 [#112](https://github.com/ElDesafio/eldesafio-app/pull/112) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+- Update dependencies (non-major) [#111](https://github.com/ElDesafio/eldesafio-app/pull/111) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 2
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v0.15.1 (Mon Mar 28 2022)
 
 #### 🔩 Dependency Updates
