@@ -83,13 +83,6 @@ export default function UserGeneral() {
               {user.firstName} {user.lastName}
             </Heading>
             <Spacer />
-            {isLoggedinUserAdmin && (
-              <LinkED to="edit">
-                <Button leftIcon={<MdEdit />} colorScheme="blue">
-                  Editar
-                </Button>
-              </LinkED>
-            )}
           </Flex>
         </Container>
       </Box>
@@ -103,9 +96,18 @@ export default function UserGeneral() {
             shadow="base"
           >
             <>
-              <Heading as="h3" size="md">
-                Datos Personales
-              </Heading>
+              <Flex alignItems="center" justifyContent="space-between">
+                <Heading as="h3" size="md">
+                  Datos Personales
+                </Heading>
+                {isLoggedinUserAdmin && (
+                  <LinkED to="edit">
+                    <Button leftIcon={<MdEdit />} colorScheme="blue" size="sm">
+                      Editar
+                    </Button>
+                  </LinkED>
+                )}
+              </Flex>
               <Divider mt="2" mb="8" />
               <Stack
                 direction={{ base: 'column', lg: 'row' }}
