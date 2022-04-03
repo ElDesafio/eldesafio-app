@@ -63,12 +63,23 @@ export default function NewParticipant() {
         </Container>
       </Box>
 
-      <UserForm
-        defaultValues={{
-          status: 'INVITED',
-          timezone: 'America/Argentina/Buenos_Aires',
-        }}
-      />
+      <Box as="main" py="8" flex="1">
+        <Container maxW="8xl">
+          <Box
+            bg={useColorModeValue('white', 'gray.700')}
+            p="6"
+            rounded="lg"
+            shadow="base"
+          >
+            <UserForm
+              defaultValues={{
+                status: 'INVITED',
+                timezone: 'America/Argentina/Buenos_Aires',
+              }}
+            />
+          </Box>
+        </Container>
+      </Box>
     </>
   );
 }
