@@ -1,5 +1,5 @@
 import { Box, Button, HStack, Stack, VStack } from '@chakra-ui/react';
-import { ParticipantDiaryType } from '@prisma/client';
+import { UserDiaryType } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useEffect, useState } from 'react';
 import { useNavigate, useTransition } from 'remix';
@@ -14,11 +14,11 @@ import { FormSelect } from '~/components/Form/FormSelect';
 import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
 import type { GetParticipantPrograms } from '~/services/participants.service';
-import { getParticipantDiaryTypeProps } from '~/util/utils';
+import { getUserDiaryTypeProps } from '~/util/utils';
 
-const diaryEventSchema = zfd.formData({
+const userDiaryEventSchema = zfd.formData({
   title: z.string().nonempty('Título es requerido'),
-  type: z.nativeEnum(ParticipantDiaryType, {
+  type: z.nativeEnum(UserDiaryType, {
     errorMap: () => ({
       message: 'Tipo de evento es requerido',
     }),
@@ -28,19 +28,19 @@ const diaryEventSchema = zfd.formData({
   programs: zfd.text(z.string().optional()),
 });
 
-export const diaryEventFormValidator = withZod(diaryEventSchema);
+export const userDiaryEventFormValidator = withZod(userDiaryEventSchema);
 
-type ParticipantDiaryEventFormProps = {
-  defaultValues?: Partial<z.infer<typeof diaryEventSchema>>;
+type UserDiaryEventFormProps = {
+  defaultValues?: Partial<z.infer<typeof userDiaryEventSchema>>;
   programs: Exclude<GetParticipantPrograms, null>;
   isAutoEvent?: boolean;
 };
 
-export function ParticipantDiaryEventForm({
+export function UserDiaryEventForm({
   isAutoEvent = false,
   defaultValues,
   programs,
-}: ParticipantDiaryEventFormProps) {
+}: UserDiaryEventFormProps) {
   let navigate = useNavigate();
   const [cleanPrograms, setCleanPrograms] = useState(programs);
   const [selectedProgramsIds, setSelectedProgramsIds] = useState(
@@ -57,16 +57,10 @@ export function ParticipantDiaryEventForm({
 
   const isSaving = transition.state === 'submitting';
 
-  const eventTypeOptions: { label: string; value: ParticipantDiaryType }[] = [
+  const eventTypeOptions: { label: string; value: UserDiaryType }[] = [
     {
-      label: getParticipantDiaryTypeProps(ParticipantDiaryType.INFO)
-        .description,
-      value: ParticipantDiaryType.INFO,
-    },
-    {
-      label: getParticipantDiaryTypeProps(ParticipantDiaryType.MENTORSHIP)
-        .description,
-      value: ParticipantDiaryType.MENTORSHIP,
+      label: getUserDiaryTypeProps(UserDiaryType.INFO).description,
+      value: UserDiaryType.INFO,
     },
   ];
 
@@ -75,64 +69,28 @@ export function ParticipantDiaryEventForm({
     eventTypeOptions.push(
       ...[
         {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.PROGRAM_STATUS_ACTIVE,
-          ).description,
-          value: ParticipantDiaryType.PROGRAM_STATUS_ACTIVE,
+          label: getUserDiaryTypeProps(UserDiaryType.STATUS_INVITED)
+            .description,
+          value: UserDiaryType.STATUS_INVITED,
         },
         {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_3_ABSENT,
-          ).description,
-          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_3_ABSENT,
+          label: getUserDiaryTypeProps(UserDiaryType.STATUS_ACTIVE).description,
+          value: UserDiaryType.STATUS_ACTIVE,
         },
         {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_FAMILY,
-          ).description,
-          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_FAMILY,
+          label: getUserDiaryTypeProps(UserDiaryType.STATUS_INACTIVE)
+            .description,
+          value: UserDiaryType.STATUS_INACTIVE,
         },
         {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_LOW_ATTENDANCE,
-          ).description,
-          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_LOW_ATTENDANCE,
+          label: getUserDiaryTypeProps(UserDiaryType.PROGRAM_STATUS_ACTIVE)
+            .description,
+          value: UserDiaryType.PROGRAM_STATUS_ACTIVE,
         },
         {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_NO_SHOW,
-          ).description,
-          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_NO_SHOW,
-        },
-        {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_OTHER,
-          ).description,
-          value: ParticipantDiaryType.PROGRAM_STATUS_INACTIVE_OTHER,
-        },
-        {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.PROGRAM_STATUS_WAITING,
-          ).description,
-          value: ParticipantDiaryType.PROGRAM_STATUS_WAITING,
-        },
-        {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.YEAR_STATUS_ACTIVE,
-          ).description,
-          value: ParticipantDiaryType.YEAR_STATUS_ACTIVE,
-        },
-        {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.YEAR_STATUS_INACTIVE,
-          ).description,
-          value: ParticipantDiaryType.YEAR_STATUS_INACTIVE,
-        },
-        {
-          label: getParticipantDiaryTypeProps(
-            ParticipantDiaryType.YEAR_STATUS_WAITING,
-          ).description,
-          value: ParticipantDiaryType.YEAR_STATUS_WAITING,
+          label: getUserDiaryTypeProps(UserDiaryType.PROGRAM_STATUS_INACTIVE)
+            .description,
+          value: UserDiaryType.PROGRAM_STATUS_INACTIVE,
         },
       ],
     );
@@ -141,7 +99,7 @@ export function ParticipantDiaryEventForm({
   return (
     <Box px={4} maxWidth="7xl">
       <ValidatedForm
-        validator={diaryEventFormValidator}
+        validator={userDiaryEventFormValidator}
         defaultValues={defaultValues}
         method="post"
         noValidate
@@ -185,7 +143,7 @@ export function ParticipantDiaryEventForm({
             <FormStack width="full">
               <FormSelect
                 instanceId="programs-select"
-                helperText="Acá podés asociar el evento a uno o más programas del participante"
+                helperText="Acá podés asociar el evento a uno o más programas del usuario"
                 name="programs"
                 label="Programas"
                 isMulti

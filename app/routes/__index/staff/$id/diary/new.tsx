@@ -7,25 +7,20 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
 import {
-  diaryEventFormValidator,
-  ParticipantDiaryEventForm,
-} from '~/components/Participants/ParticipantDiaryEventForm';
+  UserDiaryEventForm,
+  userDiaryEventFormValidator,
+} from '~/components/Users/UserDiaryEventForm';
 import { db } from '~/services/db.server';
-import type { GetParticipantPrograms } from '~/services/participants.service';
-import { getParticipantPrograms } from '~/services/participants.service';
-import { getLoggedInUser } from '~/services/users.service';
+import type { GetUserPrograms } from '~/services/users.service';
+import { getLoggedInUser, getUserPrograms } from '~/services/users.service';
 import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
 // LOADER
 export let loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
-
   const selectedYear = getSelectedYearFromRequest(request);
 
-  const programs = await getParticipantPrograms({
-    participantId: id,
-    year: selectedYear,
-  });
+  const programs = await getUserPrograms({ userId: id, year: selectedYear });
 
   return { programs };
 };
@@ -34,11 +29,11 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getLoggedInUser(request);
 
-  const { id: participantId } = z.object({ id: zfd.numeric() }).parse(params);
+  const { id: userId } = z.object({ id: zfd.numeric() }).parse(params);
 
   const formData = Object.fromEntries(await request.formData());
 
-  const fieldValues = await diaryEventFormValidator.validate(formData);
+  const fieldValues = await userDiaryEventFormValidator.validate(formData);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
@@ -51,11 +46,11 @@ export const action: ActionFunction = async ({ request, params }) => {
         }))
       : [];
 
-  const event = await db.participantDiary.create({
+  const event = await db.userDiary.create({
     data: {
       ...rest,
       date: DateTime.fromISO(rest.date, { zone: user.timezone }).toJSDate(),
-      participantId,
+      userId,
       createdBy: user.id,
       updatedBy: user.id,
       programs: {
@@ -64,12 +59,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect(`/participants/${participantId}/diary`);
+  return redirect(`/staff/${userId}/diary`);
 };
 
-export default function NewParticipantDiary() {
+export default function NewUserDiary() {
   const { programs } = useLoaderData<{
-    programs: GetParticipantPrograms;
+    programs: GetUserPrograms;
   }>();
 
   const selectedYear = useSelectedYear();
@@ -89,7 +84,7 @@ export default function NewParticipantDiary() {
         </Container>
       </Box>
       <Box as="main" py="0" flex="1">
-        <ParticipantDiaryEventForm programs={programs} key={selectedYear} />
+        <UserDiaryEventForm programs={programs} key={selectedYear} />
       </Box>
     </>
   );

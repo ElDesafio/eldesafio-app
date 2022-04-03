@@ -63,6 +63,42 @@ model User {
   updatedUserDiary             UserDiary[]              @relation("UpdatedUserDiaryByUser")
 }
 
+enum UserDiaryType {
+  STATUS_INVITED
+  STATUS_ACTIVE
+  STATUS_INACTIVE
+  PROGRAM_STATUS_ACTIVE
+  PROGRAM_STATUS_INACTIVE
+  INFO
+}
+
+model UserDiary {
+  id            Int                 @id @default(autoincrement())
+  userId        Int
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          UserDiaryType
+  title         String
+  description   String?
+  isAutoEvent   Boolean             @default(false)
+  date          DateTime            @db.Timestamptz
+  createdAt     DateTime            @default(now()) @db.Timestamptz
+  updatedAt     DateTime            @default(now()) @updatedAt @db.Timestamptz
+  createdBy     Int
+  createdByUser User                @relation("CreatedUserDiaryByUser", fields: [createdBy], references: [id])
+  updatedBy     Int
+  updatedByUser User                @relation("UpdatedUserDiaryByUser", fields: [updatedBy], references: [id])
+  programs      UserDiaryPrograms[]
+}
+
+model UserDiaryPrograms {
+  userDiaryId Int
+  userDiary   UserDiary @relation(fields: [userDiaryId], references: [id])
+  programId   Int
+  program     Program   @relation(fields: [programId], references: [id])
+
+  @@id([userDiaryId, programId])
+}
+
 enum Roles {
   ADMIN
   MENTOR
@@ -213,42 +249,6 @@ enum ParticipantDiaryType {
   PROGRAM_STATUS_INACTIVE_OTHER
   INFO
   MENTORSHIP
-}
-
-enum UserDiaryType {
-  STATUS_ACTIVE
-  STATUS_INACTIVE
-  PROGRAM_STATUS_ACTIVE
-  PROGRAM_STATUS_INACTIVE
-  INFO
-}
-
-model UserDiary {
-  id          Int           @id @default(autoincrement())
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type        UserDiaryType
-  title       String
-  description String?
-  isAutoEvent Boolean       @default(false)
-  date        DateTime      @db.Timestamptz
-  createdAt   DateTime      @default(now()) @db.Timestamptz
-  updatedAt   DateTime      @default(now()) @updatedAt @db.Timestamptz
-  createdBy   Int
-
-  createdByUser User                @relation("CreatedUserDiaryByUser", fields: [createdBy], references: [id])
-  updatedBy     Int
-  updatedByUser User                @relation("UpdatedUserDiaryByUser", fields: [updatedBy], references: [id])
-  programs      UserDiaryPrograms[]
-}
-
-model UserDiaryPrograms {
-  userDiaryId Int
-  userDiary   UserDiary @relation(fields: [userDiaryId], references: [id])
-  programId   Int
-  program     Program   @relation(fields: [programId], references: [id])
-
-  @@id([userDiaryId, programId])
 }
 
 model ParticipantDiary {
