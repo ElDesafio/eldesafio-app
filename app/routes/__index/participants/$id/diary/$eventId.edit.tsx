@@ -31,9 +31,18 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 
   const user = await getLoggedInUser(request);
 
-  const programs = await getParticipantPrograms({ participantId: id });
-
   const event = await getParticipantDiaryEvent({ eventId });
+
+  if (!event) {
+    throw new Error("The event doesn't exist");
+  }
+
+  const eventYear = DateTime.fromJSDate(event.date).year;
+
+  const programs = await getParticipantPrograms({
+    participantId: id,
+    year: eventYear,
+  });
 
   return { programs, event, timezone: user.timezone };
 };

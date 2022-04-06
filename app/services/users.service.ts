@@ -181,3 +181,25 @@ export async function getUserPrograms({
 }
 
 export type GetUserPrograms = Prisma.PromiseReturnType<typeof getUserPrograms>;
+
+export async function getUserDiaryEvent({ eventId }: { eventId: number }) {
+  return await db.userDiary.findUnique({
+    where: { id: eventId },
+    include: {
+      programs: {
+        select: {
+          program: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetUserDiaryEvent = Prisma.PromiseReturnType<
+  typeof getUserDiaryEvent
+>;

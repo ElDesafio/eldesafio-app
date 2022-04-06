@@ -21,24 +21,23 @@ import { zfd } from 'zod-form-data';
 
 import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
-import type { GetParticipantDiaryEvent } from '~/services/participants.service';
-import { getParticipantDiaryEvent } from '~/services/participants.service';
-import { getLoggedInUser } from '~/services/users.service';
-import { getFormattedDate, getParticipantDiaryTypeProps } from '~/util/utils';
+import type { GetUserDiaryEvent } from '~/services/users.service';
+import { getLoggedInUser, getUserDiaryEvent } from '~/services/users.service';
+import { getFormattedDate, getUserDiaryTypeProps } from '~/util/utils';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { eventId } = z.object({ eventId: zfd.numeric() }).parse(params);
 
   const user = await getLoggedInUser(request);
 
-  const event = await getParticipantDiaryEvent({ eventId });
+  const event = await getUserDiaryEvent({ eventId });
 
   return { event, timezone: user.timezone };
 };
 
-export default function ParticipantDiaryEvent() {
+export default function UserDiaryEvent() {
   const { event, timezone } = useLoaderData<{
-    event: GetParticipantDiaryEvent;
+    event: GetUserDiaryEvent;
     timezone: string;
   }>();
 
@@ -83,10 +82,10 @@ export default function ParticipantDiaryEvent() {
             <Td>
               <Tag
                 size="sm"
-                variant={getParticipantDiaryTypeProps(event.type).variant}
-                colorScheme={getParticipantDiaryTypeProps(event.type).tagColor}
+                variant={getUserDiaryTypeProps(event.type).variant}
+                colorScheme={getUserDiaryTypeProps(event.type).tagColor}
               >
-                {getParticipantDiaryTypeProps(event.type).text}
+                {getUserDiaryTypeProps(event.type).text}
               </Tag>
             </Td>
           </Tr>

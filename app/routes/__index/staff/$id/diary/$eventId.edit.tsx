@@ -8,19 +8,19 @@ import { zfd } from 'zod-form-data';
 
 import { AlertED } from '~/components/AlertED';
 import {
-  diaryEventFormValidator,
-  ParticipantDiaryEventForm,
-} from '~/components/Participants/ParticipantDiaryEventForm';
+  UserDiaryEventForm,
+  userDiaryEventFormValidator,
+} from '~/components/Users/UserDiaryEventForm';
 import { db } from '~/services/db.server';
 import type {
-  GetParticipantDiaryEvent,
-  GetParticipantPrograms,
-} from '~/services/participants.service';
+  GetUserDiaryEvent,
+  GetUserPrograms,
+} from '~/services/users.service';
 import {
-  getParticipantDiaryEvent,
-  getParticipantPrograms,
-} from '~/services/participants.service';
-import { getLoggedInUser } from '~/services/users.service';
+  getLoggedInUser,
+  getUserDiaryEvent,
+  getUserPrograms,
+} from '~/services/users.service';
 
 // LOADER
 export let loader: LoaderFunction = async ({ params, request }) => {
@@ -30,9 +30,15 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 
   const user = await getLoggedInUser(request);
 
-  const programs = await getParticipantPrograms({ participantId: id });
+  const event = await getUserDiaryEvent({ eventId });
 
-  const event = await getParticipantDiaryEvent({ eventId });
+  if (!event) {
+    throw new Error("The event doesn't exist");
+  }
+
+  const eventYear = DateTime.fromJSDate(event.date).year;
+
+  const programs = await getUserPrograms({ userId: id, year: eventYear });
 
   return { programs, event, timezone: user.timezone };
 };
@@ -40,13 +46,13 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 // ACTION
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getLoggedInUser(request);
-  const { id: participantId, eventId } = z
+  const { id: userId, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
 
   const formData = Object.fromEntries(await request.formData());
 
-  const fieldValues = await diaryEventFormValidator.validate(formData);
+  const fieldValues = await userDiaryEventFormValidator.validate(formData);
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
@@ -59,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         }))
       : [];
 
-  const event = await db.participantDiary.update({
+  const event = await db.userDiary.update({
     where: { id: eventId },
     data: {
       ...rest,
@@ -72,13 +78,13 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect(`/participants/${participantId}/diary`);
+  return redirect(`/staff/${userId}/diary`);
 };
 
-export default function ParticipantDiaryEventEdit() {
+export default function UserDiaryEventEdit() {
   const { programs, event, timezone } = useLoaderData<{
-    programs: GetParticipantPrograms;
-    event: GetParticipantDiaryEvent;
+    programs: GetUserPrograms;
+    event: GetUserDiaryEvent;
     timezone: string;
   }>();
 
@@ -106,7 +112,7 @@ export default function ParticipantDiaryEventEdit() {
         </Container>
       </Box>
       <Box as="main" py="0" flex="1">
-        <ParticipantDiaryEventForm
+        <UserDiaryEventForm
           isAutoEvent={event.isAutoEvent}
           defaultValues={{
             type: event.type,
