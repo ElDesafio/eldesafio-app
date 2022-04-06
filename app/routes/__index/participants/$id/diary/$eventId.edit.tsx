@@ -1,7 +1,7 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import { redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -11,7 +11,6 @@ import {
   diaryEventFormValidator,
   ParticipantDiaryEventForm,
 } from '~/components/Participants/ParticipantDiaryEventForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import type {
   GetParticipantDiaryEvent,
