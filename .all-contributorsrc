@@ -21,6 +21,15 @@
         "infra",
         "test"
       ]
+    },
+    {
+      "login": "kodiakhq[bot]",
+      "name": "kodiakhq[bot]",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29196?v=4",
+      "profile": "https://github.com/apps/kodiakhq",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
