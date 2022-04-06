@@ -1,3 +1,15 @@
+# v0.15.5 (Wed Apr 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- add kodiak ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.15.4 (Sun Apr 03 2022)
 
 #### 🔩 Dependency Updates
