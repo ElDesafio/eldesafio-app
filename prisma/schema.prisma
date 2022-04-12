@@ -80,7 +80,7 @@ model UserDiary {
   title         String
   description   String?
   isAutoEvent   Boolean             @default(false)
-  date          DateTime            @db.Timestamptz
+  date          DateTime            @default(now()) @db.Timestamptz
   createdAt     DateTime            @default(now()) @db.Timestamptz
   updatedAt     DateTime            @default(now()) @updatedAt @db.Timestamptz
   createdBy     Int
@@ -259,7 +259,7 @@ model ParticipantDiary {
   title         String
   description   String?
   isAutoEvent   Boolean                    @default(false)
-  date          DateTime                   @db.Timestamptz
+  date          DateTime                   @default(now()) @db.Timestamptz
   createdAt     DateTime                   @default(now()) @db.Timestamptz
   updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
   createdByUser User                       @relation("CreatedParticipantDiaryByUser", fields: [createdBy], references: [id])
@@ -373,7 +373,7 @@ model ProgramDiary {
   title         String
   description   String?
   isAutoEvent   Boolean                    @default(false)
-  date          DateTime                   @db.Timestamptz
+  date          DateTime                   @default(now()) @db.Timestamptz
   createdAt     DateTime                   @default(now()) @db.Timestamptz
   updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
   createdBy     Int
@@ -434,9 +434,9 @@ model Program {
 }
 
 model UsersOnPrograms {
-  user          User     @relation("UserOnProgramsByUser", fields: [userId], references: [id])
+  user          User     @relation("UserOnProgramsByUser", fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
-  program       Program  @relation("UserOnProgramsByProgram", fields: [programId], references: [id])
+  program       Program  @relation("UserOnProgramsByProgram", fields: [programId], references: [id], onDelete: Cascade)
   programId     Int
   isFacilitator Boolean  @default(false)
   createdAt     DateTime @default(now()) @db.Timestamptz
@@ -472,7 +472,7 @@ model ParticipantsOnPrograms {
 
 model ProgramDays {
   id        Int      @id @default(autoincrement())
-  program   Program  @relation("ProgramDaysByProgram", fields: [programId], references: [id])
+  program   Program  @relation("ProgramDaysByProgram", fields: [programId], references: [id], onDelete: Cascade)
   programId Int
   day       Weekdays
   fromTime  String
