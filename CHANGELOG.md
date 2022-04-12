@@ -1,3 +1,68 @@
+# v0.15.8 (Wed Apr 06 2022)
+
+#### 🔩 Dependency Updates
+
+- Update dependencies (non-major) [#118](https://github.com/ElDesafio/eldesafio-app/pull/118) ([@renovate-bot](https://github.com/renovate-bot) [@kodiakhq[bot]](https://github.com/kodiakhq[bot]) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 3
+
+- [@kodiakhq[bot]](https://github.com/kodiakhq[bot])
+- [@renovate[bot]](https://github.com/renovate[bot])
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
+# v0.15.7 (Wed Apr 06 2022)
+
+#### 🔩 Dependency Updates
+
+- Update dependencies (non-major) [#117](https://github.com/ElDesafio/eldesafio-app/pull/117) ([@renovate-bot](https://github.com/renovate-bot) [@lucascurti](https://github.com/lucascurti) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 3
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
+# v0.15.6 (Wed Apr 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- update kodiak ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.15.5 (Wed Apr 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- add kodiak ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
+# v0.15.4 (Sun Apr 03 2022)
+
+#### 🔩 Dependency Updates
+
+- Update dependencies (non-major) [#115](https://github.com/ElDesafio/eldesafio-app/pull/115) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 2
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v0.15.3 (Fri Apr 01 2022)
 
 #### 🔩 Dependency Updates
