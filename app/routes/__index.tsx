@@ -119,6 +119,7 @@ export default function Dashboard() {
   const socket = useSocket();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string | undefined>();
+  const [searchResults, setSearchResults] = useState<GlobalSearchResult[]>([]);
 
   const showNotCurrentYear = selectedYear !== DateTime.now().year.toString();
 
@@ -147,6 +148,12 @@ export default function Dashboard() {
       }
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (globalSearch.data) {
+      setSearchResults(globalSearch.data);
+    }
+  }, [globalSearch.data]);
 
   // use the user to render the UI of your private route
   const { isMenuOpen, toggle } = useMobileMenuState();
@@ -194,10 +201,14 @@ export default function Dashboard() {
               instanceId="search-global"
               size="sm"
               placeholder="Buscar..."
-              options={globalSearch.data ? globalSearch.data : []}
+              options={searchResults}
               isLoading={isLoadingSearch}
               noOptionsMessage={() => 'No se encontraron resultados'}
               onInputChange={debouncedOnInputChange}
+              onBlur={() => {
+                setSearchValue(undefined);
+                setSearchResults([]);
+              }}
               value={null}
               onChange={(newValue) => {
                 if (newValue && 'type' in newValue) {
@@ -210,6 +221,7 @@ export default function Dashboard() {
                   if (newValue?.type === 'school') {
                     navigate(`/schools/${newValue.value}`);
                   }
+                  setSearchResults([]);
                 }
               }}
               chakraStyles={{

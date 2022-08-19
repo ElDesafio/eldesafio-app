@@ -1,7 +1,7 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import { redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -10,17 +10,22 @@ import {
   diaryEventFormValidator,
   ParticipantDiaryEventForm,
 } from '~/components/Participants/ParticipantDiaryEventForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import type { GetParticipantPrograms } from '~/services/participants.service';
 import { getParticipantPrograms } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
+import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
 // LOADER
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader: LoaderFunction = async ({ params, request }) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
-  const programs = await getParticipantPrograms({ participantId: id });
+  const selectedYear = getSelectedYearFromRequest(request);
+
+  const programs = await getParticipantPrograms({
+    participantId: id,
+    year: selectedYear,
+  });
 
   return { programs };
 };
@@ -62,10 +67,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   return redirect(`/participants/${participantId}/diary`);
 };
 
-export default function NewProgram() {
+export default function NewParticipantDiary() {
   const { programs } = useLoaderData<{
     programs: GetParticipantPrograms;
   }>();
+
+  const selectedYear = useSelectedYear();
 
   return (
     <>
@@ -82,7 +89,7 @@ export default function NewProgram() {
         </Container>
       </Box>
       <Box as="main" py="0" flex="1">
-        <ParticipantDiaryEventForm programs={programs} />
+        <ParticipantDiaryEventForm programs={programs} key={selectedYear} />
       </Box>
     </>
   );

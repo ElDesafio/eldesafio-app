@@ -1,7 +1,7 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import { redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -11,7 +11,6 @@ import {
   diaryEventFormValidator,
   ParticipantDiaryEventForm,
 } from '~/components/Participants/ParticipantDiaryEventForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import type {
   GetParticipantDiaryEvent,
@@ -31,9 +30,18 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 
   const user = await getLoggedInUser(request);
 
-  const programs = await getParticipantPrograms({ participantId: id });
-
   const event = await getParticipantDiaryEvent({ eventId });
+
+  if (!event) {
+    throw new Error("The event doesn't exist");
+  }
+
+  const eventYear = DateTime.fromJSDate(event.date).year;
+
+  const programs = await getParticipantPrograms({
+    participantId: id,
+    year: eventYear,
+  });
 
   return { programs, event, timezone: user.timezone };
 };

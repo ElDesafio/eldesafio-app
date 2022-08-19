@@ -189,11 +189,18 @@ export type GetParticipantDiaryEvent = Prisma.PromiseReturnType<
 
 export async function getParticipantPrograms({
   participantId,
+  year,
 }: {
   participantId: number;
+  year: number;
 }) {
   const participantsOnPrograms = await db.participantsOnPrograms.findMany({
-    where: { participantId },
+    where: {
+      participantId,
+      program: {
+        year,
+      },
+    },
     include: {
       program: {
         select: {

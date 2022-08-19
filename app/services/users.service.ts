@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client';
+import { DateTime } from 'luxon';
 
 import {
   isAdmin,
@@ -105,3 +106,100 @@ export async function getVolunteers({
 }
 
 export type GetVolunteers = Prisma.PromiseReturnType<typeof getFacilitators>;
+
+export async function getUserDiary({
+  userId,
+  includeAutoEvents = false,
+  year,
+}: {
+  userId: number;
+  includeAutoEvents?: boolean;
+  year: number;
+}) {
+  const whereAnd: Array<Prisma.UserDiaryWhereInput> = [];
+  whereAnd.push({
+    userId,
+    date: {
+      gte: DateTime.fromObject({ year, month: 1, day: 1 }).toJSDate(),
+      lte: DateTime.fromObject({ year, month: 12, day: 31 }).toJSDate(),
+    },
+  });
+  if (!includeAutoEvents) {
+    whereAnd.push({
+      isAutoEvent: false,
+    });
+  }
+
+  return await db.userDiary.findMany({
+    where: { AND: whereAnd },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+    include: {
+      programs: {
+        select: {
+          program: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetUserDiary = Prisma.PromiseReturnType<typeof getUserDiary>;
+
+export async function getUserPrograms({
+  userId,
+  year,
+}: {
+  userId: number;
+  year: number;
+}) {
+  const usersOnPrograms = await db.usersOnPrograms.findMany({
+    where: {
+      userId,
+      program: {
+        year,
+      },
+    },
+    include: {
+      program: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return usersOnPrograms.map((userPrograms) => ({
+    id: userPrograms.program.id,
+    name: userPrograms.program.name,
+  }));
+}
+
+export type GetUserPrograms = Prisma.PromiseReturnType<typeof getUserPrograms>;
+
+export async function getUserDiaryEvent({ eventId }: { eventId: number }) {
+  return await db.userDiary.findUnique({
+    where: { id: eventId },
+    include: {
+      programs: {
+        select: {
+          program: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type GetUserDiaryEvent = Prisma.PromiseReturnType<
+  typeof getUserDiaryEvent
+>;

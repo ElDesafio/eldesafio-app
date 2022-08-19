@@ -1,4 +1,6 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import { UserDiaryType } from '@prisma/client';
+import { DateTime } from 'luxon';
 import type { ActionFunction, LoaderFunction } from 'remix';
 import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
@@ -36,14 +38,14 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { programDays, facilitators, volunteers, ...rest } = fieldValues.data;
 
-  const facilitatorsArray =
+  const newFacilitators =
     typeof facilitators === 'string'
       ? facilitators.split(',').map((id) => ({
           userId: Number(id),
           isFacilitator: true,
         }))
       : [];
-  const volunteersArray =
+  const newVolunteers =
     typeof volunteers === 'string'
       ? volunteers.split(',').map((id) => ({
           userId: Number(id),
@@ -60,9 +62,47 @@ export const action: ActionFunction = async ({ request }) => {
         create: programDays,
       },
       educators: {
-        create: [...facilitatorsArray, ...volunteersArray],
+        create: [...newFacilitators, ...newVolunteers],
       },
     },
+  });
+
+  newFacilitators.forEach(async (facilitator) => {
+    await db.userDiary.create({
+      data: {
+        userId: facilitator.userId,
+        type: UserDiaryType.PROGRAM_STATUS_ACTIVE,
+        isAutoEvent: true,
+        title: `Dado de alta como facilitador en el programa`,
+        date: DateTime.utc().toJSDate(),
+        createdBy: user.id,
+        updatedBy: user.id,
+        programs: {
+          create: {
+            programId: program.id,
+          },
+        },
+      },
+    });
+  });
+
+  newVolunteers.forEach(async (volunteer) => {
+    await db.userDiary.create({
+      data: {
+        userId: volunteer.userId,
+        type: UserDiaryType.PROGRAM_STATUS_ACTIVE,
+        isAutoEvent: true,
+        title: `Dado de alta como voluntario en el programa`,
+        date: DateTime.utc().toJSDate(),
+        createdBy: user.id,
+        updatedBy: user.id,
+        programs: {
+          create: {
+            programId: program.id,
+          },
+        },
+      },
+    });
   });
 
   return redirect('/programs');
