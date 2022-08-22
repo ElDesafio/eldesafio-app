@@ -1,8 +1,9 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import { Divider, Flex, Heading } from '@chakra-ui/react';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { z } from 'zod';
 
 import {
@@ -12,11 +13,10 @@ import {
 import { authenticator } from '~/services/auth.server';
 import { getProgramClasses } from '~/services/classes.service';
 import { db } from '~/services/db.server';
-import type { GetProgramParticipants } from '~/services/programs.service';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const classes = await getProgramClasses({
@@ -39,14 +39,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const isUserAdmin = loggedinUser.isAdmin;
 
-  return {
+  return typedjson({
     classes,
     participants,
     isUserAdmin,
-  };
+  });
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id: programId } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -83,9 +83,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function AttendanceNew() {
-  const { participants } = useLoaderData<{
-    participants: GetProgramParticipants;
-  }>();
+  const { participants } = useTypedLoaderData<typeof loader>();
 
   return (
     <>

@@ -5,15 +5,19 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { LoaderFunction } from 'remix';
-import { Outlet, useLoaderData, useLocation, useResolvedPath } from 'remix';
+import type { Prisma } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
+import {
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useResolvedPath,
+} from '@remix-run/react';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
 import { TabLink } from '~/components/TabLink';
 import { db } from '~/services/db.server';
-
-import type { Prisma } from '.prisma/client';
 
 export async function getUser(id: number) {
   return await db.user.findUnique({
@@ -28,7 +32,7 @@ export async function getUser(id: number) {
 
 export type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   return await getUser(+id);

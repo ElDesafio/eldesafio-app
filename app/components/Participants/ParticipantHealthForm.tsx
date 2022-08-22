@@ -9,7 +9,7 @@ import {
 import { BloodType, FormAnswerOptions } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
-import { useNavigate, useTransition } from 'remix';
+import { useNavigate, useTransition } from '@remix-run/react';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 

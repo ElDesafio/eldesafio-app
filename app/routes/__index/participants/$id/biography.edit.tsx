@@ -1,14 +1,9 @@
 import { Button, HStack } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { useLoaderData, useNavigate, useTransition } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import {
-  json,
-  redirect,
-  useLoaderData,
-  useNavigate,
-  useTransition,
-} from 'remix';
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { z } from 'zod';
 
@@ -34,14 +29,14 @@ const biographySchema = z.object({
 
 export const biographyValidator = withZod(biographySchema);
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   return await getParticipant(+id);
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {

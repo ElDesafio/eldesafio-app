@@ -1,7 +1,8 @@
 import { UserDiaryType } from '@prisma/client';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -17,7 +18,7 @@ import type { GetFacilitators, GetVolunteers } from '~/services/users.service';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({ id: Number(id) });
@@ -52,7 +53,7 @@ export let loader: LoaderFunction = async ({ params }) => {
 };
 
 //ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   let user = await authenticator.isAuthenticated(request, {

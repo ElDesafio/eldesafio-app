@@ -19,9 +19,9 @@ import {
 } from '@chakra-ui/react';
 import type { UserStatus } from '@prisma/client';
 import { Roles } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { MdEdit } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -48,7 +48,7 @@ function userStatusHelper(status: UserStatus) {
   }
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await getUser(Number(id));

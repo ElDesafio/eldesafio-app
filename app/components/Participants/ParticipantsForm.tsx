@@ -14,7 +14,7 @@ import { Neighborhood, PhoneBelongsTo, SchoolYear, Sex } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
 import { HiCloudUpload } from 'react-icons/hi';
-import { useLocation, useNavigate, useTransition } from 'remix';
+import { useLocation, useNavigate, useTransition } from '@remix-run/react';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 

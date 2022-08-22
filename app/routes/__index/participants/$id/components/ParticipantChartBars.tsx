@@ -1,8 +1,8 @@
 import { Box, Flex, Skeleton, SkeletonCircle, Spinner } from '@chakra-ui/react';
+import { useFetcher, useParams } from '@remix-run/react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useRef } from 'react';
-import { useFetcher, useParams } from 'remix';
 
 import { AlertED } from '~/components/AlertED';
 import type { ClassForChart } from '~/util/utils';

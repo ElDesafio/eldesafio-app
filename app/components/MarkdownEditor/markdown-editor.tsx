@@ -42,6 +42,7 @@ export interface MarkdownEditorProps {
   placeholder?: string;
   initialContent?: string;
   editable?: boolean;
+  children?: React.ReactNode;
 }
 
 type ResetStylesProps = {

@@ -1,14 +1,14 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { Roles } from '@prisma/client';
-import type { ActionFunction } from 'remix';
-import { json, redirect } from 'remix';
+import type { ActionArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { validationError } from 'remix-validated-form';
 
 import { UserForm, userFormValidator } from '~/components/Users/UsersForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });

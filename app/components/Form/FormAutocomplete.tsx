@@ -8,7 +8,7 @@ import {
 import type { OptionBase } from 'chakra-react-select';
 import { Select } from 'chakra-react-select';
 import { useState } from 'react';
-import { useFetcher } from 'remix';
+import { useFetcher } from '@remix-run/react';
 import { useField } from 'remix-validated-form';
 
 type FormSelectProps = {

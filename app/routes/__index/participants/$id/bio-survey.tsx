@@ -7,8 +7,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FormAnswerOptions } from '@prisma/client';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData } from 'remix';
+import type { LoaderArgs } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -18,7 +18,7 @@ import { getParticipantBioSurvey } from '~/services/participants.service';
 import { getFormAnswerOptionName } from '~/util/utils';
 
 // LOADER
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   return await getParticipantBioSurvey(+id);

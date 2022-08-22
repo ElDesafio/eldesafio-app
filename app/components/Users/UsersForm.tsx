@@ -16,7 +16,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
 import { FaFacebookF, FaLinkedinIn, FaSkype, FaTwitter } from 'react-icons/fa';
 import { HiCloudUpload } from 'react-icons/hi';
-import { useNavigate, useTransition } from 'remix';
+import { useNavigate, useTransition } from '@remix-run/react';
 import { ValidatedForm } from 'remix-validated-form';
 import timezones from 'tzdata';
 import * as z from 'zod';

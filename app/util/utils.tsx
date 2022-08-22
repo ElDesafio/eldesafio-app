@@ -15,11 +15,11 @@ import {
   Roles,
   UserDiaryType,
 } from '@prisma/client';
+import { useSearchParams } from '@remix-run/react';
 import type Highcharts from 'highcharts';
 import { numberFormat } from 'highcharts';
 import { DateTime, Info } from 'luxon';
 import type React from 'react';
-import { useSearchParams } from 'remix';
 import { z } from 'zod';
 
 import type { GetProgramClasses } from '~/services/classes.service';

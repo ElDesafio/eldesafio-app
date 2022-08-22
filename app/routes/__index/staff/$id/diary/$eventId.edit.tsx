@@ -1,7 +1,8 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -23,7 +24,7 @@ import {
 } from '~/services/users.service';
 
 // LOADER
-export let loader: LoaderFunction = async ({ params, request }) => {
+export let loader = async ({ params, request }: LoaderArgs) => {
   const { id, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
@@ -44,7 +45,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const user = await getLoggedInUser(request);
   const { id: userId, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })

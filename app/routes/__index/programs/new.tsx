@@ -1,8 +1,9 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import { UserDiaryType } from '@prisma/client';
+import type { ActionArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 
 import {
@@ -15,7 +16,7 @@ import type { GetFacilitators, GetVolunteers } from '~/services/users.service';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
-export let loader: LoaderFunction = async () => {
+export let loader = async () => {
   const facilitators = await getFacilitators({});
   const volunteers = await getVolunteers({});
 
@@ -23,7 +24,7 @@ export let loader: LoaderFunction = async () => {
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });

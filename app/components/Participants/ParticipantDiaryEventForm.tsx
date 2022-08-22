@@ -2,7 +2,7 @@ import { Box, Button, HStack, Stack, VStack } from '@chakra-ui/react';
 import { ParticipantDiaryType } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useEffect, useState } from 'react';
-import { useNavigate, useTransition } from 'remix';
+import { useNavigate, useTransition } from '@remix-run/react';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 import { zfd } from 'zod-form-data';

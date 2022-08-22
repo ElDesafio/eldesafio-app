@@ -1,7 +1,8 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { redirect, useLoaderData } from 'remix';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -11,12 +12,11 @@ import {
   programDiaryEventFormValidator,
 } from '~/components/Program/ProgramDiaryEventForm';
 import { db } from '~/services/db.server';
-import type { GetProgramParticipants } from '~/services/programs.service';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const participants = await getProgramParticipants({
@@ -24,11 +24,11 @@ export let loader: LoaderFunction = async ({ params }) => {
     includeStatus: ['ACTIVE', 'INACTIVE', 'WAITING'],
   });
 
-  return { participants };
+  return typedjson({ participants });
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const user = await getLoggedInUser(request);
 
   const { id: programId } = z.object({ id: zfd.numeric() }).parse(params);
@@ -65,9 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function NewProgram() {
-  const { participants } = useLoaderData<{
-    participants: GetProgramParticipants;
-  }>();
+  const { participants } = useTypedLoaderData<typeof loader>();
 
   return (
     <>

@@ -61,10 +61,16 @@ export const FormInput = ({
       >
         {!hidden && label && <FormLabel htmlFor={name}>{label}</FormLabel>}
         <InputGroup>
-          {leftElement && <InputLeftElement> {leftElement}</InputLeftElement>}
+          {leftElement && (
+            <InputLeftElement>
+              <>{leftElement}</>
+            </InputLeftElement>
+          )}
           {hidden ? <VisuallyHidden>{input}</VisuallyHidden> : input}
           {rightElement && (
-            <InputRightElement>{rightElement}</InputRightElement>
+            <InputRightElement>
+              <>{rightElement}</>
+            </InputRightElement>
           )}
         </InputGroup>
         {helperText && <FormHelperText>{helperText}</FormHelperText>}

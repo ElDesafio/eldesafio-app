@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { ClassAttendanceStatus } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
-import { useNavigate, useSearchParams, useTransition } from 'remix';
+import { useNavigate, useSearchParams, useTransition } from '@remix-run/react';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 

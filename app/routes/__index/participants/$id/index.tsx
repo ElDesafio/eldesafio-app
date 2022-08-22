@@ -28,18 +28,17 @@ import {
   Tooltip,
   Tr,
 } from '@chakra-ui/react';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import {
+  useLoaderData,
+  useSearchParams,
+  useTransition,
+} from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MdCheckCircle, MdEdit, MdHighlightOff } from 'react-icons/md';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import {
-  json,
-  redirect,
-  useLoaderData,
-  useSearchParams,
-  useTransition,
-} from 'remix';
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { z } from 'zod';
 
@@ -109,7 +108,7 @@ const commitmentMonthSchema = z.object({
 });
 export const commitmentMonthValidator = withZod(commitmentMonthSchema);
 
-export const loader: LoaderFunction = async ({ params, request }) => {
+export const loader = async ({ params, request }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const selectedYear = getSelectedYearFromRequest(request);
@@ -128,7 +127,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   let returnToYear: number | undefined = undefined;
@@ -735,7 +734,7 @@ export default function ParticipantGeneral() {
                 <input name="year" type="hidden" value={selectedYear} />
                 <input name="formType" type="hidden" value="modifyCommitment" />
               </PopoverBody>
-              <PopoverFooter d="flex" justifyContent="flex-end">
+              <PopoverFooter display="flex" justifyContent="flex-end">
                 <ButtonGroup size="sm">
                   <Button
                     type="submit"
@@ -864,7 +863,10 @@ export default function ParticipantGeneral() {
                               value="modifyCommitmentMonth"
                             />
                           </PopoverBody>
-                          <PopoverFooter d="flex" justifyContent="flex-end">
+                          <PopoverFooter
+                            display="flex"
+                            justifyContent="flex-end"
+                          >
                             <ButtonGroup size="sm">
                               <Button
                                 type="submit"
