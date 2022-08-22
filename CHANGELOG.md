@@ -1,3 +1,29 @@
+# v0.16.0 (Fri Aug 19 2022)
+
+### Release Notes
+
+#### 96 create user diary ([#125](https://github.com/ElDesafio/eldesafio-app/pull/125))
+
+This will 😃
+
+---
+
+#### 🚀 Enhancement
+
+- 96 create user diary [#125](https://github.com/ElDesafio/eldesafio-app/pull/125) ([@lucascurti](https://github.com/lucascurti))
+
+#### 🔩 Dependency Updates
+
+- Update dependencies (non-major) [#119](https://github.com/ElDesafio/eldesafio-app/pull/119) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 3
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v0.15.8 (Wed Apr 06 2022)
 
 #### 🔩 Dependency Updates
