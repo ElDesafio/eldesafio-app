@@ -1,5 +1,5 @@
-import type { LoaderFunction } from 'remix';
-import { json } from 'remix';
+import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 
 import { db } from '~/services/db.server';
 
@@ -9,7 +9,7 @@ export type GlobalSearchResult = {
   type: 'participant' | 'school' | 'program';
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const url = new URL(request.url);
   const value = url.searchParams.get('value')?.trim() ?? '';
 

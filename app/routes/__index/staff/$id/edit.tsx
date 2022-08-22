@@ -1,7 +1,9 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { Prisma, Roles, User } from '@prisma/client';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { validationError } from 'remix-validated-form';
 import type { Socket } from 'socket.io-client';
 import * as z from 'zod';
@@ -17,17 +19,17 @@ async function getUser(id: number) {
   });
 }
 
-type GetUser = Prisma.PromiseReturnType<typeof getUser>;
-
 // LOADER
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getUser(+id);
+  const user = await getUser(+id);
+
+  return typedjson(user);
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params, context }) => {
+export const action = async ({ request, params, context }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -68,7 +70,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
     },
   });
 
-  if (updatedUser.status === 'INACTIVE') {
+  if (updatedUser.status === 'INACTIVE' && context) {
     (context.socket as Socket).emit('user-deactivated', {
       userId: updatedUser.id,
     });
@@ -82,7 +84,7 @@ type UserWithRoles = User & {
 };
 
 export default function EditParticipant() {
-  const user = useLoaderData<GetUser>();
+  const user = useTypedLoaderData<typeof loader>();
 
   if (!user) return <p>No existe el usuario</p>;
 

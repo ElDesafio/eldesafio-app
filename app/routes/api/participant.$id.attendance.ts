@@ -1,10 +1,9 @@
-import type { LoaderFunction } from 'remix';
-import { json } from 'remix';
+import type { LoaderArgs } from '@remix-run/node';
 import { z } from 'zod';
 
 import { db } from '~/services/db.server';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
   const url = new URL(request.url);
 

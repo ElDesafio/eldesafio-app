@@ -1,7 +1,7 @@
-import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
-import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import type { Participant } from '@prisma/client';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { validationError } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -12,8 +12,6 @@ import {
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
-import type { Participant, Prisma } from '.prisma/client';
-
 async function getParticipant(id: number) {
   return await db.participant.findUnique({
     where: { id },
@@ -21,17 +19,17 @@ async function getParticipant(id: number) {
   });
 }
 
-type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
-
 // LOADER
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getParticipant(+id);
+  const participant = await getParticipant(+id);
+
+  return typedjson({ participant });
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -86,7 +84,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function EditParticipant() {
-  const participant = useLoaderData<GetParticipant>();
+  const { participant } = useTypedLoaderData<typeof loader>();
 
   let schoolName: string | undefined;
 

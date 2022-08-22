@@ -20,9 +20,9 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import type { LoaderArgs } from '@remix-run/node';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData, useSearchParams } from 'remix';
 import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -37,7 +37,7 @@ import {
   getUserDiaryTypeProps,
 } from '~/util/utils';
 
-export const loader: LoaderFunction = async ({ params, request }) => {
+export const loader = async ({ params, request }: LoaderArgs) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const user = await getLoggedInUser(request);

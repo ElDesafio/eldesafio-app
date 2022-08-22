@@ -14,17 +14,15 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import type { School } from '@prisma/client';
+import { Link, useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData } from 'remix';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 
-import type { School } from '.prisma/client';
-
-export const loader: LoaderFunction = async () => {
+export const loader = async () => {
   return await db.school.findMany();
 };
 

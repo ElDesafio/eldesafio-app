@@ -8,6 +8,14 @@ import {
   useColorModeValue as mode,
 } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
+import {
+  Outlet,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useSearchParams,
+} from '@remix-run/react';
 import type {
   ControlProps,
   LoadingIndicatorProps,
@@ -19,14 +27,7 @@ import { DateTime } from 'luxon';
 import { useEffect, useMemo, useState } from 'react';
 import { FaChild, FaSchool } from 'react-icons/fa';
 import { MdSchool, MdSearch } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import {
-  Outlet,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-  useSearchParams,
-} from 'remix';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 
 import { AlertED } from '~/components/AlertED';
 import { Logo } from '~/components/Logo';
@@ -48,16 +49,16 @@ function getUser(id: number) {
 
 type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader = async ({ request }: LoaderArgs) => {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
 
   const userDB = await getUser(user.id);
 
-  if (!userDB) return authenticator.logout(request, { redirectTo: '/login' });
+  if (!userDB) throw authenticator.logout(request, { redirectTo: '/login' });
 
-  return userDB;
+  return typedjson({ user: userDB });
 };
 
 const Control = ({ children, ...props }: ControlProps<GlobalSearchResult>) => (
@@ -113,7 +114,7 @@ const LoadingIndicator = (props: LoadingIndicatorProps<GlobalSearchResult>) => (
 
 // Empty React component required by Remix
 export default function Dashboard() {
-  let user = useLoaderData<GetUser>();
+  let { user } = useTypedLoaderData<typeof loader>();
   let [searchParams, setSearchParams] = useSearchParams();
   let selectedYear = useSelectedYear();
   const socket = useSocket();

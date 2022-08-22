@@ -13,8 +13,8 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { css } from '@emotion/react';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData } from 'remix';
+import type { LoaderArgs } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -26,7 +26,7 @@ import { getParticipantDiaryEvent } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getFormattedDate, getParticipantDiaryTypeProps } from '~/util/utils';
 
-export const loader: LoaderFunction = async ({ params, request }) => {
+export const loader = async ({ params, request }: LoaderArgs) => {
   const { eventId } = z.object({ eventId: zfd.numeric() }).parse(params);
 
   const user = await getLoggedInUser(request);

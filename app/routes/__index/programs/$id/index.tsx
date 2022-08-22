@@ -31,17 +31,17 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { css } from '@emotion/react';
-import mudder from 'mudder';
-import { FaAngleDown, FaAngleUp, FaTrashAlt } from 'react-icons/fa';
-import { MdEdit } from 'react-icons/md';
-import type { ActionFunction, LoaderFunction } from 'remix';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Form,
-  json,
   PrefetchPageLinks,
   useLoaderData,
   useTransition,
-} from 'remix';
+} from '@remix-run/react';
+import mudder from 'mudder';
+import { FaAngleDown, FaAngleUp, FaTrashAlt } from 'react-icons/fa';
+import { MdEdit } from 'react-icons/md';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -62,7 +62,7 @@ enum FormTypeWaiting {
   REMOVE = 'REMOVE',
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({
@@ -114,7 +114,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   };
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id: programId } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -549,7 +549,10 @@ export default function ProgramGeneral() {
                               ¿Estás seguro que querés sacarlo de la lista de
                               espera?
                             </PopoverBody>
-                            <PopoverFooter d="flex" justifyContent="flex-end">
+                            <PopoverFooter
+                              display="flex"
+                              justifyContent="flex-end"
+                            >
                               <ButtonGroup size="sm">
                                 <Form method="post">
                                   <input

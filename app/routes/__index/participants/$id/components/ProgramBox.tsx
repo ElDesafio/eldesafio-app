@@ -1,6 +1,6 @@
 import { Container, Divider, HStack, Tag, Text } from '@chakra-ui/react';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
-import { useParams, useSearchParams } from 'remix';
+import { useParams, useSearchParams } from '@remix-run/react';
 
 import { CheckboxCard } from '~/components/CheckboxCard';
 import { ProgramSexText } from '~/util/utils';
@@ -59,7 +59,7 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
         }}
       >
         <Container py="0" px="0">
-          <Text fontWeight="bold" fontSize="lg" isTruncated>
+          <Text fontWeight="bold" fontSize="lg" noOfLines={1}>
             {name}
           </Text>
           <Divider mb={2} />

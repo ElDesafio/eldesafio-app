@@ -10,22 +10,22 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import type { ActionFunction, LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Form,
-  json,
   useActionData,
   useLoaderData,
   useSearchParams,
   useTransition,
-} from 'remix';
+} from '@remix-run/react';
 
 import { Logo } from '~/components/Logo';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { getSession } from '~/services/session.server';
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader = async ({ request }: LoaderArgs) => {
   await authenticator.isAuthenticated(request, { successRedirect: '/' });
   const session = await getSession(request.headers.get('Cookie'));
 

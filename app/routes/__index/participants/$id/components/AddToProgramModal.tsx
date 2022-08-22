@@ -9,7 +9,13 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { Form, useLocation, useMatches, useParams, useTransition } from 'remix';
+import {
+  Form,
+  useLocation,
+  useMatches,
+  useParams,
+  useTransition,
+} from '@remix-run/react';
 
 import type { GetParticipant } from '../../$id';
 import { FormTypeAddToProgram } from '../programs';

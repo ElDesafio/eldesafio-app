@@ -1,5 +1,5 @@
-import type { LinkProps } from 'remix';
-import { Link, useLocation, useResolvedPath } from 'remix';
+import type { LinkProps } from '@remix-run/react';
+import { Link, useLocation, useResolvedPath } from '@remix-run/react';
 
 /** Link that supports keeping the year search param */
 export const LinkED = ({ children, to, ...props }: LinkProps) => {

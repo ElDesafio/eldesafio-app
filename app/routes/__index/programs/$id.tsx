@@ -5,15 +5,20 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { LoaderFunction } from 'remix';
-import { Outlet, useLoaderData, useLocation, useResolvedPath } from 'remix';
+import type { LoaderArgs } from '@remix-run/node';
+import {
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useResolvedPath,
+} from '@remix-run/react';
 import { z } from 'zod';
 
 import { TabLink } from '~/components/TabLink';
 import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   return await getProgram({ id: +id });
