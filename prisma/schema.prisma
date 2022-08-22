@@ -36,6 +36,7 @@ model User {
   skype                        String?
   biography                    String?
   timezone                     String                   @default("America/Argentina/Buenos_Aires")
+  diary                        UserDiary[]
   createdAt                    DateTime                 @default(now()) @db.Timestamptz
   updatedAt                    DateTime                 @default(now()) @updatedAt @db.Timestamptz
   createdParticipants          Participant[]            @relation("CreatedParticipantByUser")
@@ -58,6 +59,44 @@ model User {
   updatedParticipantDiary      ParticipantDiary[]       @relation("UpdatedParticipantDiaryByUser")
   createdProgramDiary          ProgramDiary[]           @relation("CreatedProgramDiaryByUser")
   updatedProgramDiary          ProgramDiary[]           @relation("UpdatedProgramDiaryByUser")
+  createdUserDiary             UserDiary[]              @relation("CreatedUserDiaryByUser")
+  updatedUserDiary             UserDiary[]              @relation("UpdatedUserDiaryByUser")
+}
+
+enum UserDiaryType {
+  STATUS_INVITED
+  STATUS_ACTIVE
+  STATUS_INACTIVE
+  PROGRAM_STATUS_ACTIVE
+  PROGRAM_STATUS_INACTIVE
+  INFO
+}
+
+model UserDiary {
+  id            Int                 @id @default(autoincrement())
+  userId        Int
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          UserDiaryType
+  title         String
+  description   String?
+  isAutoEvent   Boolean             @default(false)
+  date          DateTime            @default(now()) @db.Timestamptz
+  createdAt     DateTime            @default(now()) @db.Timestamptz
+  updatedAt     DateTime            @default(now()) @updatedAt @db.Timestamptz
+  createdBy     Int
+  createdByUser User                @relation("CreatedUserDiaryByUser", fields: [createdBy], references: [id])
+  updatedBy     Int
+  updatedByUser User                @relation("UpdatedUserDiaryByUser", fields: [updatedBy], references: [id])
+  programs      UserDiaryPrograms[]
+}
+
+model UserDiaryPrograms {
+  userDiaryId Int
+  userDiary   UserDiary @relation(fields: [userDiaryId], references: [id])
+  programId   Int
+  program     Program   @relation(fields: [programId], references: [id])
+
+  @@id([userDiaryId, programId])
 }
 
 enum Roles {
@@ -220,7 +259,7 @@ model ParticipantDiary {
   title         String
   description   String?
   isAutoEvent   Boolean                    @default(false)
-  date          DateTime                   @db.Timestamptz
+  date          DateTime                   @default(now()) @db.Timestamptz
   createdAt     DateTime                   @default(now()) @db.Timestamptz
   updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
   createdByUser User                       @relation("CreatedParticipantDiaryByUser", fields: [createdBy], references: [id])
@@ -334,7 +373,7 @@ model ProgramDiary {
   title         String
   description   String?
   isAutoEvent   Boolean                    @default(false)
-  date          DateTime                   @db.Timestamptz
+  date          DateTime                   @default(now()) @db.Timestamptz
   createdAt     DateTime                   @default(now()) @db.Timestamptz
   updatedAt     DateTime                   @default(now()) @updatedAt @db.Timestamptz
   createdBy     Int
@@ -391,12 +430,13 @@ model Program {
   classes            Class[]                    @relation("ClassByProgram")
   participantDiaries ParticipantDiaryPrograms[]
   programDiaries     ProgramDiary[]
+  userDiaries        UserDiaryPrograms[]
 }
 
 model UsersOnPrograms {
-  user          User     @relation("UserOnProgramsByUser", fields: [userId], references: [id])
+  user          User     @relation("UserOnProgramsByUser", fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
-  program       Program  @relation("UserOnProgramsByProgram", fields: [programId], references: [id])
+  program       Program  @relation("UserOnProgramsByProgram", fields: [programId], references: [id], onDelete: Cascade)
   programId     Int
   isFacilitator Boolean  @default(false)
   createdAt     DateTime @default(now()) @db.Timestamptz
@@ -432,7 +472,7 @@ model ParticipantsOnPrograms {
 
 model ProgramDays {
   id        Int      @id @default(autoincrement())
-  program   Program  @relation("ProgramDaysByProgram", fields: [programId], references: [id])
+  program   Program  @relation("ProgramDaysByProgram", fields: [programId], references: [id], onDelete: Cascade)
   programId Int
   day       Weekdays
   fromTime  String

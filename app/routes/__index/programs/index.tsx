@@ -14,18 +14,17 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import type { Program } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData } from 'remix';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 import { getSelectedYearFromRequest } from '~/util/utils';
 
-import type { Program } from '.prisma/client';
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const year = getSelectedYearFromRequest(request);
 
   return await db.program.findMany({

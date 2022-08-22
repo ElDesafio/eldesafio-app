@@ -1,5 +1,8 @@
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { redirect, useLoaderData } from 'remix';
+import { UserDiaryType } from '@prisma/client';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { DateTime } from 'luxon';
 import { validationError } from 'remix-validated-form';
 import * as z from 'zod';
 
@@ -15,7 +18,7 @@ import type { GetFacilitators, GetVolunteers } from '~/services/users.service';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({ id: Number(id) });
@@ -50,7 +53,7 @@ export let loader: LoaderFunction = async ({ params }) => {
 };
 
 //ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   let user = await authenticator.isAuthenticated(request, {
@@ -64,14 +67,14 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const { programDays, facilitators, volunteers, ...rest } = fieldValues.data;
 
-  const facilitatorsArray =
+  const newFacilitators =
     typeof facilitators === 'string'
       ? facilitators.split(',').map((id) => ({
           userId: Number(id),
           isFacilitator: true,
         }))
       : [];
-  const volunteersArray =
+  const newVolunteers =
     typeof volunteers === 'string'
       ? volunteers.split(',').map((id) => ({
           userId: Number(id),
@@ -79,19 +82,143 @@ export const action: ActionFunction = async ({ request, params }) => {
         }))
       : [];
 
-  const program = await db.program.update({
-    where: { id: +id },
-    data: {
-      ...rest,
-      programDays: {
-        deleteMany: {},
-        create: programDays,
+  await db.$transaction(async (db) => {
+    const program = await db.program.findUnique({
+      where: {
+        id: +id,
       },
-      educators: {
-        deleteMany: {},
-        create: [...facilitatorsArray, ...volunteersArray],
+      include: {
+        educators: {
+          select: {
+            userId: true,
+            isFacilitator: true,
+          },
+        },
       },
-    },
+    });
+
+    if (!program) {
+      throw new Response('Not Found', {
+        status: 404,
+      });
+    }
+
+    const currentFacilitators = program.educators.filter(
+      (educator) => educator && educator.isFacilitator,
+    );
+    const currentVolunteers = program.educators.filter(
+      (educator) => educator && !educator.isFacilitator,
+    );
+
+    const newActiveFacilitators = newFacilitators.filter(
+      (facilitator) =>
+        !currentFacilitators.some(
+          ({ userId }) => userId === facilitator.userId,
+        ),
+    );
+
+    const newActiveVolunteers = newVolunteers.filter(
+      (volunteer) =>
+        !currentVolunteers.some(({ userId }) => userId === volunteer.userId),
+    );
+
+    const newInactiveFacilitators = currentFacilitators.filter(
+      (facilitator) =>
+        !newFacilitators.some(({ userId }) => userId === facilitator.userId),
+    );
+
+    const newInactiveVolunteers = currentVolunteers.filter(
+      (volunteer) =>
+        !newVolunteers.some(({ userId }) => userId === volunteer.userId),
+    );
+
+    newActiveFacilitators.forEach(async (facilitator) => {
+      await db.userDiary.create({
+        data: {
+          userId: facilitator.userId,
+          type: UserDiaryType.PROGRAM_STATUS_ACTIVE,
+          isAutoEvent: true,
+          title: `Dado de alta como facilitador en el programa`,
+          date: DateTime.utc().toJSDate(),
+          createdBy: user.id,
+          updatedBy: user.id,
+          programs: {
+            create: {
+              programId: program.id,
+            },
+          },
+        },
+      });
+    });
+    newInactiveFacilitators.forEach(async (facilitator) => {
+      await db.userDiary.create({
+        data: {
+          userId: facilitator.userId,
+          type: UserDiaryType.PROGRAM_STATUS_INACTIVE,
+          isAutoEvent: true,
+          title: `Dado de baja como facilitador en el programa`,
+          date: DateTime.utc().toJSDate(),
+          createdBy: user.id,
+          updatedBy: user.id,
+          programs: {
+            create: {
+              programId: program.id,
+            },
+          },
+        },
+      });
+    });
+    newActiveVolunteers.forEach(async (volunteer) => {
+      await db.userDiary.create({
+        data: {
+          userId: volunteer.userId,
+          type: UserDiaryType.PROGRAM_STATUS_ACTIVE,
+          isAutoEvent: true,
+          title: `Dado de alta como voluntario en el programa`,
+          date: DateTime.utc().toJSDate(),
+          createdBy: user.id,
+          updatedBy: user.id,
+          programs: {
+            create: {
+              programId: program.id,
+            },
+          },
+        },
+      });
+    });
+    newInactiveVolunteers.forEach(async (volunteer) => {
+      await db.userDiary.create({
+        data: {
+          userId: volunteer.userId,
+          type: UserDiaryType.PROGRAM_STATUS_INACTIVE,
+          isAutoEvent: true,
+          title: `Dado de baja como voluntario en el programa`,
+          date: DateTime.utc().toJSDate(),
+          createdBy: user.id,
+          updatedBy: user.id,
+          programs: {
+            create: {
+              programId: program.id,
+            },
+          },
+        },
+      });
+    });
+
+    await db.program.update({
+      where: { id: +id },
+      data: {
+        ...rest,
+        programDays: {
+          deleteMany: {},
+          create: programDays,
+        },
+        educators: {
+          deleteMany: {},
+          create: [...newFacilitators, ...newVolunteers],
+        },
+      },
+    });
   });
 
   return redirect(`/programs/${id}`);

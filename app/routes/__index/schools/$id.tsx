@@ -13,9 +13,9 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import type { LoaderArgs } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { MdEdit } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData } from 'remix';
 import { z } from 'zod';
 
 import { LinkED } from '~/components/LinkED';
@@ -23,7 +23,7 @@ import type { GetSchool } from '~/services/school.service';
 import { getSchool } from '~/services/school.service';
 import { getLoggedInUser } from '~/services/users.service';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const loggedInUser = await getLoggedInUser(request);

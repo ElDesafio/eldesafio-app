@@ -1,8 +1,8 @@
 import { Box, Flex, Spinner } from '@chakra-ui/react';
+import { useFetcher, useParams } from '@remix-run/react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useRef } from 'react';
-import { useFetcher, useParams } from 'remix';
 
 import type { GetProgramClasses } from '~/services/classes.service';
 import { formatAttendanceChartBarsData } from '~/util/utils';

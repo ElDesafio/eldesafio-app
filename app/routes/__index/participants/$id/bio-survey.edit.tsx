@@ -1,5 +1,6 @@
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 
@@ -13,14 +14,14 @@ import type { GetParticipantBioSurvey } from '~/services/participants.service';
 import { getParticipantBioSurvey } from '~/services/participants.service';
 
 // LOADER
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   return await getParticipantBioSurvey(+id);
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {

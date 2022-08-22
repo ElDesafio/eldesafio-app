@@ -1,15 +1,8 @@
-import {
-  Box,
-  Button,
-  HStack,
-  Stack,
-  StackDivider,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, HStack, Stack, VStack } from '@chakra-ui/react';
 import { ParticipantDiaryType } from '@prisma/client';
+import { useNavigate, useTransition } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useEffect, useState } from 'react';
-import { useNavigate, useTransition } from 'remix';
 import { ValidatedForm } from 'remix-validated-form';
 import * as z from 'zod';
 import { zfd } from 'zod-form-data';
@@ -37,7 +30,7 @@ const diaryEventSchema = zfd.formData({
 
 export const diaryEventFormValidator = withZod(diaryEventSchema);
 
-type ProgramFormProps = {
+type ParticipantDiaryEventFormProps = {
   defaultValues?: Partial<z.infer<typeof diaryEventSchema>>;
   programs: Exclude<GetParticipantPrograms, null>;
   isAutoEvent?: boolean;
@@ -47,7 +40,7 @@ export function ParticipantDiaryEventForm({
   isAutoEvent = false,
   defaultValues,
   programs,
-}: ProgramFormProps) {
+}: ParticipantDiaryEventFormProps) {
   let navigate = useNavigate();
   const [cleanPrograms, setCleanPrograms] = useState(programs);
   const [selectedProgramsIds, setSelectedProgramsIds] = useState(

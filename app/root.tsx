@@ -9,9 +9,7 @@ import {
   theme as chakraTheme,
 } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
-import type React from 'react';
-import { useContext, useEffect, useState } from 'react';
-import remirrorStyles from 'remirror/styles/all.css';
+import type { MetaFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -21,7 +19,10 @@ import {
   ScrollRestoration,
   useCatch,
   useTransition,
-} from 'remix';
+} from '@remix-run/react';
+import type React from 'react';
+import { useContext, useEffect, useState } from 'react';
+import remirrorStyles from 'remirror/styles/all.css';
 import { ClientOnly } from 'remix-utils';
 import type { Socket } from 'socket.io-client';
 import io from 'socket.io-client';
@@ -40,6 +41,12 @@ type DocumentProps = {
   children: React.ReactNode;
   title?: string;
 };
+
+export const meta: MetaFunction = () => ({
+  charset: 'utf-8',
+  title: 'Remix Notes',
+  viewport: 'width=device-width,initial-scale=1',
+});
 
 export function links() {
   return [
@@ -114,8 +121,6 @@ const Document = withEmotionCache(
     return (
       <html lang="en">
         <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width,initial-scale=1" />
           <link rel="icon" href={favicon} type="image/x-icon" />
           {title ? <title>{title}</title> : null}
           <Meta />

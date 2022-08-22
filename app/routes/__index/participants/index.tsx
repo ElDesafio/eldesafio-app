@@ -18,18 +18,16 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import type { Participant } from '@prisma/client';
+import { useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData } from 'remix';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 import { getAge } from '~/util/utils';
 
-import type { Participant } from '.prisma/client';
-
-export const loader: LoaderFunction = async () => {
+export const loader = async () => {
   return await db.participant.findMany({
     orderBy: { firstName: 'asc' },
   });

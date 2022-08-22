@@ -15,9 +15,10 @@ import {
   PopoverHeader,
   PopoverTrigger,
 } from '@chakra-ui/react';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { Form, useLoaderData, useTransition } from '@remix-run/react';
 import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { Form, json, redirect, useLoaderData, useTransition } from 'remix';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
@@ -33,7 +34,7 @@ import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
 import { isAdmin } from '~/util/utils';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { classId } = z.object({ classId: z.string() }).parse(params);
 
   const classItem = await getClass(+classId);
@@ -61,7 +62,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   };
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id: programId, classId } = z
     .object({ id: z.string(), classId: z.string() })
     .parse(params);
@@ -176,7 +177,7 @@ export default function AttendanceEdit() {
                 ¿Estás seguro que querés borrar la clase? Una vez borrada no se
                 puede recuperar.
               </PopoverBody>
-              <PopoverFooter d="flex" justifyContent="flex-end">
+              <PopoverFooter display="flex" justifyContent="flex-end">
                 <ButtonGroup size="sm">
                   <Form method="post">
                     <input name="type" type="hidden" value="DELETE_CLASS" />

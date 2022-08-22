@@ -1,17 +1,5 @@
 {
   "extends": ["config:base"],
   "labels": ["dependencies"],
-  "draftPR": true,
-  "packageRules": [
-    {
-      "matchDepTypes": ["devDependencies", "dependencies"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "dependencies (non-major)"
-    },
-    {
-      "matchDepTypes": ["devDependencies", "dependencies"],
-      "matchUpdateTypes": ["major"],
-      "groupName": "dependencies (major)"
-    }
-  ]
+  "draftPR": true
 }

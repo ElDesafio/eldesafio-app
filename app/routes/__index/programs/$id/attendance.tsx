@@ -23,19 +23,18 @@ import {
 } from '@chakra-ui/react';
 import type { ClassAttendanceStatus } from '@prisma/client';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
+import { useSearchParams, useTransition } from '@remix-run/react';
 import { Select } from 'chakra-react-select';
 import { DateTime, Info } from 'luxon';
 import { FaCloudRain } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import { useLoaderData, useSearchParams, useTransition } from 'remix';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
-import type { GetProgramClasses } from '~/services/classes.service';
 import { getProgramClasses } from '~/services/classes.service';
-import type { GetProgramParticipants } from '~/services/programs.service';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getAge, getAttendanceProps } from '~/util/utils';
@@ -43,7 +42,7 @@ import { getAge, getAttendanceProps } from '~/util/utils';
 import { AttendanceChartBars } from './components/AttendanceChartBars';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const url = new URL(request.url);
@@ -129,13 +128,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     };
   });
 
-  return {
+  return typedjson({
     classes,
     participants,
     totalPercentages,
     isUserAdmin,
     activeParticipantsCount,
-  };
+  });
 };
 
 function ClassDateHeader({
@@ -206,13 +205,7 @@ export default function Attendance() {
     isUserAdmin,
     totalPercentages,
     activeParticipantsCount,
-  } = useLoaderData<{
-    classes: GetProgramClasses;
-    participants: GetProgramParticipants;
-    isUserAdmin: boolean;
-    totalPercentages: Record<string, { present: number; absent: number }>;
-    activeParticipantsCount: number;
-  }>();
+  } = useTypedLoaderData<typeof loader>();
   const transition = useTransition();
   const [searchParams, setSearchParams] = useSearchParams();
 

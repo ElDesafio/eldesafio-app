@@ -1,9 +1,13 @@
 import { SimpleGrid, useToast } from '@chakra-ui/react';
+import type { ParticipantDiary, Prisma, Sex } from '@prisma/client';
+import { ProgramSex } from '@prisma/client';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { useActionData, useSearchParams } from '@remix-run/react';
 import { DateTime } from 'luxon';
 import mudder from 'mudder';
 import { useEffect } from 'react';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, useActionData, useLoaderData, useSearchParams } from 'remix';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { z } from 'zod';
 
 import { authenticator } from '~/services/auth.server';
@@ -15,8 +19,6 @@ import {
 import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
 import { ProgramBox } from './components/ProgramBox';
-import type { ParticipantDiary, Prisma, Sex } from '.prisma/client';
-import { ProgramSex } from '.prisma/client';
 
 export enum FormTypeAddToProgram {
   ACTIVE = 'ACTIVE',
@@ -96,7 +98,7 @@ export type GetParticipantProgramsByYear = Prisma.PromiseReturnType<
   typeof getParticipantProgramsByYear
 >;
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
   const selectedYear = getSelectedYearFromRequest(request);
 
@@ -115,14 +117,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error("Couldn't get participant");
   }
 
-  return await getParticipantProgramsByYear(
+  const programs = await getParticipantProgramsByYear(
     +selectedYear,
     participant.birthday,
     participant.sex,
   );
+
+  return typedjson({ programs });
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -303,7 +307,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function ParticipantPrograms() {
-  const programs = useLoaderData<GetParticipantProgramsByYear>();
+  const { programs } = useTypedLoaderData<typeof loader>();
   const diaryEvent = useActionData<ParticipantDiary | null>();
   const [searchParams, setSearchParams] = useSearchParams();
   const toast = useToast();

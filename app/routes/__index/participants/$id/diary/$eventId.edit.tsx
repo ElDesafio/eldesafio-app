@@ -1,7 +1,8 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -11,7 +12,6 @@ import {
   diaryEventFormValidator,
   ParticipantDiaryEventForm,
 } from '~/components/Participants/ParticipantDiaryEventForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import type {
   GetParticipantDiaryEvent,
@@ -24,22 +24,31 @@ import {
 import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export let loader: LoaderFunction = async ({ params, request }) => {
+export let loader = async ({ params, request }: LoaderArgs) => {
   const { id, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
 
   const user = await getLoggedInUser(request);
 
-  const programs = await getParticipantPrograms({ participantId: id });
-
   const event = await getParticipantDiaryEvent({ eventId });
+
+  if (!event) {
+    throw new Error("The event doesn't exist");
+  }
+
+  const eventYear = DateTime.fromJSDate(event.date).year;
+
+  const programs = await getParticipantPrograms({
+    participantId: id,
+    year: eventYear,
+  });
 
   return { programs, event, timezone: user.timezone };
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const user = await getLoggedInUser(request);
   const { id: participantId, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })

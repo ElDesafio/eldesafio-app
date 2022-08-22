@@ -1,6 +1,9 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { json, redirect, useLoaderData } from 'remix';
+import { UserDiaryType } from '@prisma/client';
+import type { ActionArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { DateTime } from 'luxon';
 import { validationError } from 'remix-validated-form';
 
 import {
@@ -13,7 +16,7 @@ import type { GetFacilitators, GetVolunteers } from '~/services/users.service';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
-export let loader: LoaderFunction = async () => {
+export let loader = async () => {
   const facilitators = await getFacilitators({});
   const volunteers = await getVolunteers({});
 
@@ -21,7 +24,7 @@ export let loader: LoaderFunction = async () => {
 };
 
 // ACTION
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
@@ -36,14 +39,14 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { programDays, facilitators, volunteers, ...rest } = fieldValues.data;
 
-  const facilitatorsArray =
+  const newFacilitators =
     typeof facilitators === 'string'
       ? facilitators.split(',').map((id) => ({
           userId: Number(id),
           isFacilitator: true,
         }))
       : [];
-  const volunteersArray =
+  const newVolunteers =
     typeof volunteers === 'string'
       ? volunteers.split(',').map((id) => ({
           userId: Number(id),
@@ -60,9 +63,47 @@ export const action: ActionFunction = async ({ request }) => {
         create: programDays,
       },
       educators: {
-        create: [...facilitatorsArray, ...volunteersArray],
+        create: [...newFacilitators, ...newVolunteers],
       },
     },
+  });
+
+  newFacilitators.forEach(async (facilitator) => {
+    await db.userDiary.create({
+      data: {
+        userId: facilitator.userId,
+        type: UserDiaryType.PROGRAM_STATUS_ACTIVE,
+        isAutoEvent: true,
+        title: `Dado de alta como facilitador en el programa`,
+        date: DateTime.utc().toJSDate(),
+        createdBy: user.id,
+        updatedBy: user.id,
+        programs: {
+          create: {
+            programId: program.id,
+          },
+        },
+      },
+    });
+  });
+
+  newVolunteers.forEach(async (volunteer) => {
+    await db.userDiary.create({
+      data: {
+        userId: volunteer.userId,
+        type: UserDiaryType.PROGRAM_STATUS_ACTIVE,
+        isAutoEvent: true,
+        title: `Dado de alta como voluntario en el programa`,
+        date: DateTime.utc().toJSDate(),
+        createdBy: user.id,
+        updatedBy: user.id,
+        programs: {
+          create: {
+            programId: program.id,
+          },
+        },
+      },
+    });
   });
 
   return redirect('/programs');

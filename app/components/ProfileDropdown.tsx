@@ -13,7 +13,7 @@ import {
   useMenuButton,
 } from '@chakra-ui/react';
 import type { User } from '@prisma/client';
-import { Form } from 'remix';
+import { Form } from '@remix-run/react';
 
 const UserAvatar = ({
   picture,

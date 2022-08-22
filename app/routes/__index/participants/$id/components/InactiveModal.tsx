@@ -15,8 +15,13 @@ import {
   UnorderedList,
 } from '@chakra-ui/react';
 import { ParticipantDiaryType } from '@prisma/client';
+import {
+  useLocation,
+  useMatches,
+  useParams,
+  useTransition,
+} from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { useLocation, useMatches, useParams, useTransition } from 'remix';
 import { ValidatedForm } from 'remix-validated-form';
 import { z } from 'zod';
 

@@ -8,6 +8,14 @@ import {
   useColorModeValue as mode,
 } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
+import {
+  Outlet,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useSearchParams,
+} from '@remix-run/react';
 import type {
   ControlProps,
   LoadingIndicatorProps,
@@ -19,14 +27,7 @@ import { DateTime } from 'luxon';
 import { useEffect, useMemo, useState } from 'react';
 import { FaChild, FaSchool } from 'react-icons/fa';
 import { MdSchool, MdSearch } from 'react-icons/md';
-import type { LoaderFunction } from 'remix';
-import {
-  Outlet,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-  useSearchParams,
-} from 'remix';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 
 import { AlertED } from '~/components/AlertED';
 import { Logo } from '~/components/Logo';
@@ -48,16 +49,16 @@ function getUser(id: number) {
 
 type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader = async ({ request }: LoaderArgs) => {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
 
   const userDB = await getUser(user.id);
 
-  if (!userDB) return authenticator.logout(request, { redirectTo: '/login' });
+  if (!userDB) throw authenticator.logout(request, { redirectTo: '/login' });
 
-  return userDB;
+  return typedjson({ user: userDB });
 };
 
 const Control = ({ children, ...props }: ControlProps<GlobalSearchResult>) => (
@@ -113,12 +114,13 @@ const LoadingIndicator = (props: LoadingIndicatorProps<GlobalSearchResult>) => (
 
 // Empty React component required by Remix
 export default function Dashboard() {
-  let user = useLoaderData<GetUser>();
+  let { user } = useTypedLoaderData<typeof loader>();
   let [searchParams, setSearchParams] = useSearchParams();
   let selectedYear = useSelectedYear();
   const socket = useSocket();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string | undefined>();
+  const [searchResults, setSearchResults] = useState<GlobalSearchResult[]>([]);
 
   const showNotCurrentYear = selectedYear !== DateTime.now().year.toString();
 
@@ -147,6 +149,12 @@ export default function Dashboard() {
       }
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (globalSearch.data) {
+      setSearchResults(globalSearch.data);
+    }
+  }, [globalSearch.data]);
 
   // use the user to render the UI of your private route
   const { isMenuOpen, toggle } = useMobileMenuState();
@@ -194,10 +202,14 @@ export default function Dashboard() {
               instanceId="search-global"
               size="sm"
               placeholder="Buscar..."
-              options={globalSearch.data ? globalSearch.data : []}
+              options={searchResults}
               isLoading={isLoadingSearch}
               noOptionsMessage={() => 'No se encontraron resultados'}
               onInputChange={debouncedOnInputChange}
+              onBlur={() => {
+                setSearchValue(undefined);
+                setSearchResults([]);
+              }}
               value={null}
               onChange={(newValue) => {
                 if (newValue && 'type' in newValue) {
@@ -210,6 +222,7 @@ export default function Dashboard() {
                   if (newValue?.type === 'school') {
                     navigate(`/schools/${newValue.value}`);
                   }
+                  setSearchResults([]);
                 }
               }}
               chakraStyles={{

@@ -13,12 +13,13 @@ import {
   FormAnswerOptions,
   ParticipantDiaryType,
   Roles,
+  UserDiaryType,
 } from '@prisma/client';
+import { useSearchParams } from '@remix-run/react';
 import type Highcharts from 'highcharts';
 import { numberFormat } from 'highcharts';
 import { DateTime, Info } from 'luxon';
 import type React from 'react';
-import { useSearchParams } from 'remix';
 import { z } from 'zod';
 
 import type { GetProgramClasses } from '~/services/classes.service';
@@ -785,6 +786,61 @@ function getParticipantDiaryTypeProps(type: ParticipantDiaryType) {
     }
   }
 }
+function getUserDiaryTypeProps(type: UserDiaryType) {
+  switch (type) {
+    case UserDiaryType.STATUS_INVITED: {
+      return {
+        tagColor: 'gray',
+        variant: 'solid',
+        text: 'invitado',
+        description: 'invitado',
+      };
+    }
+    case UserDiaryType.STATUS_ACTIVE: {
+      return {
+        tagColor: 'blue',
+        variant: 'solid',
+        text: 'activo',
+        description: 'Estado del usuario cambiado a: activo',
+      };
+    }
+    case UserDiaryType.STATUS_INACTIVE: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'inactivo',
+        description: 'Estado del usuario cambiado a: inactivo',
+      };
+    }
+    case UserDiaryType.INFO: {
+      return {
+        tagColor: 'gray',
+        variant: 'solid',
+        text: 'info',
+        description: 'Información General',
+      };
+    }
+    case UserDiaryType.PROGRAM_STATUS_ACTIVE: {
+      return {
+        tagColor: 'blue',
+        variant: 'solid',
+        text: 'alta',
+        description: 'Alta en Programa',
+      };
+    }
+    case UserDiaryType.PROGRAM_STATUS_INACTIVE: {
+      return {
+        tagColor: 'red',
+        variant: 'solid',
+        text: 'baja',
+        description: 'Baja del Programa',
+      };
+    }
+    default: {
+      throw new Error('[getUserDiaryTypeProps] Unknown user diary type');
+    }
+  }
+}
 
 function getSelectedYearFromRequest(request: Request) {
   const url = new URL(request.url);
@@ -885,6 +941,7 @@ export {
   getParticipantDiaryTypeProps,
   getPhoneBelongsToText,
   getSelectedYearFromRequest,
+  getUserDiaryTypeProps,
   getUserRoleName,
   getUserStatusName,
   isAdmin,

@@ -1,9 +1,9 @@
-import type { LoaderFunction } from 'remix';
-import { redirect } from 'remix';
+import type { LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 
 import { getLoggedInUser } from '~/services/users.service';
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader = async ({ request }: LoaderArgs) => {
   const loggedinUser = await getLoggedInUser(request);
 
   if (loggedinUser?.status === 'INACTIVE') {
