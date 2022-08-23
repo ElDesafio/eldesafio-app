@@ -1,3 +1,22 @@
+# v0.16.2 (Tue Aug 23 2022)
+
+#### 🔩 Dependency Updates
+
+- Update dependency @vitejs/plugin-react to v2 [#130](https://github.com/ElDesafio/eldesafio-app/pull/130) ([@renovate[bot]](https://github.com/renovate[bot]) [@kodiakhq[bot]](https://github.com/kodiakhq[bot]) [@lucascurti](https://github.com/lucascurti))
+- Pin dependency @types/node to 18.7.10 [#128](https://github.com/ElDesafio/eldesafio-app/pull/128) ([@renovate[bot]](https://github.com/renovate[bot]) [@kodiakhq[bot]](https://github.com/kodiakhq[bot]))
+
+#### ⚠️ Pushed to `main`
+
+- fix prettier errors ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 3
+
+- [@kodiakhq[bot]](https://github.com/kodiakhq[bot])
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.16.1 (Tue Aug 23 2022)
 
 ### Release Notes
