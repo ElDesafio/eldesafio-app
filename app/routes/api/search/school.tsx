@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 
 import { db } from '~/services/db.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const schoolName = url.searchParams.get('schoolName') ?? '';
 
@@ -21,4 +21,4 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   return json(schools);
-};
+}

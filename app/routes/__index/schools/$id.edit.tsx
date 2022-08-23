@@ -14,17 +14,17 @@ import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
 // LOADER
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const school = await db.school.findUnique({
     where: { id: +id },
   });
   return json({ school });
-};
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -47,7 +47,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect('/schools');
-};
+}
 
 export default function EditParticipant() {
   const { school } = useLoaderData<typeof loader>();

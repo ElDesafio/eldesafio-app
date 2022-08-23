@@ -3,7 +3,7 @@ import { redirect } from '@remix-run/node';
 
 import { getLoggedInUser } from '~/services/users.service';
 
-export let loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   const loggedinUser = await getLoggedInUser(request);
 
   if (loggedinUser?.status === 'INACTIVE') {
@@ -11,4 +11,4 @@ export let loader = async ({ request }: LoaderArgs) => {
   }
 
   return redirect('/participants');
-};
+}

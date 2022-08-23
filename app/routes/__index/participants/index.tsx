@@ -27,13 +27,13 @@ import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 import { getAge } from '~/util/utils';
 
-export const loader = async () => {
+export async function loader() {
   const participants = await db.participant.findMany({
     orderBy: { firstName: 'asc' },
   });
 
   return json({ participants });
-};
+}
 
 export default function Participants() {
   const { participants } = useLoaderData<typeof loader>();

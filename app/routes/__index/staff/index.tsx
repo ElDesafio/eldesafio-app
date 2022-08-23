@@ -37,10 +37,10 @@ async function getUsers() {
   });
 }
 
-export const loader = async () => {
+export async function loader() {
   const users = await getUsers();
   return json({ users });
-};
+}
 
 export default function Participants() {
   const { users } = useLoaderData<typeof loader>();

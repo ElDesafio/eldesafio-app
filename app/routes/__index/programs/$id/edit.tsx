@@ -16,7 +16,7 @@ import { getProgram } from '~/services/programs.service';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
-export let loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({ id: Number(id) });
@@ -48,10 +48,10 @@ export let loader = async ({ params }: LoaderArgs) => {
     facilitatorsIdsString,
     volunteersIdsString,
   });
-};
+}
 
 //ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   let user = await authenticator.isAuthenticated(request, {
@@ -220,7 +220,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect(`/programs/${id}`);
-};
+}
 
 export default function EditProgram() {
   const {

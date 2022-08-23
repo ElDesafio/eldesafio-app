@@ -37,7 +37,7 @@ import {
   getUserDiaryTypeProps,
 } from '~/util/utils';
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const user = await getLoggedInUser(request);
@@ -55,7 +55,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const timezone = user.timezone;
 
   return json({ diary, timezone });
-};
+}
 
 export default function UserDiary() {
   const { diary, timezone } = useLoaderData<typeof loader>();

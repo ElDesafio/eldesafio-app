@@ -24,7 +24,7 @@ import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 import { getSelectedYearFromRequest } from '~/util/utils';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   const year = getSelectedYearFromRequest(request);
 
   const programs = await db.program.findMany({
@@ -35,7 +35,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   return json({ programs });
-};
+}
 
 export default function Programs() {
   const { programs } = useLoaderData<typeof loader>();

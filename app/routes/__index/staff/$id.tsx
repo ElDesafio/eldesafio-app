@@ -31,13 +31,13 @@ export async function getUser(id: number) {
   });
 }
 
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const user = await getUser(+id);
 
   return json({ user });
-};
+}
 
 export default function User() {
   const { user } = useLoaderData<typeof loader>();

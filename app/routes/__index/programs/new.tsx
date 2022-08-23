@@ -15,15 +15,15 @@ import { db } from '~/services/db.server';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
-export let loader = async () => {
+export async function loader() {
   const facilitators = await getFacilitators({});
   const volunteers = await getVolunteers({});
 
   return json({ facilitators, volunteers });
-};
+}
 
 // ACTION
-export const action = async ({ request }: ActionArgs) => {
+export async function action({ request }: ActionArgs) {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
@@ -106,7 +106,7 @@ export const action = async ({ request }: ActionArgs) => {
   });
 
   return redirect('/programs');
-};
+}
 
 export default function NewProgram() {
   const { facilitators, volunteers } = useLoaderData<typeof loader>();

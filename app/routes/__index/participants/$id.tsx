@@ -33,13 +33,13 @@ export async function getParticipant(id: number) {
 
 export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
 
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const participant = await getParticipant(+id);
 
   return json({ participant });
-};
+}
 
 export default function Participant() {
   const { participant } = useLoaderData<typeof loader>();

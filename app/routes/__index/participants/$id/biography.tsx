@@ -20,12 +20,12 @@ export async function getParticipant(id: number) {
   });
 }
 
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participant = await getParticipant(+id);
   return json({ participant });
-};
+}
 
 export default function ParticipantHealth() {
   const { participant } = useLoaderData<typeof loader>();

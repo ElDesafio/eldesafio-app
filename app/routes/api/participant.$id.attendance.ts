@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { db } from '~/services/db.server';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
   const url = new URL(request.url);
 
@@ -41,4 +41,4 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       participants: classItem.participants,
     };
   });
-};
+}

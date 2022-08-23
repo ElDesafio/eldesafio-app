@@ -22,11 +22,11 @@ import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 
-export const loader = async () => {
+export async function loader() {
   const schools = await db.school.findMany();
 
   return json({ schools });
-};
+}
 
 export default function Programs() {
   const { schools } = useLoaderData<typeof loader>();

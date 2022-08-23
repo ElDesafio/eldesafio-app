@@ -20,16 +20,16 @@ async function getUser(id: number) {
 }
 
 // LOADER
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await getUser(+id);
 
   return typedjson(user);
-};
+}
 
 // ACTION
-export const action = async ({ request, params, context }: ActionArgs) => {
+export async function action({ request, params, context }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -77,7 +77,7 @@ export const action = async ({ request, params, context }: ActionArgs) => {
   }
 
   return redirect(`/staff/${id}`);
-};
+}
 
 type UserWithRoles = User & {
   roles: string;

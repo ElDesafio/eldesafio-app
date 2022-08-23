@@ -28,7 +28,7 @@ import { getProgramDiaryEvent } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getFormattedDate } from '~/util/utils';
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { eventId } = z.object({ eventId: zfd.numeric() }).parse(params);
 
   const user = await getLoggedInUser(request);
@@ -36,7 +36,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const event = await getProgramDiaryEvent({ eventId });
 
   return json({ event, timezone: user.timezone });
-};
+}
 
 export default function ParticipantDiaryEvent() {
   const { event, timezone } = useLoaderData<typeof loader>();

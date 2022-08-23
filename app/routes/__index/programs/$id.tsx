@@ -18,13 +18,13 @@ import { z } from 'zod';
 import { TabLink } from '~/components/TabLink';
 import { getProgram } from '~/services/programs.service';
 
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({ id: +id });
 
   return json({ program });
-};
+}
 
 export default function Program() {
   const { program } = useLoaderData<typeof loader>();

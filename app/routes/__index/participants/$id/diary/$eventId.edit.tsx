@@ -20,7 +20,7 @@ import {
 import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export let loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { id, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
@@ -41,10 +41,10 @@ export let loader = async ({ params, request }: LoaderArgs) => {
   });
 
   return json({ programs, event, timezone: user.timezone });
-};
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const user = await getLoggedInUser(request);
   const { id: participantId, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
@@ -79,7 +79,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect(`/participants/${participantId}/diary`);
-};
+}
 
 export default function ParticipantDiaryEventEdit() {
   const { programs, event, timezone } = useLoaderData<typeof loader>();

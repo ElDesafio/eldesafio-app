@@ -22,7 +22,7 @@ import { LinkED } from '~/components/LinkED';
 import { getSchool } from '~/services/school.service';
 import { getLoggedInUser } from '~/services/users.service';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const loggedInUser = await getLoggedInUser(request);
@@ -30,7 +30,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const school = await getSchool(Number(id));
 
   return { school, isAdmin: loggedInUser.isAdmin };
-};
+}
 
 export default function UserGeneral() {
   const { school, isAdmin } = useLoaderData<typeof loader>();

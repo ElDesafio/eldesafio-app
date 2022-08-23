@@ -31,7 +31,7 @@ import { getClass } from '~/services/classes.service';
 import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { classId } = z.object({ classId: z.string() }).parse(params);
 
   const classItem = await getClass(+classId);
@@ -57,9 +57,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     classItem,
     isUserAdmin,
   });
-};
+}
 
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id: programId, classId } = z
     .object({ id: z.string(), classId: z.string() })
     .parse(params);
@@ -131,7 +131,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   return redirect(
     `/programs/${programId}/attendance?${url.searchParams.toString()}`,
   );
-};
+}
 
 export default function AttendanceEdit() {
   const { classItem, defaultValues } = useLoaderData<typeof loader>();

@@ -16,17 +16,17 @@ import { getLoggedInUser, getUserPrograms } from '~/services/users.service';
 import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
 // LOADER
-export let loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
   const selectedYear = getSelectedYearFromRequest(request);
 
   const programs = await getUserPrograms({ userId: id, year: selectedYear });
 
   return json({ programs });
-};
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const user = await getLoggedInUser(request);
 
   const { id: userId } = z.object({ id: zfd.numeric() }).parse(params);
@@ -60,7 +60,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect(`/staff/${userId}/diary`);
-};
+}
 
 export default function NewUserDiary() {
   const { programs } = useLoaderData<typeof loader>();

@@ -45,7 +45,7 @@ function userStatusHelper(status: UserStatus) {
   }
 }
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await getUser(Number(id));
@@ -54,7 +54,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const isLoggedinUserAdmin = loggedinUser.isAdmin;
 
   return json({ user, isLoggedinUserAdmin });
-};
+}
 
 export default function UserGeneral() {
   const { user, isLoggedinUserAdmin } = useLoaderData<typeof loader>();

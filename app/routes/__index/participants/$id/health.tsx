@@ -17,13 +17,13 @@ import { getParticipantHealth } from '~/services/participants.service';
 import { getBloodTypeName, getFormAnswerOptionName } from '~/util/utils';
 
 // LOADER
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participantHealth = await getParticipantHealth(+id);
 
   return json({ participantHealth });
-};
+}
 
 export default function ParticipantHealth() {
   const { participantHealth } = useLoaderData<typeof loader>();

@@ -25,7 +25,7 @@ import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { getSession } from '~/services/session.server';
 
-export let loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   await authenticator.isAuthenticated(request, { successRedirect: '/' });
   const session = await getSession(request.headers.get('Cookie'));
 
@@ -34,9 +34,9 @@ export let loader = async ({ request }: LoaderArgs) => {
   const error = session.get('auth:error');
 
   return json({ magicLinkSent: !!magicLinkSent, error });
-};
+}
 
-export let action = async ({ request }: ActionArgs) => {
+export async function action({ request }: ActionArgs) {
   const clonedRequest = request.clone();
   const formData = Object.fromEntries(await clonedRequest.formData());
 
@@ -67,7 +67,7 @@ export let action = async ({ request }: ActionArgs) => {
     // rendered.
     failureRedirect: '/login',
   });
-};
+}
 
 export default function Login() {
   let { magicLinkSent, error } = useLoaderData<typeof loader>();
