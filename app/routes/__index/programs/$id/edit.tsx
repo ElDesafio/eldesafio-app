@@ -1,6 +1,6 @@
 import { UserDiaryType } from '@prisma/client';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
 import { validationError } from 'remix-validated-form';
@@ -12,9 +12,7 @@ import {
 } from '~/components/Program/ProgramForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
-import type { GetFacilitators, GetVolunteers } from '~/services/users.service';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
@@ -43,13 +41,13 @@ export let loader = async ({ params }: LoaderArgs) => {
   const facilitatorsIdsString = facilitatorsIds.join(',');
   const volunteersIdsString = volunteersIds.join(',');
 
-  return {
+  return json({
     program,
     facilitators,
     volunteers,
     facilitatorsIdsString,
     volunteersIdsString,
-  };
+  });
 };
 
 //ACTION
@@ -231,13 +229,7 @@ export default function EditProgram() {
     volunteers,
     facilitatorsIdsString,
     volunteersIdsString,
-  } = useLoaderData<{
-    program: Exclude<GetProgram, 'participants'>;
-    facilitators: GetFacilitators;
-    volunteers: GetVolunteers;
-    facilitatorsIdsString: string;
-    volunteersIdsString: string;
-  }>();
+  } = useLoaderData<typeof loader>();
 
   if (!program) {
     throw new Error('Program not found');

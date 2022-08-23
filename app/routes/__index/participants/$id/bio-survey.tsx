@@ -8,12 +8,12 @@ import {
 } from '@chakra-ui/react';
 import { FormAnswerOptions } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
-import type { GetParticipantBioSurvey } from '~/services/participants.service';
 import { getParticipantBioSurvey } from '~/services/participants.service';
 import { getFormAnswerOptionName } from '~/util/utils';
 
@@ -21,11 +21,13 @@ import { getFormAnswerOptionName } from '~/util/utils';
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getParticipantBioSurvey(+id);
+  const participantBioSurvey = await getParticipantBioSurvey(+id);
+
+  return json({ participantBioSurvey });
 };
 
 export default function ParticipantHealth() {
-  const participantBioSurvey = useLoaderData<GetParticipantBioSurvey>();
+  const { participantBioSurvey } = useLoaderData<typeof loader>();
 
   return (
     <div>

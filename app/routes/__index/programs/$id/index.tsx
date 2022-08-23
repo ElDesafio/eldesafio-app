@@ -49,7 +49,6 @@ import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getDayByName, ProgramSexText } from '~/util/utils';
@@ -103,7 +102,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const isUserAdmin = loggedinUser.isAdmin;
 
-  return {
+  return json({
     program,
     isUserAdmin,
     facilitators,
@@ -111,7 +110,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     participantsActive,
     participantsInactive,
     participantsWaiting,
-  };
+  });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -222,15 +221,7 @@ export default function ProgramGeneral() {
     participantsActive,
     participantsInactive,
     participantsWaiting,
-  } = useLoaderData<{
-    program: GetProgram;
-    isUserAdmin: boolean;
-    facilitators: Exclude<GetProgram, null>['educators'];
-    volunteers: Exclude<GetProgram, null>['educators'];
-    participantsActive: Exclude<GetProgram, null>['participants'];
-    participantsInactive: Exclude<GetProgram, null>['participants'];
-    participantsWaiting: Exclude<GetProgram, null>['participants'];
-  }>();
+  } = useLoaderData<typeof loader>();
   const transition = useTransition();
 
   if (!program) {

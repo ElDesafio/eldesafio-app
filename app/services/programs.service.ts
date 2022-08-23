@@ -55,6 +55,7 @@ export async function getProgram({
   });
 }
 
+// TODO: delete?
 export type GetProgram = Prisma.PromiseReturnType<typeof getProgram>;
 
 export async function getProgramParticipants({
@@ -189,6 +190,7 @@ export async function getProgramDiary({
   );
 }
 
+// TODO: delete?
 export type GetProgramDiary = Prisma.PromiseReturnType<typeof getProgramDiary>;
 
 export async function getProgramDiaryEvent({ eventId }: { eventId: number }) {
@@ -211,6 +213,7 @@ export async function getProgramDiaryEvent({ eventId }: { eventId: number }) {
   });
 }
 
+// TODO: delete?
 export type GetProgramDiaryEvent = Prisma.PromiseReturnType<
   typeof getProgramDiaryEvent
 >;

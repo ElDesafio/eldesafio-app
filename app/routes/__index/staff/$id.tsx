@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Outlet,
   useLoaderData,
@@ -30,16 +31,19 @@ export async function getUser(id: number) {
   });
 }
 
+// TODO: delete?
 export type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
-  return await getUser(+id);
+  const user = await getUser(+id);
+
+  return json({ user });
 };
 
 export default function User() {
-  const user = useLoaderData<GetUser>();
+  const { user } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   if (!user) throw new Error("User doesn't exist");

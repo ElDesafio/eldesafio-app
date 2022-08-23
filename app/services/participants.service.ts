@@ -9,6 +9,7 @@ export async function getParticipantHealth(id: number) {
   });
 }
 
+// TODO: delete?
 export type GetParticipantHealth = Prisma.PromiseReturnType<
   typeof getParticipantHealth
 >;
@@ -19,6 +20,7 @@ export async function getParticipantBioSurvey(id: number) {
   });
 }
 
+// TODO: delete?
 export type GetParticipantBioSurvey = Prisma.PromiseReturnType<
   typeof getParticipantBioSurvey
 >;
@@ -82,6 +84,7 @@ export async function getParticipantWithPrograms(id: number, year: number) {
   };
 }
 
+// TODO: delete?
 export type GetParticipantWithPrograms = Prisma.PromiseReturnType<
   typeof getParticipantWithPrograms
 >;
@@ -183,6 +186,7 @@ export async function getParticipantDiaryEvent({
   });
 }
 
+// TODO: delete?
 export type GetParticipantDiaryEvent = Prisma.PromiseReturnType<
   typeof getParticipantDiaryEvent
 >;
@@ -217,6 +221,7 @@ export async function getParticipantPrograms({
   }));
 }
 
+// TODO: delete?
 export type GetParticipantPrograms = Prisma.PromiseReturnType<
   typeof getParticipantPrograms
 >;

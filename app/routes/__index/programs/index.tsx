@@ -14,8 +14,8 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { Program } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
 
@@ -27,16 +27,18 @@ import { getSelectedYearFromRequest } from '~/util/utils';
 export const loader = async ({ request }: LoaderArgs) => {
   const year = getSelectedYearFromRequest(request);
 
-  return await db.program.findMany({
+  const programs = await db.program.findMany({
     where: {
       year,
     },
     orderBy: { name: 'asc' },
   });
+
+  return json({ programs });
 };
 
 export default function Programs() {
-  const programs = useLoaderData<Program[]>();
+  const { programs } = useLoaderData<typeof loader>();
   return (
     <>
       <Box

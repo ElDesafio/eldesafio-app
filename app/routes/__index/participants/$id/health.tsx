@@ -7,12 +7,12 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
-import type { GetParticipantHealth } from '~/services/participants.service';
 import { getParticipantHealth } from '~/services/participants.service';
 import { getBloodTypeName, getFormAnswerOptionName } from '~/util/utils';
 
@@ -20,11 +20,13 @@ import { getBloodTypeName, getFormAnswerOptionName } from '~/util/utils';
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getParticipantHealth(+id);
+  const participantHealth = await getParticipantHealth(+id);
+
+  return json({ participantHealth });
 };
 
 export default function ParticipantHealth() {
-  const participantHealth = useLoaderData<GetParticipantHealth>();
+  const { participantHealth } = useLoaderData<typeof loader>();
 
   return (
     <div>

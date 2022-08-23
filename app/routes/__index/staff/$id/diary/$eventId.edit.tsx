@@ -1,6 +1,6 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
 import { validationError } from 'remix-validated-form';
@@ -13,10 +13,6 @@ import {
   userDiaryEventFormValidator,
 } from '~/components/Users/UserDiaryEventForm';
 import { db } from '~/services/db.server';
-import type {
-  GetUserDiaryEvent,
-  GetUserPrograms,
-} from '~/services/users.service';
 import {
   getLoggedInUser,
   getUserDiaryEvent,
@@ -41,7 +37,7 @@ export let loader = async ({ params, request }: LoaderArgs) => {
 
   const programs = await getUserPrograms({ userId: id, year: eventYear });
 
-  return { programs, event, timezone: user.timezone };
+  return json({ programs, event, timezone: user.timezone });
 };
 
 // ACTION
@@ -83,11 +79,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function UserDiaryEventEdit() {
-  const { programs, event, timezone } = useLoaderData<{
-    programs: GetUserPrograms;
-    event: GetUserDiaryEvent;
-    timezone: string;
-  }>();
+  const { programs, event, timezone } = useLoaderData<typeof loader>();
 
   if (!event) throw new Error("Event doesn't exist");
 

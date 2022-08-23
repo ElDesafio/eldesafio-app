@@ -23,6 +23,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { MdAdd, MdSchool } from 'react-icons/md';
 import { ClientOnly } from 'remix-utils';
@@ -58,14 +59,11 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   const timezone = user.timezone;
 
-  return { diary, timezone };
+  return json({ diary, timezone });
 };
 
 export default function ParticipantDiary() {
-  const { diary, timezone } = useLoaderData<{
-    diary: GetParticipantDiary;
-    timezone: string;
-  }>();
+  const { diary, timezone } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (

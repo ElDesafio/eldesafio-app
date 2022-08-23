@@ -10,7 +10,7 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Form,
@@ -36,7 +36,7 @@ export let loader = async ({ request }: LoaderArgs) => {
   return json({ magicLinkSent: !!magicLinkSent, error });
 };
 
-export let action: ActionFunction = async ({ request }) => {
+export let action = async ({ request }: ActionArgs) => {
   const clonedRequest = request.clone();
   const formData = Object.fromEntries(await clonedRequest.formData());
 
@@ -70,10 +70,7 @@ export let action: ActionFunction = async ({ request }) => {
 };
 
 export default function Login() {
-  let { magicLinkSent, error } = useLoaderData<{
-    magicLinkSent: boolean;
-    error: { message: string } | undefined;
-  }>();
+  let { magicLinkSent, error } = useLoaderData<typeof loader>();
   let response = useActionData<{ message: string }>();
   let [searchParams, setSearchParams] = useSearchParams();
 

@@ -18,7 +18,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { Participant } from '@prisma/client';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
 
@@ -28,13 +28,15 @@ import { db } from '~/services/db.server';
 import { getAge } from '~/util/utils';
 
 export const loader = async () => {
-  return await db.participant.findMany({
+  const participants = await db.participant.findMany({
     orderBy: { firstName: 'asc' },
   });
+
+  return json({ participants });
 };
 
 export default function Participants() {
-  const participants = useLoaderData<Participant[]>();
+  const { participants } = useLoaderData<typeof loader>();
   return (
     <>
       <Box

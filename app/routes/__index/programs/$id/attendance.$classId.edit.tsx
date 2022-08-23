@@ -55,11 +55,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     })),
   };
 
-  return {
+  return json({
     defaultValues,
     classItem,
     isUserAdmin,
-  };
+  });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -137,10 +137,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function AttendanceEdit() {
-  const { classItem, defaultValues } = useLoaderData<{
-    classItem: GetClass;
-    defaultValues: Partial<z.infer<typeof attendanceSchema>>;
-  }>();
+  const { classItem, defaultValues } = useLoaderData<typeof loader>();
 
   const transition = useTransition();
 

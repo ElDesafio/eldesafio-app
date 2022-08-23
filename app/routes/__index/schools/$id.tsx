@@ -19,7 +19,6 @@ import { MdEdit } from 'react-icons/md';
 import { z } from 'zod';
 
 import { LinkED } from '~/components/LinkED';
-import type { GetSchool } from '~/services/school.service';
 import { getSchool } from '~/services/school.service';
 import { getLoggedInUser } from '~/services/users.service';
 
@@ -34,10 +33,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function UserGeneral() {
-  const { school, isAdmin } = useLoaderData<{
-    school: GetSchool;
-    isAdmin: boolean;
-  }>();
+  const { school, isAdmin } = useLoaderData<typeof loader>();
 
   if (!school) {
     throw new Error("School doesn't exist");

@@ -20,6 +20,7 @@ export async function getUser(id: number) {
   });
 }
 
+// TODO: delete?
 export type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
 /** It checks */
@@ -79,6 +80,7 @@ export async function getFacilitators({
   });
 }
 
+// TODO: delete?
 export type GetFacilitators = Prisma.PromiseReturnType<typeof getFacilitators>;
 
 export async function getVolunteers({
@@ -105,6 +107,7 @@ export async function getVolunteers({
   });
 }
 
+// TODO: delete?
 export type GetVolunteers = Prisma.PromiseReturnType<typeof getFacilitators>;
 
 export async function getUserDiary({
@@ -148,6 +151,7 @@ export async function getUserDiary({
   });
 }
 
+// TODO: delete?
 export type GetUserDiary = Prisma.PromiseReturnType<typeof getUserDiary>;
 
 export async function getUserPrograms({
@@ -180,6 +184,7 @@ export async function getUserPrograms({
   }));
 }
 
+// TODO: delete?
 export type GetUserPrograms = Prisma.PromiseReturnType<typeof getUserPrograms>;
 
 export async function getUserDiaryEvent({ eventId }: { eventId: number }) {
@@ -200,6 +205,7 @@ export async function getUserDiaryEvent({ eventId }: { eventId: number }) {
   });
 }
 
+// TODO: delete?
 export type GetUserDiaryEvent = Prisma.PromiseReturnType<
   typeof getUserDiaryEvent
 >;

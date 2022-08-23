@@ -1,6 +1,6 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
 import { validationError } from 'remix-validated-form';
@@ -12,7 +12,6 @@ import {
   userDiaryEventFormValidator,
 } from '~/components/Users/UserDiaryEventForm';
 import { db } from '~/services/db.server';
-import type { GetUserPrograms } from '~/services/users.service';
 import { getLoggedInUser, getUserPrograms } from '~/services/users.service';
 import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
@@ -23,7 +22,7 @@ export let loader = async ({ params, request }: LoaderArgs) => {
 
   const programs = await getUserPrograms({ userId: id, year: selectedYear });
 
-  return { programs };
+  return json({ programs });
 };
 
 // ACTION
@@ -64,9 +63,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function NewUserDiary() {
-  const { programs } = useLoaderData<{
-    programs: GetUserPrograms;
-  }>();
+  const { programs } = useLoaderData<typeof loader>();
 
   const selectedYear = useSelectedYear();
 

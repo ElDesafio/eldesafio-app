@@ -21,6 +21,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
 import { ClientOnly } from 'remix-utils';
@@ -29,7 +30,6 @@ import { zfd } from 'zod-form-data';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
-import type { GetUserDiary } from '~/services/users.service';
 import { getLoggedInUser, getUserDiary } from '~/services/users.service';
 import {
   getFormattedDate,
@@ -54,14 +54,11 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   const timezone = user.timezone;
 
-  return { diary, timezone };
+  return json({ diary, timezone });
 };
 
 export default function UserDiary() {
-  const { diary, timezone } = useLoaderData<{
-    diary: GetUserDiary;
-    timezone: string;
-  }>();
+  const { diary, timezone } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (

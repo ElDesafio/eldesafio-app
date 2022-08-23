@@ -48,7 +48,6 @@ import { FormTextArea } from '~/components/Form/FormTextArea';
 import { LinkED } from '~/components/LinkED';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import type { GetParticipantWithPrograms } from '~/services/participants.service';
 import {
   createParticipantDiaryAutoEvent,
   getParticipantWithPrograms,
@@ -123,7 +122,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   const isUserAdmin = loggedinUser.isAdmin;
 
-  return { participant, isUserAdmin, timezone: loggedinUser.timezone };
+  return json({ participant, isUserAdmin, timezone: loggedinUser.timezone });
 };
 
 // ACTION
@@ -279,11 +278,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export default function ParticipantGeneral() {
-  const { participant, isUserAdmin, timezone } = useLoaderData<{
-    participant: GetParticipantWithPrograms;
-    isUserAdmin: boolean;
-    timezone: string;
-  }>();
+  const { participant, isUserAdmin, timezone } = useLoaderData<typeof loader>();
   const [btnHover, setBtnHover] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedYear = useSelectedYear();

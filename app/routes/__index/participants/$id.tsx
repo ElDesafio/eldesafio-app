@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Outlet,
   useLoaderData,
@@ -35,11 +36,13 @@ export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
-  return await getParticipant(+id);
+  const participant = await getParticipant(+id);
+
+  return json({ participant });
 };
 
 export default function Participant() {
-  const participant = useLoaderData<GetParticipant>();
+  const { participant } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   if (!participant) throw new Error("Participant doesn't exist");

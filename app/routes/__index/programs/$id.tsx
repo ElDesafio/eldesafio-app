@@ -6,6 +6,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Outlet,
   useLoaderData,
@@ -15,17 +16,18 @@ import {
 import { z } from 'zod';
 
 import { TabLink } from '~/components/TabLink';
-import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getProgram({ id: +id });
+  const program = await getProgram({ id: +id });
+
+  return json({ program });
 };
 
 export default function Program() {
-  const program = useLoaderData<GetProgram>();
+  const { program } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   if (!program) throw new Error("Participant doesn't exist");

@@ -17,10 +17,10 @@ import { db } from '~/services/db.server';
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const school: School | null = await db.school.findUnique({
+  const school = await db.school.findUnique({
     where: { id: +id },
   });
-  return school;
+  return json({ school });
 };
 
 // ACTION
@@ -50,7 +50,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function EditParticipant() {
-  const school = useLoaderData<School>();
+  const { school } = useLoaderData<typeof loader>();
   return (
     <>
       <Box
@@ -66,7 +66,7 @@ export default function EditParticipant() {
         </Container>
       </Box>
 
-      <SchoolForm defaultValues={school} />
+      <SchoolForm defaultValues={school ?? undefined} />
     </>
   );
 }

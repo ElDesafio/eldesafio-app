@@ -22,7 +22,9 @@ export async function getParticipant(id: number) {
   });
 }
 
+// TODO: delete?
 export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
+
 const biographySchema = z.object({
   biography: z.string().nonempty('La biografía no puede estar vacía'),
 });
@@ -32,7 +34,9 @@ export const biographyValidator = withZod(biographySchema);
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getParticipant(+id);
+  const participant = await getParticipant(+id);
+
+  return json({ participant });
 };
 
 // ACTION
@@ -62,7 +66,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function ParticipantHealth() {
-  const participant = useLoaderData<GetParticipant>();
+  const { participant } = useLoaderData<typeof loader>();
   let navigate = useNavigate();
   const transition = useTransition();
 
