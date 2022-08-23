@@ -14,7 +14,7 @@
     "docker": "docker-compose up -d",
     "docker:update_repo_db": "rm -rf ./postgres-data/{*,.*} & docker cp ed_local_db:/var/lib/postgresql/data postgres-data/",
     "format": "prettier --write .",
-    "postinstall": "remix setup node && patch-package",
+    "postinstall": "patch-package",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
