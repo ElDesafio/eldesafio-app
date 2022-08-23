@@ -16,7 +16,7 @@ import { db } from '~/services/db.server';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const classes = await getProgramClasses({
@@ -44,9 +44,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     participants,
     isUserAdmin,
   });
-};
+}
 
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id: programId } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -80,7 +80,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect(`/programs/${programId}/attendance`);
-};
+}
 
 export default function AttendanceNew() {
   const { participants } = useTypedLoaderData<typeof loader>();

@@ -25,6 +25,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { MdAdd, MdPerson } from 'react-icons/md';
 import { ClientOnly } from 'remix-utils';
@@ -34,7 +35,6 @@ import { zfd } from 'zod-form-data';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { TooltipAvatar } from '~/components/TooltipAvatar';
-import type { GetProgramDiary } from '~/services/programs.service';
 import { getProgramDiary } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import {
@@ -43,7 +43,7 @@ import {
   getSelectedYearFromRequest,
 } from '~/util/utils';
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const user = await getLoggedInUser(request);
@@ -60,14 +60,11 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   const timezone = user.timezone;
 
-  return { diary, timezone };
-};
+  return json({ diary, timezone });
+}
 
 export default function ParticipantDiary() {
-  const { diary, timezone } = useLoaderData<{
-    diary: GetProgramDiary;
-    timezone: string;
-  }>();
+  const { diary, timezone } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (

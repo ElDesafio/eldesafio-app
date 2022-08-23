@@ -37,9 +37,7 @@ export const attendanceSchema = z.object({
   isRainyDay: schemaCheckbox,
   attendants: z
     .object({
-      participantId: z
-        .string()
-        .nonempty('Participante ID no puede estar vacío'),
+      participantId: z.number(),
       status: z.preprocess(
         (value) => (value === '' ? null : value),
         z.nativeEnum(ClassAttendanceStatus).nullable().optional(),

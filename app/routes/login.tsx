@@ -10,7 +10,7 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Form,
@@ -25,7 +25,7 @@ import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { getSession } from '~/services/session.server';
 
-export let loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   await authenticator.isAuthenticated(request, { successRedirect: '/' });
   const session = await getSession(request.headers.get('Cookie'));
 
@@ -34,9 +34,9 @@ export let loader = async ({ request }: LoaderArgs) => {
   const error = session.get('auth:error');
 
   return json({ magicLinkSent: !!magicLinkSent, error });
-};
+}
 
-export let action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionArgs) {
   const clonedRequest = request.clone();
   const formData = Object.fromEntries(await clonedRequest.formData());
 
@@ -67,13 +67,10 @@ export let action: ActionFunction = async ({ request }) => {
     // rendered.
     failureRedirect: '/login',
   });
-};
+}
 
 export default function Login() {
-  let { magicLinkSent, error } = useLoaderData<{
-    magicLinkSent: boolean;
-    error: { message: string } | undefined;
-  }>();
+  let { magicLinkSent, error } = useLoaderData<typeof loader>();
   let response = useActionData<{ message: string }>();
   let [searchParams, setSearchParams] = useSearchParams();
 

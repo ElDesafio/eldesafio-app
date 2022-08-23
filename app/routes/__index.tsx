@@ -49,7 +49,7 @@ function getUser(id: number) {
 
 type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
-export let loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
@@ -59,7 +59,7 @@ export let loader = async ({ request }: LoaderArgs) => {
   if (!userDB) throw authenticator.logout(request, { redirectTo: '/login' });
 
   return typedjson({ user: userDB });
-};
+}
 
 const Control = ({ children, ...props }: ControlProps<GlobalSearchResult>) => (
   <chakraComponents.Control {...props}>

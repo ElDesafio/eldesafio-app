@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
 import { Roles } from '@prisma/client';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
 
@@ -36,14 +37,13 @@ async function getUsers() {
   });
 }
 
-type GetUsers = Prisma.PromiseReturnType<typeof getUsers>;
-
-export const loader = async () => {
-  return await getUsers();
-};
+export async function loader() {
+  const users = await getUsers();
+  return json({ users });
+}
 
 export default function Participants() {
-  const users = useLoaderData<GetUsers>();
+  const { users } = useLoaderData<typeof loader>();
 
   return (
     <>

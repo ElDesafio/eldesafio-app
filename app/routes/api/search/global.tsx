@@ -9,7 +9,7 @@ export type GlobalSearchResult = {
   type: 'participant' | 'school' | 'program';
 };
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const url = new URL(request.url);
   const value = url.searchParams.get('value')?.trim() ?? '';
 
@@ -89,4 +89,4 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }));
 
   return json([...cleanParticipants, ...cleanPrograms, ...cleanSchools]);
-};
+}

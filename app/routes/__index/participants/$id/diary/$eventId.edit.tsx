@@ -1,6 +1,6 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
 import { validationError } from 'remix-validated-form';
@@ -13,10 +13,6 @@ import {
   ParticipantDiaryEventForm,
 } from '~/components/Participants/ParticipantDiaryEventForm';
 import { db } from '~/services/db.server';
-import type {
-  GetParticipantDiaryEvent,
-  GetParticipantPrograms,
-} from '~/services/participants.service';
 import {
   getParticipantDiaryEvent,
   getParticipantPrograms,
@@ -24,7 +20,7 @@ import {
 import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export let loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { id, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
@@ -44,11 +40,11 @@ export let loader = async ({ params, request }: LoaderArgs) => {
     year: eventYear,
   });
 
-  return { programs, event, timezone: user.timezone };
-};
+  return json({ programs, event, timezone: user.timezone });
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const user = await getLoggedInUser(request);
   const { id: participantId, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
@@ -83,14 +79,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect(`/participants/${participantId}/diary`);
-};
+}
 
 export default function ParticipantDiaryEventEdit() {
-  const { programs, event, timezone } = useLoaderData<{
-    programs: GetParticipantPrograms;
-    event: GetParticipantDiaryEvent;
-    timezone: string;
-  }>();
+  const { programs, event, timezone } = useLoaderData<typeof loader>();
 
   if (!event) throw new Error("Event doesn't exist");
 

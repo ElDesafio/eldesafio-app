@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 
 import { authenticator } from '~/services/auth.server';
 
-export let loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   await authenticator.authenticate('email-link', request, {
     // If the user was authenticated, we redirect them to their profile page
     // This redirect is optional, if not defined the user will be returned by
@@ -14,4 +14,4 @@ export let loader = async ({ request }: LoaderArgs) => {
     // the ErrorBoundary will be rendered.
     failureRedirect: '/login',
   });
-};
+}

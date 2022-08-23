@@ -98,7 +98,7 @@ export type GetParticipantProgramsByYear = Prisma.PromiseReturnType<
   typeof getParticipantProgramsByYear
 >;
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
   const selectedYear = getSelectedYearFromRequest(request);
 
@@ -124,9 +124,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   );
 
   return typedjson({ programs });
-};
+}
 
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -304,7 +304,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       throw new Error('Form Type not supported');
     }
   }
-};
+}
 
 export default function ParticipantPrograms() {
   const { programs } = useTypedLoaderData<typeof loader>();

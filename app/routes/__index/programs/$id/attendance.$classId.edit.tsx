@@ -22,19 +22,16 @@ import { DateTime } from 'luxon';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
-import type { attendanceSchema } from '~/components/Attendance/AttendanceForm';
 import {
   AttendanceForm,
   attendanceFormValidator,
 } from '~/components/Attendance/AttendanceForm';
 import { authenticator } from '~/services/auth.server';
-import type { GetClass } from '~/services/classes.service';
 import { getClass } from '~/services/classes.service';
 import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
-import { isAdmin } from '~/util/utils';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { classId } = z.object({ classId: z.string() }).parse(params);
 
   const classItem = await getClass(+classId);
@@ -55,14 +52,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     })),
   };
 
-  return {
+  return json({
     defaultValues,
     classItem,
     isUserAdmin,
-  };
-};
+  });
+}
 
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id: programId, classId } = z
     .object({ id: z.string(), classId: z.string() })
     .parse(params);
@@ -134,13 +131,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   return redirect(
     `/programs/${programId}/attendance?${url.searchParams.toString()}`,
   );
-};
+}
 
 export default function AttendanceEdit() {
-  const { classItem, defaultValues } = useLoaderData<{
-    classItem: GetClass;
-    defaultValues: Partial<z.infer<typeof attendanceSchema>>;
-  }>();
+  const { classItem, defaultValues } = useLoaderData<typeof loader>();
 
   const transition = useTransition();
 

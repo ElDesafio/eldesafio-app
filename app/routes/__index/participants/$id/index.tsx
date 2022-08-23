@@ -48,7 +48,6 @@ import { FormTextArea } from '~/components/Form/FormTextArea';
 import { LinkED } from '~/components/LinkED';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import type { GetParticipantWithPrograms } from '~/services/participants.service';
 import {
   createParticipantDiaryAutoEvent,
   getParticipantWithPrograms,
@@ -108,7 +107,7 @@ const commitmentMonthSchema = z.object({
 });
 export const commitmentMonthValidator = withZod(commitmentMonthSchema);
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const selectedYear = getSelectedYearFromRequest(request);
@@ -123,11 +122,11 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   const isUserAdmin = loggedinUser.isAdmin;
 
-  return { participant, isUserAdmin, timezone: loggedinUser.timezone };
-};
+  return json({ participant, isUserAdmin, timezone: loggedinUser.timezone });
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   let returnToYear: number | undefined = undefined;
@@ -275,15 +274,11 @@ export const action = async ({ request, params }: ActionArgs) => {
   }
 
   return redirect(returnURL);
-};
+}
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export default function ParticipantGeneral() {
-  const { participant, isUserAdmin, timezone } = useLoaderData<{
-    participant: GetParticipantWithPrograms;
-    isUserAdmin: boolean;
-    timezone: string;
-  }>();
+  const { participant, isUserAdmin, timezone } = useLoaderData<typeof loader>();
   const [btnHover, setBtnHover] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedYear = useSelectedYear();

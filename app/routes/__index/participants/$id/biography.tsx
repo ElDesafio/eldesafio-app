@@ -1,6 +1,7 @@
 import { Button, Divider, Heading, Stack } from '@chakra-ui/react';
 import type { Prisma } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 
@@ -19,16 +20,15 @@ export async function getParticipant(id: number) {
   });
 }
 
-export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
-
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getParticipant(+id);
-};
+  const participant = await getParticipant(+id);
+  return json({ participant });
+}
 
 export default function ParticipantHealth() {
-  const participant = useLoaderData<GetParticipant>();
+  const { participant } = useLoaderData<typeof loader>();
 
   return (
     <>

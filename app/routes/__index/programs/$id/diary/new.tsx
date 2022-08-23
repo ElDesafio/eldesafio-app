@@ -16,7 +16,7 @@ import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export let loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const participants = await getProgramParticipants({
@@ -25,10 +25,10 @@ export let loader = async ({ params }: LoaderArgs) => {
   });
 
   return typedjson({ participants });
-};
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const user = await getLoggedInUser(request);
 
   const { id: programId } = z.object({ id: zfd.numeric() }).parse(params);
@@ -62,7 +62,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect(`/programs/${programId}/diary`);
-};
+}
 
 export default function NewProgram() {
   const { participants } = useTypedLoaderData<typeof loader>();

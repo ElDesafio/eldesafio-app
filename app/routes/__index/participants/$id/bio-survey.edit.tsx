@@ -10,18 +10,19 @@ import {
 } from '~/components/Participants/ParticipantBioSurveyForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import type { GetParticipantBioSurvey } from '~/services/participants.service';
 import { getParticipantBioSurvey } from '~/services/participants.service';
 
 // LOADER
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  return await getParticipantBioSurvey(+id);
-};
+  const participantBioSurvey = await getParticipantBioSurvey(+id);
+
+  return json({ participantBioSurvey });
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -51,10 +52,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   return redirect(`/participants/${id}/bio-survey`);
-};
+}
 
 export default function ParticipantBioSurveyEdit() {
-  const participantBioSurvey = useLoaderData<GetParticipantBioSurvey>();
+  const { participantBioSurvey } = useLoaderData<typeof loader>();
 
   return (
     <div>

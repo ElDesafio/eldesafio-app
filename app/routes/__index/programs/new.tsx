@@ -12,19 +12,18 @@ import {
 } from '~/components/Program/ProgramForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import type { GetFacilitators, GetVolunteers } from '~/services/users.service';
 import { getFacilitators, getVolunteers } from '~/services/users.service';
 
 // LOADER
-export let loader = async () => {
+export async function loader() {
   const facilitators = await getFacilitators({});
   const volunteers = await getVolunteers({});
 
-  return { facilitators, volunteers };
-};
+  return json({ facilitators, volunteers });
+}
 
 // ACTION
-export const action = async ({ request }: ActionArgs) => {
+export async function action({ request }: ActionArgs) {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
@@ -107,13 +106,10 @@ export const action = async ({ request }: ActionArgs) => {
   });
 
   return redirect('/programs');
-};
+}
 
 export default function NewProgram() {
-  const { facilitators, volunteers } = useLoaderData<{
-    facilitators: GetFacilitators;
-    volunteers: GetVolunteers;
-  }>();
+  const { facilitators, volunteers } = useLoaderData<typeof loader>();
 
   return (
     <>

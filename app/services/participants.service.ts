@@ -9,19 +9,11 @@ export async function getParticipantHealth(id: number) {
   });
 }
 
-export type GetParticipantHealth = Prisma.PromiseReturnType<
-  typeof getParticipantHealth
->;
-
 export async function getParticipantBioSurvey(id: number) {
   return await db.surveyBiography.findUnique({
     where: { participantId: id },
   });
 }
-
-export type GetParticipantBioSurvey = Prisma.PromiseReturnType<
-  typeof getParticipantBioSurvey
->;
 
 export async function getParticipantWithPrograms(id: number, year: number) {
   const participant = await db.participant.findUnique({
@@ -81,10 +73,6 @@ export async function getParticipantWithPrograms(id: number, year: number) {
     },
   };
 }
-
-export type GetParticipantWithPrograms = Prisma.PromiseReturnType<
-  typeof getParticipantWithPrograms
->;
 
 export async function getParticipantDiary({
   participantId,
@@ -182,10 +170,6 @@ export async function getParticipantDiaryEvent({
     },
   });
 }
-
-export type GetParticipantDiaryEvent = Prisma.PromiseReturnType<
-  typeof getParticipantDiaryEvent
->;
 
 export async function getParticipantPrograms({
   participantId,

@@ -10,7 +10,7 @@ import {
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
-export const action = async ({ request }: ActionArgs) => {
+export async function action({ request }: ActionArgs) {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
@@ -50,7 +50,7 @@ export const action = async ({ request }: ActionArgs) => {
   });
 
   return redirect('/participants');
-};
+}
 
 export default function NewParticipant() {
   return (

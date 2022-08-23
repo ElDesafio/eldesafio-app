@@ -20,16 +20,16 @@ async function getParticipant(id: number) {
 }
 
 // LOADER
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participant = await getParticipant(+id);
 
   return typedjson({ participant });
-};
+}
 
 // ACTION
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -81,7 +81,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   }
 
   return redirect(returnURL);
-};
+}
 
 export default function EditParticipant() {
   const { participant } = useTypedLoaderData<typeof loader>();

@@ -20,8 +20,6 @@ export async function getUser(id: number) {
   });
 }
 
-export type GetUser = Prisma.PromiseReturnType<typeof getUser>;
-
 /** It checks */
 export async function getLoggedInUser(request: Request) {
   const authUser = await authenticator.isAuthenticated(request, {
@@ -79,8 +77,6 @@ export async function getFacilitators({
   });
 }
 
-export type GetFacilitators = Prisma.PromiseReturnType<typeof getFacilitators>;
-
 export async function getVolunteers({
   includeInactive = false,
 }: {
@@ -104,8 +100,6 @@ export async function getVolunteers({
     },
   });
 }
-
-export type GetVolunteers = Prisma.PromiseReturnType<typeof getFacilitators>;
 
 export async function getUserDiary({
   userId,
@@ -148,8 +142,6 @@ export async function getUserDiary({
   });
 }
 
-export type GetUserDiary = Prisma.PromiseReturnType<typeof getUserDiary>;
-
 export async function getUserPrograms({
   userId,
   year,
@@ -180,8 +172,6 @@ export async function getUserPrograms({
   }));
 }
 
-export type GetUserPrograms = Prisma.PromiseReturnType<typeof getUserPrograms>;
-
 export async function getUserDiaryEvent({ eventId }: { eventId: number }) {
   return await db.userDiary.findUnique({
     where: { id: eventId },
@@ -199,7 +189,3 @@ export async function getUserDiaryEvent({ eventId }: { eventId: number }) {
     },
   });
 }
-
-export type GetUserDiaryEvent = Prisma.PromiseReturnType<
-  typeof getUserDiaryEvent
->;

@@ -14,7 +14,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { School } from '@prisma/client';
+import { json } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
 
@@ -22,12 +22,14 @@ import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
 
-export const loader = async () => {
-  return await db.school.findMany();
-};
+export async function loader() {
+  const schools = await db.school.findMany();
+
+  return json({ schools });
+}
 
 export default function Programs() {
-  const schools = useLoaderData<School[]>();
+  const { schools } = useLoaderData<typeof loader>();
   return (
     <>
       <Box

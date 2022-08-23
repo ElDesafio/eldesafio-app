@@ -2,12 +2,10 @@ import {
   Avatar,
   Box,
   Button,
-  Container,
   Divider,
   Flex,
   Heading,
   HStack,
-  Spacer,
   Stack,
   Table,
   Tag,
@@ -15,11 +13,11 @@ import {
   Tbody,
   Td,
   Tr,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import type { UserStatus } from '@prisma/client';
 import { Roles } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdEdit } from 'react-icons/md';
 import { z } from 'zod';
@@ -27,7 +25,6 @@ import { z } from 'zod';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
-import type { GetUser } from '~/services/users.service';
 import { getLoggedInUser, getUser } from '~/services/users.service';
 import { getAge, getFormattedDate, getUserRoleName } from '~/util/utils';
 
@@ -48,7 +45,7 @@ function userStatusHelper(status: UserStatus) {
   }
 }
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await getUser(Number(id));
@@ -56,14 +53,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const isLoggedinUserAdmin = loggedinUser.isAdmin;
 
-  return { user, isLoggedinUserAdmin };
-};
+  return json({ user, isLoggedinUserAdmin });
+}
 
 export default function UserGeneral() {
-  const { user, isLoggedinUserAdmin } = useLoaderData<{
-    user: GetUser;
-    isLoggedinUserAdmin: boolean;
-  }>();
+  const { user, isLoggedinUserAdmin } = useLoaderData<typeof loader>();
 
   if (!user) {
     throw new Error("User doesn't exist");

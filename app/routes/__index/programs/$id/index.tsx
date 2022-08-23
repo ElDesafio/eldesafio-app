@@ -49,7 +49,6 @@ import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import type { GetProgram } from '~/services/programs.service';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getDayByName, ProgramSexText } from '~/util/utils';
@@ -62,7 +61,7 @@ enum FormTypeWaiting {
   REMOVE = 'REMOVE',
 }
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({
@@ -103,7 +102,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const isUserAdmin = loggedinUser.isAdmin;
 
-  return {
+  return json({
     program,
     isUserAdmin,
     facilitators,
@@ -111,10 +110,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     participantsActive,
     participantsInactive,
     participantsWaiting,
-  };
-};
+  });
+}
 
-export const action = async ({ request, params }: ActionArgs) => {
+export async function action({ request, params }: ActionArgs) {
   const { id: programId } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -211,7 +210,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       throw new Error('Form Type not supported');
     }
   }
-};
+}
 
 export default function ProgramGeneral() {
   const {
@@ -222,15 +221,7 @@ export default function ProgramGeneral() {
     participantsActive,
     participantsInactive,
     participantsWaiting,
-  } = useLoaderData<{
-    program: GetProgram;
-    isUserAdmin: boolean;
-    facilitators: Exclude<GetProgram, null>['educators'];
-    volunteers: Exclude<GetProgram, null>['educators'];
-    participantsActive: Exclude<GetProgram, null>['participants'];
-    participantsInactive: Exclude<GetProgram, null>['participants'];
-    participantsWaiting: Exclude<GetProgram, null>['participants'];
-  }>();
+  } = useLoaderData<typeof loader>();
   const transition = useTransition();
 
   if (!program) {

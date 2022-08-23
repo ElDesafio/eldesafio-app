@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { css } from '@emotion/react';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { ClientOnly } from 'remix-utils';
 import { z } from 'zod';
@@ -21,25 +22,21 @@ import { zfd } from 'zod-form-data';
 
 import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
-import type { GetUserDiaryEvent } from '~/services/users.service';
 import { getLoggedInUser, getUserDiaryEvent } from '~/services/users.service';
 import { getFormattedDate, getUserDiaryTypeProps } from '~/util/utils';
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export async function loader({ params, request }: LoaderArgs) {
   const { eventId } = z.object({ eventId: zfd.numeric() }).parse(params);
 
   const user = await getLoggedInUser(request);
 
   const event = await getUserDiaryEvent({ eventId });
 
-  return { event, timezone: user.timezone };
-};
+  return json({ event, timezone: user.timezone });
+}
 
 export default function UserDiaryEvent() {
-  const { event, timezone } = useLoaderData<{
-    event: GetUserDiaryEvent;
-    timezone: string;
-  }>();
+  const { event, timezone } = useLoaderData<typeof loader>();
 
   if (!event) {
     throw new Error("The event doesn't exist");

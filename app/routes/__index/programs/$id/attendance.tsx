@@ -42,7 +42,7 @@ import { getAge, getAttendanceProps } from '~/util/utils';
 import { AttendanceChartBars } from './components/AttendanceChartBars';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export const loader = async ({ request, params }: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const url = new URL(request.url);
@@ -135,7 +135,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     isUserAdmin,
     activeParticipantsCount,
   });
-};
+}
 
 function ClassDateHeader({
   classId,
