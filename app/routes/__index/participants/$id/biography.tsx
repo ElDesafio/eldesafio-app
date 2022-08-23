@@ -20,9 +20,6 @@ export async function getParticipant(id: number) {
   });
 }
 
-// TODO: delete?
-export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
-
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: z.string() }).parse(params);
 

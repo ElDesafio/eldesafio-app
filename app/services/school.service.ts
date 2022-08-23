@@ -9,5 +9,3 @@ export async function getSchool(id: number) {
     },
   });
 }
-// TODO: delete?
-export type GetSchool = Prisma.PromiseReturnType<typeof getSchool>;

@@ -22,17 +22,14 @@ import { DateTime } from 'luxon';
 import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
-import type { attendanceSchema } from '~/components/Attendance/AttendanceForm';
 import {
   AttendanceForm,
   attendanceFormValidator,
 } from '~/components/Attendance/AttendanceForm';
 import { authenticator } from '~/services/auth.server';
-import type { GetClass } from '~/services/classes.service';
 import { getClass } from '~/services/classes.service';
 import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
-import { isAdmin } from '~/util/utils';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { classId } = z.object({ classId: z.string() }).parse(params);

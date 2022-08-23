@@ -22,9 +22,6 @@ export async function getParticipant(id: number) {
   });
 }
 
-// TODO: delete?
-export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
-
 const biographySchema = z.object({
   biography: z.string().nonempty('La biografía no puede estar vacía'),
 });

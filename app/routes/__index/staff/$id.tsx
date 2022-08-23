@@ -31,9 +31,6 @@ export async function getUser(id: number) {
   });
 }
 
-// TODO: delete?
-export type GetUser = Prisma.PromiseReturnType<typeof getUser>;
-
 export const loader = async ({ params }: LoaderArgs) => {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 

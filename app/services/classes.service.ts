@@ -184,5 +184,4 @@ export async function getClass(id: number) {
   };
 }
 
-// TODO: delete?
 export type GetClass = Prisma.PromiseReturnType<typeof getClass>;
