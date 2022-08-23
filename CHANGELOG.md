@@ -1,3 +1,36 @@
+# v0.16.1 (Tue Aug 23 2022)
+
+### Release Notes
+
+#### Update packages ([#127](https://github.com/ElDesafio/eldesafio-app/pull/127))
+
+- Update packages
+- Fix type error with Prisma dates
+
+---
+
+#### 🐛 Bug Fix
+
+- Update packages [#127](https://github.com/ElDesafio/eldesafio-app/pull/127) ([@lucascurti](https://github.com/lucascurti))
+
+#### ⚠️ Pushed to `main`
+
+- add fly healthcheck ([@lucascurti](https://github.com/lucascurti))
+- fix docker build (5th attempt) ([@lucascurti](https://github.com/lucascurti))
+- fix docker build (4th attempt) - disable npm prune ([@lucascurti](https://github.com/lucascurti))
+- fix docker build (3rd attempt) ([@lucascurti](https://github.com/lucascurti))
+- remove remix setup node from postinstall ([@lucascurti](https://github.com/lucascurti))
+- fix docker build (2nd attempt) ([@lucascurti](https://github.com/lucascurti))
+- remove metronome ([@lucascurti](https://github.com/lucascurti))
+- Merge branch 'main' of https://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- fix deploy ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.16.0 (Fri Aug 19 2022)
 
 ### Release Notes
