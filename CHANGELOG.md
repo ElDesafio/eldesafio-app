@@ -1,3 +1,25 @@
+# v0.17.0 (Tue Aug 23 2022)
+
+### Release Notes
+
+#### 132 fix useloaderdata types and throw redirects ([#133](https://github.com/ElDesafio/eldesafio-app/pull/133))
+
+- `useLoaderData` should use `typeof loader`
+- redirects should be thrown
+- always return `json()` from loader
+
+---
+
+#### 🚀 Enhancement
+
+- 132 fix useloaderdata types and throw redirects [#133](https://github.com/ElDesafio/eldesafio-app/pull/133) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.16.2 (Tue Aug 23 2022)
 
 #### 🔩 Dependency Updates
