@@ -15,7 +15,7 @@ WORKDIR /myapp
 COPY patches ./patches
 
 ADD package.json package-lock.json .npmrc ./
-RUN npm install --omit=dev --legacy-peer-deps
+RUN npm install --production=false --legacy-peer-deps
 
 
 # Setup production node_modules
@@ -25,7 +25,7 @@ WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 ADD package.json .npmrc ./
-# RUN npm prune --production
+RUN npm prune --production
 
 
 # Build the app
