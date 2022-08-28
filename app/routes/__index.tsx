@@ -4,15 +4,12 @@ import {
   HStack,
   Icon,
   Select,
-  Spinner,
   useColorModeValue as mode,
 } from '@chakra-ui/react';
-import type { Prisma } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
 import {
   Outlet,
   useFetcher,
-  useLoaderData,
   useNavigate,
   useSearchParams,
 } from '@remix-run/react';
@@ -33,7 +30,6 @@ import { AlertED } from '~/components/AlertED';
 import { Logo } from '~/components/Logo';
 import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
 import { NavMenu } from '~/components/NavMenu';
-import { Notification } from '~/components/Notification';
 import { ProfileDropdown } from '~/components/ProfileDropdown';
 import { useMobileMenuState } from '~/hooks/useMobileMenuState';
 import { authenticator } from '~/services/auth.server';
@@ -46,8 +42,6 @@ import type { GlobalSearchResult } from './api/search/global';
 function getUser(id: number) {
   return db.user.findUnique({ where: { id } });
 }
-
-type GetUser = Prisma.PromiseReturnType<typeof getUser>;
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request, {

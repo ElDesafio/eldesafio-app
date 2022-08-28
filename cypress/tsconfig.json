@@ -7,7 +7,8 @@
     "e2e/**/*",
     "support/**/*",
     "../node_modules/cypress",
-    "../node_modules/@testing-library/cypress"
+    "../node_modules/@testing-library/cypress",
+    "../modules.d.ts"
   ],
   "compilerOptions": {
     "baseUrl": ".",
