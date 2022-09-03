@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
 
-const prisma = new PrismaClient();
+import { db } from '../app/services/db.server';
 
 async function main() {
   try {
@@ -23,13 +22,13 @@ async function main() {
     );
 
     for (const sql of sqlStatements) {
-      await prisma.$executeRawUnsafe(sql);
+      await db.$executeRawUnsafe(sql);
     }
   } catch (e) {
     console.error(e);
     process.exit(1);
   } finally {
-    await prisma.$disconnect();
+    await db.$disconnect();
   }
 }
 
