@@ -16,17 +16,20 @@
     "format": "prettier --write .",
     "postinstall": "patch-package",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "setup": "prisma generate && prisma migrate deploy && prisma db seed",
+    "prisma:setup": "prisma generate && prisma migrate deploy && prisma db seed",
+    "prisma:update-seed-sql": "ts-node prisma/update-seed-sql.ts",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
     "start:mocks": "cross-env NODE_ENV=production node --require ./mocks --require dotenv/config ./build/server.js",
     "test": "vitest",
-    "backup_db_local": "ts-node cypress/support/backup_db.ts",
     "restore_db_local": "ts-node cypress/support/restore_db.ts",
-    "test:e2e:dev": "cross-env E2E=TRUE DATABASE_URL_E2E=\"postgresql://desafio:desafio@localhost:5432/desafio_e2e\"  start-server-and-test dev http://localhost:3000 \"npx cypress open --e2e --browser chrome\"",
+    "test:e2e:dev": "cross-env E2E=TRUE start-server-and-test dev http://localhost:3000 \"npx cypress open --e2e --browser chrome\"",
     "pretest:e2e:run": "npm run build",
     "test:e2e:run": "cross-env PORT=8811 start-server-and-test start:mocks http://localhost:8811 \"npx cypress run\"",
     "typecheck": "tsc -b && tsc -b cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "eslintIgnore": [
     "/node_modules",

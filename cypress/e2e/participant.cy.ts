@@ -1,6 +1,6 @@
 describe('Participants', () => {
   before(() => {
-    cy.task('db_seed');
+    // cy.task('db_seed');
   });
   context('New Participant', () => {
     const findName = () => cy.findByRole('textbox', { name: 'Nombre' });

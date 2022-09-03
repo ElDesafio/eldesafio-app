@@ -8,7 +8,8 @@
     "support/**/*",
     "../node_modules/cypress",
     "../node_modules/@testing-library/cypress",
-    "../modules.d.ts"
+    "../modules.d.ts",
+    "../prisma/restore_db.ts"
   ],
   "compilerOptions": {
     "baseUrl": ".",
