@@ -136,5 +136,24 @@ describe('Participants', () => {
       cy.findByText('Kevin Johansen').should('exist').click();
       cy.findByRole('heading', { name: 'Datos Personales' }).should('exist');
     });
+
+    it.only('Should show error when email or DNI is already taken', () => {
+      cy.visitAndCheck('/participants/new');
+      findName().type('Gabriela');
+      findLastName().type('Epumer');
+      cy.get('#sex').click();
+      cy.findByText('Varón').click();
+      findBirthday().focus().type('2000-09-09');
+      findDNI().type('58367293');
+      findEmail().type('charly@garcia.fake');
+      findSendButton().click();
+      cy.findByText('Ya existe un participante con este DNI').should(
+        'be.visible',
+      );
+      findDNI().type('5835667000');
+      findSendButton().click();
+      cy.findByText('Gabriela Epumer').should('exist').click();
+      cy.findByRole('heading', { name: 'Datos Personales' }).should('exist');
+    });
   });
 });

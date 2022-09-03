@@ -1,6 +1,9 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
+import { Prisma } from '@prisma/client';
 import type { ActionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json, redirect, Response } from '@remix-run/node';
+import { useActionData } from '@remix-run/react';
+import type { ValidatorError } from 'remix-validated-form';
 import { validationError } from 'remix-validated-form';
 
 import {
@@ -10,6 +13,7 @@ import {
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export async function action({ request }: ActionArgs) {
   let user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
@@ -33,23 +37,51 @@ export async function action({ request }: ActionArgs) {
     healthCertificateDate,
   } = fieldValues.data;
 
-  const participant = await db.participant.create({
-    data: {
-      ...fieldValues.data,
-      neighborhood: neighborhood || undefined,
-      phone1HasWhatsapp: !!phone1HasWhatsapp,
-      phone1BelongsTo: phone1BelongsTo || undefined,
-      phone2HasWhatsapp: !!phone2HasWhatsapp,
-      phone2BelongsTo: phone2BelongsTo || undefined,
-      presentedHealthCertificate: !!presentedHealthCertificate,
-      presentedDNI: !!presentedDNI,
-      healthCertificateDate: healthCertificateDate || undefined,
-      createdBy: user.id,
-      updatedBy: user.id,
-    },
-  });
+  try {
+    const participant = await db.participant.create({
+      data: {
+        ...fieldValues.data,
+        neighborhood: neighborhood || undefined,
+        phone1HasWhatsapp: !!phone1HasWhatsapp,
+        phone1BelongsTo: phone1BelongsTo || undefined,
+        phone2HasWhatsapp: !!phone2HasWhatsapp,
+        phone2BelongsTo: phone2BelongsTo || undefined,
+        presentedHealthCertificate: !!presentedHealthCertificate,
+        presentedDNI: !!presentedDNI,
+        healthCertificateDate: healthCertificateDate || undefined,
+        createdBy: user.id,
+        updatedBy: user.id,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (
+        error.code === 'P2002' &&
+        error.meta &&
+        Array.isArray(error.meta?.target)
+      ) {
+        const validatorError: ValidatorError = { fieldErrors: {} };
 
-  return redirect('/participants');
+        error.meta.target.forEach((key) => {
+          if (key === 'dni') {
+            validatorError.fieldErrors[key] =
+              'Ya existe un participante con este DNI';
+          }
+          if (key === 'email') {
+            validatorError.fieldErrors[key] =
+              'Ya existe un participante con este correo';
+          }
+        });
+
+        return validationError(validatorError);
+      } else {
+        throw new Response('Internal Server Error', { status: 500 });
+      }
+    }
+  }
+
+  throw redirect('/participants');
 }
 
 export default function NewParticipant() {

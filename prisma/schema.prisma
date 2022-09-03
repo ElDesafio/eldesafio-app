@@ -160,7 +160,7 @@ model Participant {
   birthday                   String
   dni                        String                     @unique
   sex                        Sex
-  email                      String?
+  email                      String?                    @unique
   neighborhood               Neighborhood?
   city                       String?
   address                    String?
