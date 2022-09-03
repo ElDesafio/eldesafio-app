@@ -10,6 +10,7 @@ declare namespace NodeJS {
     NEW_RELIC_ENABLED: string;
     GH_TOKEN: string;
     DATABASE_URL: string;
+    DATABASE_URL_CLEAN: string;
     DATABASE_URL_E2E: string;
     E2E: string;
     MAGIC_LINK_ADMIN: string;

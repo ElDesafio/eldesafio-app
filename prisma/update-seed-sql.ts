@@ -3,7 +3,7 @@ import 'dotenv/config';
 import execa from 'execa';
 
 function updateSeedSQL() {
-  const DATABASE_URL = process.env.DATABASE_URL;
+  const DATABASE_URL = process.env.DATABASE_URL_CLEAN;
   if (!DATABASE_URL) {
     throw new Error('Database connection string not provided.');
   }
