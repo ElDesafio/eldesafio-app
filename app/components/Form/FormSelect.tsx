@@ -94,6 +94,8 @@ export function FormSelect<Option extends BaseOption>({
       {label != null && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <Select<Option, typeof isMulti, GroupBase<Option>>
         id={name}
+        arial-label={label}
+        data-test={`select-${name}`}
         instanceId={instanceId}
         name={name}
         isMulti={isMulti}

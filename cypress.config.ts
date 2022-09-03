@@ -27,6 +27,15 @@ export default defineConfig({
         },
         db_seed() {
           try {
+            // const { stdout: stdoutPrisma } = execa.sync('npx', [
+            //   `prisma`,
+            //   `migrate`,
+            //   `reset`,
+            //   `--force`,
+            // ]);
+
+            // console.log(stdoutPrisma);
+
             const { stdout } = execa.sync(
               'psql',
               [
@@ -37,6 +46,13 @@ export default defineConfig({
               { shell: true },
             );
             console.log(stdout);
+
+            const { stdout: stdoutPrisma } = execa.sync('npx', [
+              `prisma`,
+              `generate`,
+            ]);
+
+            console.log(stdoutPrisma);
 
             return true;
           } catch (error) {

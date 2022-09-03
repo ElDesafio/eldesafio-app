@@ -1,4 +1,8 @@
+import { configure } from '@testing-library/cypress';
+
 import type { GetMagicLinkArgs } from './get-magic-link';
+
+configure({ testIdAttribute: 'data-test' });
 
 declare global {
   namespace Cypress {
@@ -6,14 +10,14 @@ declare global {
       /**
        * Logs in with a role
        *
-       * @returns {typeof getMagicLink}
+       * @returns {typeof login}
        * @memberof Chainable
        * @example
-       *    cy.getMagicLink()
+       *    cy.login()
        * @example
-       *    cy.getMagicLink({ role: 'admin' })
+       *    cy.login({ role: 'admin' })
        */
-      getMagicLink: typeof getMagicLink;
+      login: typeof login;
 
       /**
        * Extends the standard visit command to wait for the page to load
@@ -30,7 +34,7 @@ declare global {
   }
 }
 
-function getMagicLink({ role }: GetMagicLinkArgs) {
+function login({ role }: GetMagicLinkArgs) {
   let email: string;
 
   switch (role) {
@@ -47,23 +51,26 @@ function getMagicLink({ role }: GetMagicLinkArgs) {
       throw new Error(`'role' option wasn't provided for getMagicLink()`);
   }
 
-  cy.findByRole('textbox', { name: /email/i }).click().type(email);
+  cy.session(role, () => {
+    cy.visitAndCheck('/');
+    cy.findByRole('textbox', { name: /email/i }).click().type(email);
 
-  cy.findByRole('button', { name: /continuar/i }).click();
+    cy.findByRole('button', { name: /continuar/i }).click();
 
-  cy.findByText(/correo enviado! revisa tu casilla/i).should('be.visible');
+    cy.findByText(/correo enviado! revisa tu casilla/i).should('be.visible');
 
-  cy.exec(
-    `npx ts-node --files --require tsconfig-paths/register ./cypress/support/get-magic-link.ts "${role}"`,
-  ).then(({ stdout }) => {
-    const magicLinkValue = stdout
-      .replace(
-        /.*<magicLink>(?<magicLinkValue>.*)<\/magicLink>.*/s,
-        '$<magicLinkValue>',
-      )
-      .trim();
-    cy.visit(magicLinkValue);
-    cy.location('pathname').should('eq', '/participants');
+    cy.exec(
+      `npx ts-node --files --require tsconfig-paths/register ./cypress/support/get-magic-link.ts "${role}"`,
+    ).then(({ stdout }) => {
+      const magicLinkValue = stdout
+        .replace(
+          /.*<magicLink>(?<magicLinkValue>.*)<\/magicLink>.*/s,
+          '$<magicLinkValue>',
+        )
+        .trim();
+      cy.visit(magicLinkValue);
+      cy.location('pathname').should('eq', '/participants');
+    });
   });
 }
 
@@ -77,7 +84,7 @@ function visitAndCheck(url: string, waitTime: number = 1000) {
   cy.location('pathname').should('contain', url).wait(waitTime);
 }
 
-Cypress.Commands.add('getMagicLink', getMagicLink);
+Cypress.Commands.add('login', login);
 Cypress.Commands.add('visitAndCheck', visitAndCheck);
 
 /*

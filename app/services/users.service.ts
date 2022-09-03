@@ -39,7 +39,7 @@ export async function getLoggedInUser(request: Request) {
   });
 
   if (!user) {
-    throw new Error('[getLoggedInUser] User not found');
+    return await authenticator.logout(request, { redirectTo: '/login' });
   }
 
   return {

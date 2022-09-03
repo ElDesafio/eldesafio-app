@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { PrismaClient } from '@prisma/client';
 
 let db: PrismaClient;
@@ -18,6 +20,13 @@ if (process.env.NODE_ENV === 'production') {
   if (!global.__db) {
     global.__db = new PrismaClient({
       log: ['warn', 'error'],
+      datasources: {
+        db: {
+          url: process.env.E2E
+            ? process.env.DATABASE_URL_E2E
+            : process.env.DATABASE_URL,
+        },
+      },
     });
     global.__db.$connect();
   }

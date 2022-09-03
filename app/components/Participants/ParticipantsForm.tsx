@@ -437,6 +437,7 @@ export function ParticipantForm({
           <FieldGroup title="Biografía">
             <FormTextArea
               name="biography"
+              label="Biografía"
               rows={5}
               helperText="Si surgen datos importantes durante la inscripción se pueden detallar aquí (se puede actualizar después)"
             />

@@ -3,14 +3,13 @@ import {
   Avatar,
   Box,
   chakra,
-  Flex,
   HStack,
   Menu,
+  MenuButton,
   MenuItem,
   MenuList,
   Text,
   useColorModeValue as mode,
-  useMenuButton,
 } from '@chakra-ui/react';
 import type { User } from '@prisma/client';
 import { Form } from '@remix-run/react';
@@ -28,23 +27,21 @@ type ProfileMenuButtonProps = UseMenuButtonProps & {
 };
 
 const ProfileMenuButton = ({ user, ...rest }: ProfileMenuButtonProps) => {
-  const buttonProps = useMenuButton(rest);
   return (
-    <Flex
-      {...buttonProps}
-      as="div"
-      cursor="pointer"
+    <MenuButton
       flexShrink={0}
       rounded="full"
       outline="0"
       _focus={{ shadow: 'outline' }}
+      data-test="open user menu"
+      {...rest}
     >
       <Box srOnly>Open user menu</Box>
       <UserAvatar
         name={`${user.firstName} ${user.lastName}`}
         picture={user.picture}
       />
-    </Flex>
+    </MenuButton>
   );
 };
 

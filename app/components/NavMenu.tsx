@@ -118,7 +118,7 @@ const DesktopNavMenu = () => {
     // },
   ];
   return (
-    <HStack spacing="3" flex="1" display={{ base: 'none', lg: 'flex' }}>
+    <HStack spacing="3" flex="1" display={{ base: 'none', xl: 'flex' }}>
       {navItems.map((navItem) => (
         <NavItem.Desktop
           to={navItem.to}

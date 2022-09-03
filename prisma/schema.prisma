@@ -4,7 +4,6 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "interactiveTransactions"]
-
 }
 
 datasource db {
@@ -222,7 +221,6 @@ model ParticipantCommitment {
   decemberStatus       Boolean?
   decemberDescription  String?
 
-
   @@id([year, participantId])
 }
 
@@ -274,7 +272,6 @@ model ParticipantDiaryPrograms {
   participantDiary   ParticipantDiary @relation(fields: [participantDiaryId], references: [id], onDelete: Cascade)
   programId          Int
   program            Program          @relation(fields: [programId], references: [id], onDelete: Cascade)
-
 
   @@id([participantDiaryId, programId])
 }

@@ -172,7 +172,7 @@ export default function Dashboard() {
 
           {/* Desktop Logo placement */}
           <Logo
-            display={{ base: 'none', lg: 'block' }}
+            display={{ base: 'none', xl: 'block' }}
             flexShrink={0}
             h="9"
             marginEnd="8"
@@ -184,8 +184,8 @@ export default function Dashboard() {
 
           {/* Mobile Logo placement */}
           <Logo
-            flex={{ base: '1', lg: '0' }}
-            display={{ lg: 'none' }}
+            flex={{ base: '1', xl: '0' }}
+            display={{ xl: 'none' }}
             flexShrink={0}
             h="9"
             color="white"
