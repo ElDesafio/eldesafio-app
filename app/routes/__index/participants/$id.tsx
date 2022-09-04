@@ -120,7 +120,7 @@ export default function Participant() {
             >
               Datos Médicos
             </TabLink>
-            <TabLink
+            {/* <TabLink
               to="family"
               aria-current={
                 location.pathname.includes(useResolvedPath('family').pathname)
@@ -129,7 +129,7 @@ export default function Participant() {
               }
             >
               Familiares
-            </TabLink>
+            </TabLink> */}
           </Stack>
         </Container>
       </Box>

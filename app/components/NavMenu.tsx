@@ -28,12 +28,12 @@ const MobileNavMenu = (props: { isOpen?: boolean }) => {
       active: location.pathname.startsWith('/staff'),
       icon: <AiOutlineTeam />,
     },
-    {
-      label: 'Familiares',
-      to: '/family',
-      active: location.pathname.startsWith('/family'),
-      icon: <MdOutlineFamilyRestroom />,
-    },
+    // {
+    //   label: 'Familiares',
+    //   to: '/family',
+    //   active: location.pathname.startsWith('/family'),
+    //   icon: <MdOutlineFamilyRestroom />,
+    // },
     {
       label: 'Escuelas',
       to: '/schools',
@@ -92,12 +92,12 @@ const DesktopNavMenu = () => {
       active: location.pathname.startsWith('/programs'),
       icon: <MdSchool />,
     },
-    {
-      label: 'Familiares',
-      to: '/family',
-      active: location.pathname.startsWith('/family'),
-      icon: <MdOutlineFamilyRestroom />,
-    },
+    // {
+    //   label: 'Familiares',
+    //   to: '/family',
+    //   active: location.pathname.startsWith('/family'),
+    //   icon: <MdOutlineFamilyRestroom />,
+    // },
     {
       label: 'Escuelas',
       to: '/schools',
