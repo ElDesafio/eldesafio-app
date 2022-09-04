@@ -1,7 +1,13 @@
+import 'dotenv/config';
+
 import { defineConfig } from 'cypress';
+import execa from 'execa';
 
 export default defineConfig({
+  viewportWidth: 1000,
+  viewportHeight: 800,
   e2e: {
+    experimentalSessionAndOrigin: true,
     setupNodeEvents(on, config) {
       const isDev = config.watchForFileChanges;
       const port = process.env.PORT ?? (isDev ? '3000' : '8811');
@@ -18,6 +24,16 @@ export default defineConfig({
           console.log(message);
 
           return null;
+        },
+        db_seed() {
+          try {
+            const { stdout } = execa.sync('npm', ['run', 'prisma:setup']);
+            console.log(stdout);
+
+            return true;
+          } catch (error) {
+            console.log(error);
+          }
         },
       });
 

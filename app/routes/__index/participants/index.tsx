@@ -116,7 +116,7 @@ export default function Participants() {
                                 </ChakraLink>
                               </Box>
                               <Box fontSize="sm" color="gray.500">
-                                cambiareste@correo.com
+                                {participant.email}
                               </Box>
                             </Box>
                           </Stack>

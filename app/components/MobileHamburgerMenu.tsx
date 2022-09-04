@@ -10,7 +10,7 @@ interface MobileHamburgerMenuProps {
 export const MobileHamburgerMenu = (props: MobileHamburgerMenuProps) => {
   const { onClick, isOpen } = props;
   return (
-    <Box ms="-4" minW={{ base: '12', lg: '76px' }} display={{ lg: 'none' }}>
+    <Box ms="-4" minW={{ base: '12', xl: '76px' }} display={{ xl: 'none' }}>
       <Box as="button" onClick={onClick} p="2" fontSize="xl">
         <Box aria-hidden as={isOpen ? HiX : HiOutlineMenu} />
         <Box srOnly>{isOpen ? 'Close menu' : 'Open menu'}</Box>

@@ -57,6 +57,7 @@ export const ProgramBox = ({ program }: ProgramBoxProps) => {
         checkboxProps={{
           isChecked: isActive,
         }}
+        dataTest={program.name}
       >
         <Container py="0" px="0">
           <Text fontWeight="bold" fontSize="lg" noOfLines={1}>

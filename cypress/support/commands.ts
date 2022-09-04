@@ -1,31 +1,23 @@
-import { faker } from '@faker-js/faker';
+import { configure } from '@testing-library/cypress';
+
+import type { GetMagicLinkArgs } from './get-magic-link';
+
+configure({ testIdAttribute: 'data-test' });
 
 declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Logs in with a random user. Yields the user and adds an alias to the user
+       * Logs in with a role
        *
        * @returns {typeof login}
        * @memberof Chainable
        * @example
        *    cy.login()
        * @example
-       *    cy.login({ email: 'whatever@example.com' })
+       *    cy.login({ role: 'admin' })
        */
       login: typeof login;
-
-      /**
-       * Deletes the current @user
-       *
-       * @returns {typeof cleanupUser}
-       * @memberof Chainable
-       * @example
-       *    cy.cleanupUser()
-       * @example
-       *    cy.cleanupUser({ email: 'whatever@example.com' })
-       */
-      cleanupUser: typeof cleanupUser;
 
       /**
        * Extends the standard visit command to wait for the page to load
@@ -42,42 +34,44 @@ declare global {
   }
 }
 
-function login({
-  email = faker.internet.email(undefined, undefined, 'example.com'),
-}: {
-  email?: string;
-} = {}) {
-  cy.then(() => ({ email })).as('user');
-  cy.exec(
-    `npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts "${email}"`,
-  ).then(({ stdout }) => {
-    const cookieValue = stdout
-      .replace(/.*<cookie>(?<cookieValue>.*)<\/cookie>.*/s, '$<cookieValue>')
-      .trim();
-    cy.setCookie('__session', cookieValue);
-  });
-  return cy.get('@user');
-}
+function login({ role }: GetMagicLinkArgs) {
+  let email: string;
 
-function cleanupUser({ email }: { email?: string } = {}) {
-  if (email) {
-    deleteUserByEmail(email);
-  } else {
-    cy.get('@user').then((user) => {
-      const email = (user as { email?: string }).email;
-      if (email) {
-        deleteUserByEmail(email);
-      }
-    });
+  switch (role) {
+    case 'admin':
+      email = 'lucas.curti@eldesafio.org';
+      break;
+    case 'facilitator':
+      email = 'not@yet.implemented';
+      break;
+    case 'volunteer':
+      email = 'not@yet.implemented';
+      break;
+    default:
+      throw new Error(`'role' option wasn't provided for getMagicLink()`);
   }
-  cy.clearCookie('__session');
-}
 
-function deleteUserByEmail(email: string) {
-  cy.exec(
-    `npx ts-node --require tsconfig-paths/register ./cypress/support/delete-user.ts "${email}"`,
-  );
-  cy.clearCookie('__session');
+  cy.session(role, () => {
+    cy.visitAndCheck('/');
+    cy.findByRole('textbox', { name: /email/i }).click().type(email);
+
+    cy.findByRole('button', { name: /continuar/i }).click();
+
+    cy.findByText(/correo enviado! revisa tu casilla/i).should('be.visible');
+
+    cy.exec(
+      `npx ts-node --files --require tsconfig-paths/register ./cypress/support/get-magic-link.ts "${role}"`,
+    ).then(({ stdout }) => {
+      const magicLinkValue = stdout
+        .replace(
+          /.*<magicLink>(?<magicLinkValue>.*)<\/magicLink>.*/s,
+          '$<magicLinkValue>',
+        )
+        .trim();
+      cy.visit(magicLinkValue);
+      cy.location('pathname').should('eq', '/participants');
+    });
+  });
 }
 
 // We're waiting a second because of this issue happen randomly
@@ -91,7 +85,6 @@ function visitAndCheck(url: string, waitTime: number = 1000) {
 }
 
 Cypress.Commands.add('login', login);
-Cypress.Commands.add('cleanupUser', cleanupUser);
 Cypress.Commands.add('visitAndCheck', visitAndCheck);
 
 /*

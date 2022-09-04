@@ -11,15 +11,18 @@ export const sendMagicLinkEmail: SendEmailFunction<User> = async ({
   user,
   emailAddress,
 }) => {
-  const msg = {
-    to: emailAddress,
-    from: sender,
-    templateId: process.env.SENDGRID_TEMPLATE_MAGIC_LINK,
-    dynamicTemplateData: {
-      magic_link: magicLink,
-      name: user?.firstName || '',
-    },
-  };
+  // Send the email only if not in E2E environment
+  if (!process.env.E2E) {
+    const msg = {
+      to: emailAddress,
+      from: sender,
+      templateId: process.env.SENDGRID_TEMPLATE_MAGIC_LINK,
+      dynamicTemplateData: {
+        magic_link: magicLink,
+        name: user?.firstName || '',
+      },
+    };
 
-  await sgMail.send(msg);
+    await sgMail.send(msg);
+  }
 };

@@ -25,11 +25,11 @@ import { getLoggedInUser } from '~/services/users.service';
 export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const loggedInUser = await getLoggedInUser(request);
+  const user = await getLoggedInUser(request);
 
   const school = await getSchool(Number(id));
 
-  return { school, isAdmin: loggedInUser.isAdmin };
+  return { school, isAdmin: user.isAdmin };
 }
 
 export default function UserGeneral() {

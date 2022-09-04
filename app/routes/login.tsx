@@ -104,6 +104,7 @@ export default function Login() {
             <Stack spacing="6">
               <Stack spacing="4">
                 <Input
+                  aria-label="email"
                   id="email"
                   name="email"
                   placeholder="Correo electrónico"
@@ -143,6 +144,13 @@ export default function Login() {
               nuevo.
             </Alert>
           )}
+          {/* {error?.message ===
+            'Magic link expired. Please request a new one.' && (
+            <Alert status="error">
+              <AlertIcon />
+              El link ha expirado. Volvé a solicitar uno nuevo.
+            </Alert>
+          )} */}
           {(error?.message === 'User is inactive' ||
             response?.message === 'user deactivated') && (
             <Alert status="error">
