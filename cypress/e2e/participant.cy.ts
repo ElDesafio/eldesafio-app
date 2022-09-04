@@ -137,7 +137,7 @@ describe('Participants', () => {
       cy.findByRole('heading', { name: 'Datos Personales' }).should('exist');
     });
 
-    it.only('Should show error when email or DNI is already taken', () => {
+    it('Should show error when email or DNI is already taken', () => {
       cy.visitAndCheck('/participants/new');
       findName().type('Gabriela');
       findLastName().type('Epumer');
@@ -154,6 +154,67 @@ describe('Participants', () => {
       findSendButton().click();
       cy.findByText('Gabriela Epumer').should('exist').click();
       cy.findByRole('heading', { name: 'Datos Personales' }).should('exist');
+    });
+
+    it.only('should be possible to add/remove/waitlist participant to program', () => {
+      cy.intercept({
+        method: 'POST',
+        url: '/participants/1/programs**',
+      }).as('PostProgram');
+
+      // Add to Program
+      cy.visitAndCheck('participants/1/programs');
+      cy.findByTestId(/paracaidismo/i).click();
+      cy.findByRole('dialog', { name: /agregar a 🪂 paracaidismo/i }).should(
+        'be.visible',
+      );
+      cy.findByRole('button', { name: 'Agregar' }).click();
+      cy.wait('@PostProgram');
+      cy.visitAndCheck('participants/1/programs');
+      cy.findByRole('dialog', { name: /agregar a 🪂 paracaidismo/i }).should(
+        'not.exist',
+      );
+      cy.findByRole('checkbox', { name: /paracaidismo/i, hidden: true }).should(
+        'be.checked',
+      );
+
+      // Remove from Program
+      cy.findByTestId(/paracaidismo/i).click();
+      cy.findByRole('dialog', {
+        name: /dar de baja de 🪂 paracaidismo/i,
+      }).should('be.visible');
+      cy.findByRole('button', { name: 'Dar de baja' }).click();
+      cy.wait('@PostProgram');
+      cy.visitAndCheck('participants/1/programs');
+      cy.findByRole('dialog', {
+        name: /dar de baja de 🪂 paracaidismo/i,
+      }).should('not.exist');
+      cy.findByTestId(/paracaidismo/i).within(() => {
+        cy.findByText('Baja').should('be.visible');
+        cy.findByRole('checkbox', {
+          name: /paracaidismo/i,
+          hidden: true,
+        }).should('not.be.checked');
+      });
+
+      // Add to waiting list
+      cy.findByTestId(/paracaidismo/i).click();
+      cy.findByRole('dialog', { name: /agregar a 🪂 paracaidismo/i }).should(
+        'be.visible',
+      );
+      cy.findByRole('button', { name: 'Agregar en Espera' }).click();
+      cy.wait('@PostProgram');
+      cy.visitAndCheck('participants/1/programs');
+      cy.findByRole('dialog', { name: /agregar a 🪂 paracaidismo/i }).should(
+        'not.exist',
+      );
+      cy.findByTestId(/paracaidismo/i).within(() => {
+        cy.findByText('En Espera').should('be.visible');
+        cy.findByRole('checkbox', {
+          name: /paracaidismo/i,
+          hidden: true,
+        }).should('not.be.checked');
+      });
     });
   });
 });
