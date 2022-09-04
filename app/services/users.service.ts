@@ -20,7 +20,10 @@ export async function getUser(id: number) {
   });
 }
 
-/** It checks */
+export async function logout(request: Request) {
+  return await authenticator.logout(request, { redirectTo: '/login' });
+}
+
 export async function getLoggedInUser(request: Request) {
   const authUser = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
@@ -39,7 +42,7 @@ export async function getLoggedInUser(request: Request) {
   });
 
   if (!user) {
-    return await authenticator.logout(request, { redirectTo: '/login' });
+    throw logout(request);
   }
 
   return {
