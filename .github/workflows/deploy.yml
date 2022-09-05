@@ -38,10 +38,10 @@ jobs:
         id: cache-docker-layers
         uses: actions/cache@v3
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          path: /tmp/.build-cache
+          key: ${{ runner.os }}-build-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-
+            ${{ runner.os }}-build-
 
       - name: 🔑 Fly Registry Auth
         id: fly-registry-auth
@@ -60,8 +60,8 @@ jobs:
           tags: registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+          cache-from: type=local,src=/tmp/.build-cache
+          cache-to: type=local,mode=max,dest=/tmp/.build-cache-new
 
       # This ugly bit is necessary if you don't want your cache to grow forever
       # till it hits GitHub's limit of 5GB.
@@ -71,8 +71,8 @@ jobs:
       - name: 🚚 Move cache
         id: move-cache
         run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          rm -rf /tmp/.build-cache
+          mv /tmp/.build-cache-new /tmp/.build-cache
 
   deploy:
     name: 🚀 Deploy
