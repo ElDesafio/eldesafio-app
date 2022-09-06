@@ -23,9 +23,9 @@ import { getSchool } from '~/services/school.service';
 import { getLoggedInUser } from '~/services/users.service';
 
 export async function loader({ request, params }: LoaderArgs) {
-  const { id } = z.object({ id: z.string() }).parse(params);
-
   const user = await getLoggedInUser(request);
+
+  const { id } = z.object({ id: z.string() }).parse(params);
 
   const school = await getSchool(Number(id));
 

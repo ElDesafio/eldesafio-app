@@ -1,19 +1,15 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { Roles } from '@prisma/client';
 import type { ActionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { validationError } from 'remix-validated-form';
 
 import { UserForm, userFormValidator } from '~/components/Users/UsersForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 export async function action({ request }: ActionArgs) {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  await getLoggedInUser(request);
 
   const fieldValues = await userFormValidator.validate(
     Object.fromEntries(await request.formData()),
@@ -32,7 +28,7 @@ export async function action({ request }: ActionArgs) {
     role: role as Roles,
   }));
 
-  const newUser = await db.user.create({
+  await db.user.create({
     data: {
       ...rest,
       roles: {

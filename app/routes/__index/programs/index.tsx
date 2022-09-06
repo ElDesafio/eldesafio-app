@@ -22,9 +22,12 @@ import { MdAdd } from 'react-icons/md';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 import { getSelectedYearFromRequest } from '~/util/utils';
 
 export async function loader({ request }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const year = getSelectedYearFromRequest(request);
 
   const programs = await db.program.findMany({

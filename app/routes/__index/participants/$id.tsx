@@ -19,6 +19,7 @@ import { zfd } from 'zod-form-data';
 
 import { TabLink } from '~/components/TabLink';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 export async function getParticipant(id: number) {
   return await db.participant.findUnique({
@@ -33,7 +34,9 @@ export async function getParticipant(id: number) {
 
 export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const participant = await getParticipant(+id);

@@ -47,7 +47,6 @@ import { z } from 'zod';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
@@ -62,13 +61,14 @@ enum FormTypeWaiting {
 }
 
 export async function loader({ request, params }: LoaderArgs) {
+  const loggedinUser = await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({
     id: Number(id),
     includeParticipants: true,
   });
-  const loggedinUser = await getLoggedInUser(request);
 
   if (!program) {
     throw new Error('Program not found');
@@ -116,11 +116,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export async function action({ request, params }: ActionArgs) {
   const { id: programId } = z.object({ id: z.string() }).parse(params);
 
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  const user = await getLoggedInUser(request);
 
   const form = await request.formData();
   const participantId = z.string().parse(form.get('participantId'));

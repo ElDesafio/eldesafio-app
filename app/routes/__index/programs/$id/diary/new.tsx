@@ -16,7 +16,9 @@ import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const participants = await getProgramParticipants({
@@ -48,7 +50,7 @@ export async function action({ request, params }: ActionArgs) {
         }))
       : [];
 
-  const event = await db.programDiary.create({
+  await db.programDiary.create({
     data: {
       ...rest,
       date: DateTime.fromISO(rest.date, { zone: user.timezone }).toJSDate(),

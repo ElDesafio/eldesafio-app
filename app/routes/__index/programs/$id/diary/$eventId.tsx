@@ -29,9 +29,9 @@ import { getLoggedInUser } from '~/services/users.service';
 import { getFormattedDate } from '~/util/utils';
 
 export async function loader({ params, request }: LoaderArgs) {
-  const { eventId } = z.object({ eventId: zfd.numeric() }).parse(params);
-
   const user = await getLoggedInUser(request);
+
+  const { eventId } = z.object({ eventId: zfd.numeric() }).parse(params);
 
   const event = await getProgramDiaryEvent({ eventId });
 

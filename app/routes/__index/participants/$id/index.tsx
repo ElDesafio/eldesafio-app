@@ -108,6 +108,8 @@ const commitmentMonthSchema = z.object({
 export const commitmentMonthValidator = withZod(commitmentMonthSchema);
 
 export async function loader({ params, request }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const selectedYear = getSelectedYearFromRequest(request);
@@ -127,6 +129,8 @@ export async function loader({ params, request }: LoaderArgs) {
 
 // ACTION
 export async function action({ request, params }: ActionArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   let returnToYear: number | undefined = undefined;

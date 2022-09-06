@@ -1,16 +1,14 @@
-import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
-import type { Prisma, Roles, User } from '@prisma/client';
+import type { Roles, User } from '@prisma/client';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { redirect } from '@remix-run/node';
 import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { validationError } from 'remix-validated-form';
 import type { Socket } from 'socket.io-client';
 import * as z from 'zod';
 
 import { UserForm, userFormValidator } from '~/components/Users/UsersForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 async function getUser(id: number) {
   return await db.user.findUnique({
@@ -20,7 +18,9 @@ async function getUser(id: number) {
 }
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await getUser(+id);
@@ -30,13 +30,8 @@ export async function loader({ params }: LoaderArgs) {
 
 // ACTION
 export async function action({ request, params, context }: ActionArgs) {
+  await getLoggedInUser(request);
   const { id } = z.object({ id: z.string() }).parse(params);
-
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
 
   const formData = Object.fromEntries(await request.formData());
 

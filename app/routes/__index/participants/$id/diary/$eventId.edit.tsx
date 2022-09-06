@@ -65,7 +65,7 @@ export async function action({ request, params }: ActionArgs) {
         }))
       : [];
 
-  const event = await db.participantDiary.update({
+  await db.participantDiary.update({
     where: { id: eventId },
     data: {
       ...rest,

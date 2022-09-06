@@ -1,21 +1,17 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { ActionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { validationError } from 'remix-validated-form';
 
 import {
   SchoolForm,
   schoolFormValidator,
 } from '~/components/School/SchoolForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 export async function action({ request }: ActionArgs) {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  let user = await getLoggedInUser(request);
 
   const formData = Object.fromEntries(await request.formData());
 
@@ -23,7 +19,7 @@ export async function action({ request }: ActionArgs) {
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const school = await db.school.create({
+  await db.school.create({
     data: {
       ...fieldValues.data,
       createdBy: user.id,

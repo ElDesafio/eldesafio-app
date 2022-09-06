@@ -14,10 +14,13 @@ import { z } from 'zod';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { getParticipantHealth } from '~/services/participants.service';
+import { getLoggedInUser } from '~/services/users.service';
 import { getBloodTypeName, getFormAnswerOptionName } from '~/util/utils';
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participantHealth = await getParticipantHealth(+id);

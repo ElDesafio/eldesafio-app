@@ -2,6 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 export type GlobalSearchResult = {
   label: string;
@@ -10,6 +11,8 @@ export type GlobalSearchResult = {
 };
 
 export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const url = new URL(request.url);
   const value = url.searchParams.get('value')?.trim() ?? '';
 

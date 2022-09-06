@@ -11,6 +11,7 @@ import {
 } from '~/components/Participants/ParticipantsForm';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 async function getParticipant(id: number) {
   return await db.participant.findUnique({
@@ -20,7 +21,9 @@ async function getParticipant(id: number) {
 }
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participant = await getParticipant(+id);
@@ -30,6 +33,8 @@ export async function loader({ params }: LoaderArgs) {
 
 // ACTION
 export async function action({ request, params }: ActionArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -55,7 +60,7 @@ export async function action({ request, params }: ActionArgs) {
     healthCertificateDate,
   } = fieldValues.data;
 
-  const participant = await db.participant.update({
+  await db.participant.update({
     where: { id: +id },
     data: {
       ...fieldValues.data,

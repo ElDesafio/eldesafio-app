@@ -17,8 +17,11 @@ import { z } from 'zod';
 
 import { TabLink } from '~/components/TabLink';
 import { getProgram } from '~/services/programs.service';
+import { getLoggedInUser } from '~/services/users.service';
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({ id: +id });

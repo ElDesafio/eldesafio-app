@@ -43,6 +43,8 @@ import { AttendanceChartBars } from './components/AttendanceChartBars';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export async function loader({ request, params }: LoaderArgs) {
+  const user = await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const url = new URL(request.url);
@@ -70,8 +72,6 @@ export async function loader({ request, params }: LoaderArgs) {
     throw new Error('Class not found');
   }
 
-  const loggedinUser = await getLoggedInUser(request);
-
   const participants = await getProgramParticipants({
     programId: Number(id),
     includeStatus:
@@ -89,7 +89,7 @@ export async function loader({ request, params }: LoaderArgs) {
     throw new Error('Participants not found');
   }
 
-  const isUserAdmin = loggedinUser.isAdmin;
+  const isUserAdmin = user.isAdmin;
 
   const totalPercentageHelper: Record<
     string,

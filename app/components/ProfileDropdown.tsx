@@ -11,8 +11,9 @@ import {
   Text,
   useColorModeValue as mode,
 } from '@chakra-ui/react';
-import type { User } from '@prisma/client';
 import { Form } from '@remix-run/react';
+
+import type { LoggedInUser } from '~/services/users.service';
 
 const UserAvatar = ({
   picture,
@@ -23,7 +24,7 @@ const UserAvatar = ({
 }) => <Avatar size="sm" src={picture ?? undefined} name={name} />;
 
 type ProfileMenuButtonProps = UseMenuButtonProps & {
-  user: User;
+  user: LoggedInUser;
 };
 
 const ProfileMenuButton = ({ user, ...rest }: ProfileMenuButtonProps) => {
@@ -45,7 +46,7 @@ const ProfileMenuButton = ({ user, ...rest }: ProfileMenuButtonProps) => {
   );
 };
 
-export const ProfileDropdown = ({ user }: { user: User }) => {
+export const ProfileDropdown = ({ user }: { user: LoggedInUser }) => {
   return (
     <Menu>
       <ProfileMenuButton user={user} />

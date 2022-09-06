@@ -18,6 +18,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
@@ -25,9 +26,11 @@ import { MdAdd } from 'react-icons/md';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 import { getAge } from '~/util/utils';
 
-export async function loader() {
+export async function loader({ request }: LoaderArgs) {
+  await getLoggedInUser(request);
   const participants = await db.participant.findMany({
     orderBy: { firstName: 'asc' },
   });

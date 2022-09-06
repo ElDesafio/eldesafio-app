@@ -21,11 +21,11 @@ import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
 export async function loader({ params, request }: LoaderArgs) {
+  const user = await getLoggedInUser(request);
+
   const { id, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
-
-  const user = await getLoggedInUser(request);
 
   const participants = await getProgramParticipants({
     programId: id,
@@ -40,6 +40,7 @@ export async function loader({ params, request }: LoaderArgs) {
 // ACTION
 export async function action({ request, params }: ActionArgs) {
   const user = await getLoggedInUser(request);
+
   const { id: programId, eventId } = z
     .object({ id: zfd.numeric(), eventId: zfd.numeric() })
     .parse(params);
@@ -59,7 +60,7 @@ export async function action({ request, params }: ActionArgs) {
         }))
       : [];
 
-  const event = await db.programDiary.update({
+  await db.programDiary.update({
     where: { id: eventId },
     data: {
       ...rest,

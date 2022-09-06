@@ -46,10 +46,11 @@ function userStatusHelper(status: UserStatus) {
 }
 
 export async function loader({ request, params }: LoaderArgs) {
+  const loggedinUser = await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await getUser(Number(id));
-  const loggedinUser = await getLoggedInUser(request);
 
   const isLoggedinUserAdmin = loggedinUser.isAdmin;
 

@@ -32,7 +32,6 @@ import { zfd } from 'zod-form-data';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
-import type { GetParticipantDiary } from '~/services/participants.service';
 import { getParticipantDiary } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
 import {
