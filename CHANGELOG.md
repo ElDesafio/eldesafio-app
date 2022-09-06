@@ -1,3 +1,23 @@
+# v0.23.0 (Tue Sep 06 2022)
+
+### Release Notes
+
+#### fix tooltips ([#154](https://github.com/ElDesafio/eldesafio-app/pull/154))
+
+- Fix colors in Tooltips
+
+---
+
+#### 🚀 Enhancement
+
+- fix tooltips [#154](https://github.com/ElDesafio/eldesafio-app/pull/154) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.22.0 (Tue Sep 06 2022)
 
 ### Release Notes
