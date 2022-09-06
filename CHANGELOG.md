@@ -1,3 +1,23 @@
+# v0.24.0 (Tue Sep 06 2022)
+
+### Release Notes
+
+#### fix dates issue ([#156](https://github.com/ElDesafio/eldesafio-app/pull/156))
+
+- Fix Date typing issues by using `typedjson` so all returned data from loaders/actions is correctly typed as Date instead of string.
+
+---
+
+#### 🚀 Enhancement
+
+- fix dates issue [#156](https://github.com/ElDesafio/eldesafio-app/pull/156) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.23.0 (Tue Sep 06 2022)
 
 ### Release Notes
