@@ -107,7 +107,7 @@ export default function ParticipantDiaryEventEdit() {
           isAutoEvent={event.isAutoEvent}
           defaultValues={{
             type: event.type,
-            date: DateTime.fromISO(event.date as unknown as string)
+            date: DateTime.fromJSDate(event.date)
               .setZone(timezone)
               .toFormat(`yyyy-MM-dd'T'HH:mm`),
             description: event.description ?? undefined,
