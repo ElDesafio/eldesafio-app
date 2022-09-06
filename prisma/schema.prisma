@@ -227,7 +227,7 @@ model ParticipantCommitment {
 model ParticipantStatus {
   year          Int
   participantId Int
-  participant   Participant           @relation(fields: [participantId], references: [id])
+  participant   Participant           @relation(fields: [participantId], references: [id], onDelete: Cascade)
   status        ParticipantYearStatus @default(value: INACTIVE)
   wasEverActive Boolean               @default(value: false)
 
