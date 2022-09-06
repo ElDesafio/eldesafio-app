@@ -195,6 +195,7 @@ export default function ParticipantDiary() {
                         <Tooltip
                           placement="top-start"
                           label="Es un evento en el diario del programa"
+                          color="white"
                         >
                           <IconButton
                             fontSize="lg"

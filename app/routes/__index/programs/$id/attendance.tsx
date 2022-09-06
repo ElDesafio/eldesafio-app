@@ -146,7 +146,7 @@ function ClassDateHeader({
   isRainyDay: boolean;
 }) {
   //! There is an issue in Prisma. It's returning it as ISO instead of Date object
-  const dateLuxon = DateTime.fromISO(date as unknown as string, {
+  const dateLuxon = DateTime.fromJSDate(date, {
     zone: 'utc',
   }).setLocale('es-ES');
 
@@ -233,6 +233,7 @@ export default function Attendance() {
             label="No hay participantes activos"
             isDisabled={activeParticipantsCount > 0}
             shouldWrapChildren
+            color="white"
           >
             <Button
               leftIcon={<MdAdd />}
@@ -360,6 +361,7 @@ export default function Attendance() {
                               attendant.wasEverActive
                             )
                           }
+                          color="white"
                         >
                           <Avatar
                             size="sm"

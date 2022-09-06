@@ -7,13 +7,15 @@ export const TooltipAvatar = ({
   linkTo,
   ...props
 }: AvatarProps & { linkTo?: string }) => (
-  <Tooltip label={props.name}>
-    {linkTo !== undefined ? (
-      <LinkED to={linkTo}>
+  <Tooltip label={props.name} placement="top" hasArrow color="white">
+    <span>
+      {linkTo !== undefined ? (
+        <LinkED to={linkTo}>
+          <Avatar {...props} />
+        </LinkED>
+      ) : (
         <Avatar {...props} />
-      </LinkED>
-    ) : (
-      <Avatar {...props} />
-    )}
+      )}
+    </span>
   </Tooltip>
 );
