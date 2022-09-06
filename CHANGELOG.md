@@ -1,3 +1,23 @@
+# v0.22.0 (Tue Sep 06 2022)
+
+### Release Notes
+
+#### move components away from routes folder ([#152](https://github.com/ElDesafio/eldesafio-app/pull/152))
+
+- Move components out of routes folder 🤦
+
+---
+
+#### 🚀 Enhancement
+
+- move components away from routes folder [#152](https://github.com/ElDesafio/eldesafio-app/pull/152) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.21.2 (Tue Sep 06 2022)
 
 #### ⚠️ Pushed to `main`
