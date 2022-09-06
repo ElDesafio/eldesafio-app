@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import { Divider, Flex, Heading } from '@chakra-ui/react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { DateTime } from 'luxon';
 import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { z } from 'zod';
@@ -10,7 +10,6 @@ import {
   AttendanceForm,
   attendanceFormValidator,
 } from '~/components/Attendance/AttendanceForm';
-import { authenticator } from '~/services/auth.server';
 import { getProgramClasses } from '~/services/classes.service';
 import { db } from '~/services/db.server';
 import { getProgramParticipants } from '~/services/programs.service';
@@ -49,11 +48,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export async function action({ request, params }: ActionArgs) {
   const { id: programId } = z.object({ id: z.string() }).parse(params);
 
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  const user = await getLoggedInUser(request);
 
   const formData = await request.formData();
 

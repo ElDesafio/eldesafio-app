@@ -2,8 +2,11 @@ import type { LoaderArgs } from '@remix-run/node';
 import { z } from 'zod';
 
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
   const url = new URL(request.url);
 

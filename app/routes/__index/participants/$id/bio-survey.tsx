@@ -15,10 +15,13 @@ import { z } from 'zod';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { getParticipantBioSurvey } from '~/services/participants.service';
+import { getLoggedInUser } from '~/services/users.service';
 import { getFormAnswerOptionName } from '~/util/utils';
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participantBioSurvey = await getParticipantBioSurvey(+id);

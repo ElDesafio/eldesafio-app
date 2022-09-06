@@ -33,16 +33,18 @@ export async function getLoggedInUser(request: Request) {
     where: { id: authUser.id },
     select: {
       id: true,
+      email: true,
       status: true,
       firstName: true,
       lastName: true,
       timezone: true,
       roles: true,
+      picture: true,
     },
   });
 
-  if (!user) {
-    throw logout(request);
+  if (!user || user.status === 'INACTIVE') {
+    throw await logout(request);
   }
 
   return {
@@ -54,7 +56,7 @@ export async function getLoggedInUser(request: Request) {
   };
 }
 
-export type GetLoggedInUser = Prisma.PromiseReturnType<typeof getLoggedInUser>;
+export type LoggedInUser = Prisma.PromiseReturnType<typeof getLoggedInUser>;
 
 export async function getFacilitators({
   includeInactive = false,

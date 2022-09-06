@@ -1,8 +1,7 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import { Prisma } from '@prisma/client';
 import type { ActionArgs } from '@remix-run/node';
-import { json, redirect, Response } from '@remix-run/node';
-import { useActionData } from '@remix-run/react';
+import { redirect, Response } from '@remix-run/node';
 import type { ValidatorError } from 'remix-validated-form';
 import { validationError } from 'remix-validated-form';
 
@@ -10,16 +9,12 @@ import {
   ParticipantForm,
   participantFormValidator,
 } from '~/components/Participants/ParticipantsForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export async function action({ request }: ActionArgs) {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  let user = await getLoggedInUser(request);
 
   const fieldValues = await participantFormValidator.validate(
     Object.fromEntries(await request.formData()),
@@ -38,7 +33,7 @@ export async function action({ request }: ActionArgs) {
   } = fieldValues.data;
 
   try {
-    const participant = await db.participant.create({
+    await db.participant.create({
       data: {
         ...fieldValues.data,
         neighborhood: neighborhood || undefined,

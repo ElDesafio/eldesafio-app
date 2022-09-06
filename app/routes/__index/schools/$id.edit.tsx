@@ -1,5 +1,4 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
-import type { School } from '@prisma/client';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -10,11 +9,13 @@ import {
   SchoolForm,
   schoolFormValidator,
 } from '~/components/School/SchoolForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const school = await db.school.findUnique({
@@ -27,18 +28,14 @@ export async function loader({ params }: LoaderArgs) {
 export async function action({ request, params }: ActionArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  const user = await getLoggedInUser(request);
 
   const fieldValues = await schoolFormValidator.validate(
     Object.fromEntries(await request.formData()),
   );
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const school = await db.school.update({
+  await db.school.update({
     where: { id: +id },
     data: {
       ...fieldValues.data,

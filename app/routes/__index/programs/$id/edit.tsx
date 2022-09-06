@@ -10,13 +10,18 @@ import {
   ProgramForm,
   programFormValidator,
 } from '~/components/Program/ProgramForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { getProgram } from '~/services/programs.service';
-import { getFacilitators, getVolunteers } from '~/services/users.service';
+import {
+  getFacilitators,
+  getLoggedInUser,
+  getVolunteers,
+} from '~/services/users.service';
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({ id: Number(id) });
@@ -52,11 +57,9 @@ export async function loader({ params }: LoaderArgs) {
 
 //ACTION
 export async function action({ request, params }: ActionArgs) {
-  const { id } = z.object({ id: z.string() }).parse(params);
+  let user = await getLoggedInUser(request);
 
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const { id } = z.object({ id: z.string() }).parse(params);
 
   const fieldValues = await programFormValidator.validate(
     Object.fromEntries(await request.formData()),

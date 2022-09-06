@@ -5,7 +5,6 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { Prisma } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
@@ -19,6 +18,7 @@ import { zfd } from 'zod-form-data';
 
 import { TabLink } from '~/components/TabLink';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 export async function getUser(id: number) {
   return await db.user.findUnique({
@@ -31,7 +31,9 @@ export async function getUser(id: number) {
   });
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const user = await getUser(+id);

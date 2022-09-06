@@ -44,9 +44,9 @@ import {
 } from '~/util/utils';
 
 export async function loader({ params, request }: LoaderArgs) {
-  const { id } = z.object({ id: zfd.numeric() }).parse(params);
-
   const user = await getLoggedInUser(request);
+
+  const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const url = new URL(request.url);
 

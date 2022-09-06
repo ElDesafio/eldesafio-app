@@ -18,6 +18,8 @@ import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
 // LOADER
 export async function loader({ params, request }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const selectedYear = getSelectedYearFromRequest(request);
@@ -51,7 +53,7 @@ export async function action({ request, params }: ActionArgs) {
         }))
       : [];
 
-  const event = await db.participantDiary.create({
+  await db.participantDiary.create({
     data: {
       ...rest,
       date: DateTime.fromISO(rest.date, { zone: user.timezone }).toJSDate(),

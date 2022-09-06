@@ -1,6 +1,6 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import { UserDiaryType } from '@prisma/client';
-import type { ActionArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { DateTime } from 'luxon';
@@ -10,12 +10,17 @@ import {
   ProgramForm,
   programFormValidator,
 } from '~/components/Program/ProgramForm';
-import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import { getFacilitators, getVolunteers } from '~/services/users.service';
+import {
+  getFacilitators,
+  getLoggedInUser,
+  getVolunteers,
+} from '~/services/users.service';
 
 // LOADER
-export async function loader() {
+export async function loader({ request }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const facilitators = await getFacilitators({});
   const volunteers = await getVolunteers({});
 
@@ -24,11 +29,7 @@ export async function loader() {
 
 // ACTION
 export async function action({ request }: ActionArgs) {
-  let user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
-
-  if (!user) throw json('Unauthorized', { status: 403 });
+  let user = await getLoggedInUser(request);
 
   const formData = Object.fromEntries(await request.formData());
 

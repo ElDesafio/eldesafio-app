@@ -11,9 +11,12 @@ import {
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { getParticipantBioSurvey } from '~/services/participants.service';
+import { getLoggedInUser } from '~/services/users.service';
 
 // LOADER
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participantBioSurvey = await getParticipantBioSurvey(+id);
@@ -23,6 +26,8 @@ export async function loader({ params }: LoaderArgs) {
 
 // ACTION
 export async function action({ request, params }: ActionArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {
@@ -37,7 +42,7 @@ export async function action({ request, params }: ActionArgs) {
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const participant = await db.surveyBiography.upsert({
+  await db.surveyBiography.upsert({
     where: { participantId: +id },
     create: {
       ...fieldValues.data,

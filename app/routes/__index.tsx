@@ -32,27 +32,16 @@ import { MobileHamburgerMenu } from '~/components/MobileHamburgerMenu';
 import { NavMenu } from '~/components/NavMenu';
 import { ProfileDropdown } from '~/components/ProfileDropdown';
 import { useMobileMenuState } from '~/hooks/useMobileMenuState';
-import { authenticator } from '~/services/auth.server';
-import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 import { useSocket } from '~/socketContext';
 import { useSelectedYear } from '~/util/utils';
 
 import type { GlobalSearchResult } from './api/search/global';
 
-function getUser(id: number) {
-  return db.user.findUnique({ where: { id } });
-}
-
 export async function loader({ request }: LoaderArgs) {
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const user = await getLoggedInUser(request);
 
-  const userDB = await getUser(user.id);
-
-  if (!userDB) throw authenticator.logout(request, { redirectTo: '/login' });
-
-  return typedjson({ user: userDB });
+  return typedjson({ user });
 }
 
 const Control = ({ children, ...props }: ControlProps<GlobalSearchResult>) => (

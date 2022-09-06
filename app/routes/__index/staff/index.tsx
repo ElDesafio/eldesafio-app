@@ -18,14 +18,15 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import type { Prisma } from '@prisma/client';
 import { Roles } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdAdd } from 'react-icons/md';
 
 import { LinkED } from '~/components/LinkED';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 import { getUserRoleName } from '~/util/utils';
 
 async function getUsers() {
@@ -37,7 +38,9 @@ async function getUsers() {
   });
 }
 
-export async function loader() {
+export async function loader({ request }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const users = await getUsers();
   return json({ users });
 }

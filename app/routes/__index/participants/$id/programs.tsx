@@ -16,6 +16,7 @@ import {
   createParticipantDiaryAutoEvent,
   updateParticipantYearStatus,
 } from '~/services/participants.service';
+import { getLoggedInUser } from '~/services/users.service';
 import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
 
 import { ProgramBox } from './components/ProgramBox';
@@ -99,6 +100,8 @@ export type GetParticipantProgramsByYear = Prisma.PromiseReturnType<
 >;
 
 export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
   const selectedYear = getSelectedYearFromRequest(request);
 
@@ -127,6 +130,8 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export async function action({ request, params }: ActionArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const user = await authenticator.isAuthenticated(request, {

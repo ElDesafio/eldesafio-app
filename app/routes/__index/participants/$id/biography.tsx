@@ -1,5 +1,4 @@
 import { Button, Divider, Heading, Stack } from '@chakra-ui/react';
-import type { Prisma } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -9,6 +8,7 @@ import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
 import { db } from '~/services/db.server';
+import { getLoggedInUser } from '~/services/users.service';
 
 export async function getParticipant(id: number) {
   return await db.participant.findUnique({
@@ -20,7 +20,9 @@ export async function getParticipant(id: number) {
   });
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
+  await getLoggedInUser(request);
+
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const participant = await getParticipant(+id);

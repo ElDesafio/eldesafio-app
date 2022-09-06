@@ -26,20 +26,19 @@ import {
   AttendanceForm,
   attendanceFormValidator,
 } from '~/components/Attendance/AttendanceForm';
-import { authenticator } from '~/services/auth.server';
 import { getClass } from '~/services/classes.service';
 import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
 
 export async function loader({ request, params }: LoaderArgs) {
+  const loggedinUser = await getLoggedInUser(request);
+
   const { classId } = z.object({ classId: z.string() }).parse(params);
 
   const classItem = await getClass(+classId);
   if (!classItem) {
     throw new Error('Classes not found');
   }
-
-  const loggedinUser = await getLoggedInUser(request);
 
   const isUserAdmin = loggedinUser.isAdmin;
 
@@ -60,13 +59,11 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export async function action({ request, params }: ActionArgs) {
+  const user = await getLoggedInUser(request);
+
   const { id: programId, classId } = z
     .object({ id: z.string(), classId: z.string() })
     .parse(params);
-
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
 
   const url = new URL(request.url);
 
