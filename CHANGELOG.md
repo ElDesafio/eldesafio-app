@@ -1,3 +1,15 @@
+# v0.20.1 (Tue Sep 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Create LICENSE.md ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.20.0 (Tue Sep 06 2022)
 
 ### Release Notes
