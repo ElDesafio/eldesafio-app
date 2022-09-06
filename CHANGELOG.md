@@ -1,3 +1,23 @@
+# v0.20.0 (Tue Sep 06 2022)
+
+### Release Notes
+
+#### call getLoggedInUser on every route ([#147](https://github.com/ElDesafio/eldesafio-app/pull/147))
+
+- use `getLoggedInUser()` on every route so only logged in users can visit them
+
+---
+
+#### 🚀 Enhancement
+
+- call getLoggedInUser on every route [#147](https://github.com/ElDesafio/eldesafio-app/pull/147) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.19.0 (Tue Sep 06 2022)
 
 ### Release Notes
