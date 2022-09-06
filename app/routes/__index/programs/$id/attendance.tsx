@@ -145,7 +145,6 @@ function ClassDateHeader({
   date: Date;
   isRainyDay: boolean;
 }) {
-  //! There is an issue in Prisma. It's returning it as ISO instead of Date object
   const dateLuxon = DateTime.fromJSDate(date, {
     zone: 'utc',
   }).setLocale('es-ES');

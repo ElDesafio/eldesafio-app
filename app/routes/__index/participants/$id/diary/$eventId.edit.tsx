@@ -1,8 +1,8 @@
 import { Box, Container, Heading, useColorModeValue } from '@chakra-ui/react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { redirect } from '@remix-run/node';
 import { DateTime } from 'luxon';
+import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { validationError } from 'remix-validated-form';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
@@ -40,7 +40,7 @@ export async function loader({ params, request }: LoaderArgs) {
     year: eventYear,
   });
 
-  return json({ programs, event, timezone: user.timezone });
+  return typedjson({ programs, event, timezone: user.timezone });
 }
 
 // ACTION
@@ -82,7 +82,7 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function ParticipantDiaryEventEdit() {
-  const { programs, event, timezone } = useLoaderData<typeof loader>();
+  const { programs, event, timezone } = useTypedLoaderData<typeof loader>();
 
   if (!event) throw new Error("Event doesn't exist");
 
@@ -112,7 +112,7 @@ export default function ParticipantDiaryEventEdit() {
           isAutoEvent={event.isAutoEvent}
           defaultValues={{
             type: event.type,
-            date: DateTime.fromISO(event.date as unknown as string)
+            date: DateTime.fromJSDate(event.date)
               .setZone(timezone)
               .toFormat(`yyyy-MM-dd'T'HH:mm`),
             description: event.description ?? undefined,

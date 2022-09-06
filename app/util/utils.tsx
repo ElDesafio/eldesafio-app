@@ -360,9 +360,8 @@ function formatAttendanceChartBarsData(
   > = {};
 
   classes.forEach((classItem) => {
-    //! There is an issue in Prisma. It's returning it as ISO instead of Date object
     const month = (
-      DateTime.fromISO(classItem.date as unknown as string, {
+      DateTime.fromJSDate(classItem.date, {
         zone: 'utc',
       }).setLocale('en-EN').month - 1
     ).toString();

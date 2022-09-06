@@ -1,8 +1,9 @@
 import { Box, Heading, SkeletonCircle } from '@chakra-ui/react';
-import { useFetcher, useParams } from '@remix-run/react';
+import { useParams } from '@remix-run/react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useRef } from 'react';
+import { useTypedFetcher } from 'remix-typedjson';
 
 import { AlertED } from '~/components/AlertED';
 import type { ClassForChart } from '~/util/utils';
@@ -18,7 +19,7 @@ export function ParticipantChartPie({
   const { id } = useParams();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
-  const routeData = useFetcher<ClassForChart[]>();
+  const routeData = useTypedFetcher<{ classes: ClassForChart[] }>();
 
   const params = new URLSearchParams();
 
@@ -32,7 +33,7 @@ export function ParticipantChartPie({
     routeData.load(`/api/participant/${id}/attendance/?${params.toString()}`);
   }, [params.toString()]);
 
-  if (routeData.data && routeData.data.length === 0) {
+  if (routeData.data && routeData.data.classes.length === 0) {
     return null;
   }
 
@@ -52,7 +53,7 @@ export function ParticipantChartPie({
         {routeData?.data ? (
           <HighchartsReact
             highcharts={Highcharts}
-            options={formatProgramChartPieData(routeData.data)}
+            options={formatProgramChartPieData(routeData.data.classes)}
             containerProps={{ style: { maxHeight: '100%' } }}
             ref={chartComponentRef}
           />

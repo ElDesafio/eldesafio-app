@@ -1,8 +1,9 @@
 import { Box, Flex, Spinner } from '@chakra-ui/react';
-import { useFetcher, useParams } from '@remix-run/react';
+import { useParams } from '@remix-run/react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useRef } from 'react';
+import { useTypedFetcher } from 'remix-typedjson';
 
 import type { GetProgramClasses } from '~/services/classes.service';
 import { formatAttendanceChartBarsData } from '~/util/utils';
@@ -11,7 +12,7 @@ export function AttendanceChartBars() {
   const { id } = useParams();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
-  const routeData = useFetcher<{ classes: GetProgramClasses }>();
+  const routeData = useTypedFetcher<{ classes: GetProgramClasses }>();
 
   useEffect(() => {
     routeData.load(

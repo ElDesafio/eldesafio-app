@@ -1,4 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node';
+import { typedjson } from 'remix-typedjson';
 import { z } from 'zod';
 
 import { db } from '~/services/db.server';
@@ -37,11 +38,13 @@ export async function loader({ request, params }: LoaderArgs) {
     },
   });
 
-  return classes.map((classItem) => {
-    return {
-      date: classItem.date,
-      isRainyDay: classItem.isRainyDay,
-      participants: classItem.participants,
-    };
+  return typedjson({
+    classes: classes.map((classItem) => {
+      return {
+        date: classItem.date,
+        isRainyDay: classItem.isRainyDay,
+        participants: classItem.participants,
+      };
+    }),
   });
 }
