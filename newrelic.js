@@ -13,7 +13,7 @@ exports.config = {
   /**
    * Your New Relic license key.
    */
-  license_key: 'd2f38ef2ca2a99146dd7574727b21a33ac69NRAL',
+  license_key: '<license_key>',
   process_host: {
     display_name: 'app',
   },
