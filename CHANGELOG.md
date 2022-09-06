@@ -1,3 +1,39 @@
+# v0.18.0 (Tue Sep 06 2022)
+
+### Release Notes
+
+#### 34-add-tests-with-cypress ([#139](https://github.com/ElDesafio/eldesafio-app/pull/139))
+
+- Added Cypress tests for login and participants
+- FIx db seeding for Cypress
+
+---
+
+#### 🚀 Enhancement
+
+- 34-add-tests-with-cypress [#139](https://github.com/ElDesafio/eldesafio-app/pull/139) ([@lucascurti](https://github.com/lucascurti))
+
+#### 🔩 Dependency Updates
+
+- Update dependency @types/react to v18.0.18 [#140](https://github.com/ElDesafio/eldesafio-app/pull/140) ([@renovate[bot]](https://github.com/renovate[bot]) [@kodiakhq[bot]](https://github.com/kodiakhq[bot]))
+- Update typescript-eslint monorepo to v5.36.2 [#136](https://github.com/ElDesafio/eldesafio-app/pull/136) ([@renovate[bot]](https://github.com/renovate[bot]))
+
+#### ⚠️ Pushed to `main`
+
+- update seed and migrations ([@lucascurti](https://github.com/lucascurti))
+- Merge branch 'main' of ssh://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- change cache folder ([@lucascurti](https://github.com/lucascurti))
+- remove start with migrations ([@lucascurti](https://github.com/lucascurti))
+- add debug ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 3
+
+- [@kodiakhq[bot]](https://github.com/kodiakhq[bot])
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.17.0 (Tue Aug 23 2022)
 
 ### Release Notes
