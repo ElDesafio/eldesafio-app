@@ -1,3 +1,16 @@
+# v0.21.2 (Tue Sep 06 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of ssh://github.com/ElDesafio/eldesafio-app ([@lucascurti](https://github.com/lucascurti))
+- use env variables for new relic ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.21.1 (Tue Sep 06 2022)
 
 #### ⚠️ Pushed to `main`
