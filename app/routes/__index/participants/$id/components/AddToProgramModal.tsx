@@ -42,9 +42,9 @@ export function AddToProgramModal({
   searchParams.delete('addToProgramId');
   const actionURL = pathname + '?' + searchParams.toString();
 
-  const participant = useMatches().find(
+  const { participant } = useMatches().find(
     (m) => m.pathname === `/participants/${id}`,
-  )?.data as GetParticipant;
+  )?.data as { participant: GetParticipant };
 
   if (!participant) throw new Error("Participant doesn't exist");
 
