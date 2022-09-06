@@ -1,9 +1,9 @@
 import type { User } from '@prisma/client';
 import { Authenticator, AuthorizationError } from 'remix-auth';
+import { EmailLinkStrategy } from 'remix-auth-email-link';
 
 import { db } from './db.server';
 import { sendMagicLinkEmail } from './email.server';
-import { EmailLinkStrategy } from './remix-auth-email-link';
 import { sessionStorage } from './session.server';
 
 // This secret is used to encrypt the token sent in the magic link and the
