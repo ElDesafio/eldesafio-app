@@ -25,10 +25,6 @@ describe('Participants', () => {
       cy.findByRole('textbox', { name: 'Correo Electrónico' });
     const findPhone1 = () => cy.findByRole('textbox', { name: 'Teléfono 1' });
     const findPhone2 = () => cy.findByRole('textbox', { name: 'Teléfono 2' });
-    const findPhone1Whatsapp = () =>
-      cy
-        .findAllByRole('checkbox', { name: /Tiene Whatsapp/i })
-        .spread((one, two) => one);
     const findPhone2Whatsapp = () =>
       cy
         .findAllByRole('checkbox', { name: /Tiene Whatsapp/i })

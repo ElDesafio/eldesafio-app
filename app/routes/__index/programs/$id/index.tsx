@@ -47,12 +47,11 @@ import { z } from 'zod';
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
 import { MarkdownEditor } from '~/components/MarkdownEditor/markdown-editor';
+import { ProgramChartPie } from '~/components/Program/ProgramChartPie';
 import { db } from '~/services/db.server';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getDayByName, ProgramSexText } from '~/util/utils';
-
-import { ProgramChartPie } from './components/ProgramChartPie';
 
 enum FormTypeWaiting {
   UP = 'UP',

@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { typedjson, useTypedLoaderData } from 'remix-typedjson';
 import { z } from 'zod';
 
+import { ProgramBox } from '~/components/Participants/ProgramBox';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import {
@@ -18,8 +19,6 @@ import {
 } from '~/services/participants.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getSelectedYearFromRequest, useSelectedYear } from '~/util/utils';
-
-import { ProgramBox } from './components/ProgramBox';
 
 export enum FormTypeAddToProgram {
   ACTIVE = 'ACTIVE',

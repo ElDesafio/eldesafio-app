@@ -10,7 +10,7 @@ export type GlobalSearchResult = {
   type: 'participant' | 'school' | 'program';
 };
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request }: LoaderArgs) {
   await getLoggedInUser(request);
 
   const url = new URL(request.url);

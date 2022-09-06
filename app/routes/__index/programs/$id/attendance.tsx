@@ -24,7 +24,7 @@ import {
 import type { ClassAttendanceStatus } from '@prisma/client';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
-import { useSearchParams, useTransition } from '@remix-run/react';
+import { useSearchParams } from '@remix-run/react';
 import { Select } from 'chakra-react-select';
 import { DateTime, Info } from 'luxon';
 import { FaCloudRain } from 'react-icons/fa';
@@ -198,14 +198,8 @@ function ClassAttendanceCell({ status }: { status: ClassAttendanceStatus }) {
 }
 
 export default function Attendance() {
-  const {
-    classes,
-    participants,
-    isUserAdmin,
-    totalPercentages,
-    activeParticipantsCount,
-  } = useTypedLoaderData<typeof loader>();
-  const transition = useTransition();
+  const { classes, participants, totalPercentages, activeParticipantsCount } =
+    useTypedLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedMonth =
