@@ -3,9 +3,9 @@ import { ParticipantsOnProgramsStatus } from '@prisma/client';
 import { useParams, useSearchParams } from '@remix-run/react';
 
 import { CheckboxCard } from '~/components/CheckboxCard';
+import type { GetParticipantProgramsByYear } from '~/routes/__index/participants/$id/programs';
 import { ProgramSexText } from '~/util/utils';
 
-import type { GetParticipantProgramsByYear } from '../programs';
 import { AddToProgramModal } from './AddToProgramModal';
 import { RemoveFromProgramModal } from './RemoveFromProgramModal';
 

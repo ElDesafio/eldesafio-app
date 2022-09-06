@@ -24,7 +24,7 @@ import {
 import type { ClassAttendanceStatus } from '@prisma/client';
 import { ParticipantsOnProgramsStatus } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
-import { useSearchParams, useTransition } from '@remix-run/react';
+import { useSearchParams } from '@remix-run/react';
 import { Select } from 'chakra-react-select';
 import { DateTime, Info } from 'luxon';
 import { FaCloudRain } from 'react-icons/fa';
@@ -34,12 +34,11 @@ import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
+import { AttendanceChartBars } from '~/components/Program/AttendanceChartBars';
 import { getProgramClasses } from '~/services/classes.service';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getAge, getAttendanceProps } from '~/util/utils';
-
-import { AttendanceChartBars } from './components/AttendanceChartBars';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export async function loader({ request, params }: LoaderArgs) {
@@ -199,14 +198,8 @@ function ClassAttendanceCell({ status }: { status: ClassAttendanceStatus }) {
 }
 
 export default function Attendance() {
-  const {
-    classes,
-    participants,
-    isUserAdmin,
-    totalPercentages,
-    activeParticipantsCount,
-  } = useTypedLoaderData<typeof loader>();
-  const transition = useTransition();
+  const { classes, participants, totalPercentages, activeParticipantsCount } =
+    useTypedLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedMonth =

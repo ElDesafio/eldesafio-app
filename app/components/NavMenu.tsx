@@ -3,7 +3,7 @@ import { Box, Flex, HStack } from '@chakra-ui/react';
 import { useLocation } from '@remix-run/react';
 import { AiOutlineTeam } from 'react-icons/ai';
 import { FaChild, FaSchool } from 'react-icons/fa';
-import { MdOutlineFamilyRestroom, MdSchool } from 'react-icons/md';
+import { MdSchool } from 'react-icons/md';
 
 import { NavItem } from './NavItem';
 

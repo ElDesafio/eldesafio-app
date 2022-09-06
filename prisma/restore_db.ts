@@ -15,6 +15,8 @@ function restoreDB() {
       { shell: true },
     );
 
+    console.log(stdout);
+
     console.log(`✅ DB restored created`);
   } catch (error) {
     console.error(`❌ Error restoring DB: ${(error as Error)?.message}`);

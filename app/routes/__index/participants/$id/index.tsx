@@ -46,6 +46,12 @@ import { AlertED } from '~/components/AlertED';
 import { FormSwitch } from '~/components/Form/FormSwitch';
 import { FormTextArea } from '~/components/Form/FormTextArea';
 import { LinkED } from '~/components/LinkED';
+import {
+  InactiveModal,
+  inactiveModalValidator,
+} from '~/components/Participants/InactiveModal';
+import { ParticipantChartBars } from '~/components/Participants/ParticipantChartBars';
+import { ParticipantChartPie } from '~/components/Participants/ParticipantChartPie';
 import { authenticator } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import {
@@ -66,13 +72,6 @@ import {
   schemaCheckbox,
   useSelectedYear,
 } from '~/util/utils';
-
-import {
-  InactiveModal,
-  inactiveModalValidator,
-} from './components/InactiveModal';
-import { ParticipantChartBars } from './components/ParticipantChartBars';
-import { ParticipantChartPie } from './components/ParticipantChartPie';
 
 const commitmentSchema = z
   .object({

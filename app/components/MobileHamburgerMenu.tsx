@@ -1,5 +1,4 @@
 import { Box } from '@chakra-ui/react';
-import * as React from 'react';
 import { HiOutlineMenu, HiX } from 'react-icons/hi';
 
 interface MobileHamburgerMenuProps {

@@ -17,8 +17,8 @@ import {
   useTransition,
 } from '@remix-run/react';
 
-import type { GetParticipant } from '../../$id';
-import { FormTypeAddToProgram } from '../programs';
+import type { GetParticipant } from '~/routes/__index/participants/$id';
+import { FormTypeAddToProgram } from '~/routes/__index/participants/$id/programs';
 
 type AddToProgramModalProps = {
   isOpen: boolean;

@@ -46,7 +46,7 @@ export async function action({ request, params }: ActionArgs) {
         }))
       : [];
 
-  const event = await db.userDiary.create({
+  await db.userDiary.create({
     data: {
       ...rest,
       date: DateTime.fromISO(rest.date, { zone: user.timezone }).toJSDate(),
