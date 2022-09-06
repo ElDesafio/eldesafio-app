@@ -1,3 +1,23 @@
+# v0.19.0 (Tue Sep 06 2022)
+
+### Release Notes
+
+#### 138-update remix-auth-email-link ([#142](https://github.com/ElDesafio/eldesafio-app/pull/142))
+
+- Update `remix-auth-email-link` and other packages
+
+---
+
+#### 🚀 Enhancement
+
+- 138-update remix-auth-email-link [#142](https://github.com/ElDesafio/eldesafio-app/pull/142) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.18.0 (Tue Sep 06 2022)
 
 ### Release Notes
