@@ -51,7 +51,7 @@ interface CheckboxCardProps extends BoxProps {
 export const CheckboxCard = (
   props: CheckboxCardProps & { dataTest?: string },
 ) => {
-  const { checkboxProps, children, ...rest } = props;
+  const { checkboxProps, children, dataTest, ...rest } = props;
   const { getInputProps, getCheckboxProps, getLabelProps, state } =
     useCheckbox(checkboxProps);
   const id = useId(undefined, 'checkbox-card');
@@ -68,7 +68,7 @@ export const CheckboxCard = (
           zIndex: 1,
         },
       }}
-      data-test={props['dataTest']}
+      data-test={dataTest}
     >
       <input {...getInputProps()} aria-labelledby={id} />
       <Box
@@ -77,7 +77,6 @@ export const CheckboxCard = (
         {...getCheckboxProps()}
         {...rest}
         aria-hidden={false}
-        aria-role="region"
       >
         <Stack direction="row">
           <Box flex="1">{children}</Box>

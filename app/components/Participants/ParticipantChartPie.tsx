@@ -1,11 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Skeleton,
-  SkeletonCircle,
-  Spinner,
-} from '@chakra-ui/react';
+import { Box, Heading, SkeletonCircle } from '@chakra-ui/react';
 import { useFetcher, useParams } from '@remix-run/react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';

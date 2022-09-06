@@ -34,12 +34,11 @@ import { z } from 'zod';
 
 import { AlertED } from '~/components/AlertED';
 import { LinkED } from '~/components/LinkED';
+import { AttendanceChartBars } from '~/components/Program/AttendanceChartBars';
 import { getProgramClasses } from '~/services/classes.service';
 import { getProgramParticipants } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
 import { getAge, getAttendanceProps } from '~/util/utils';
-
-import { AttendanceChartBars } from './components/AttendanceChartBars';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export async function loader({ request, params }: LoaderArgs) {

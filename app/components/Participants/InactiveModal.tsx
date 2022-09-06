@@ -27,14 +27,12 @@ import { z } from 'zod';
 
 import { FormRichTextEditor } from '~/components/Form/FormRichTextEditor';
 import { FormSelect } from '~/components/Form/FormSelect';
+import type { GetParticipant } from '~/routes/__index/participants/$id';
 import {
   convertStringToNumberForZod,
   getParticipantDiaryTypeProps,
   useSelectedYear,
 } from '~/util/utils';
-
-import type { GetParticipant } from '../../$id';
-import { FormTypeAddToProgram } from '../programs';
 
 const inactiveModalSchema = z.object({
   type: z.preprocess(
