@@ -467,6 +467,7 @@ export default function ParticipantGeneral() {
                         placement="top"
                         label="Tiene Whatsapp"
                         alignItems="center"
+                        color="white"
                       >
                         <Box alignItems="center" pt={1}>
                           <Icon color="green.500" as={FaWhatsapp} />
@@ -492,6 +493,7 @@ export default function ParticipantGeneral() {
                         placement="top"
                         label="Tiene Whatsapp"
                         alignItems="center"
+                        color="white"
                       >
                         <Box alignItems="center" pt={1}>
                           <Icon color="green.500" as={FaWhatsapp} />
@@ -538,7 +540,12 @@ export default function ParticipantGeneral() {
           order={{ base: 1, lg: 2 }}
         >
           <Avatar size="2xl" src={participant.picture || undefined} />
-          <Tooltip placement="top-end" hasArrow label={tooltipText}>
+          <Tooltip
+            placement="top-end"
+            hasArrow
+            label={tooltipText}
+            color="white"
+          >
             <Button
               variant={statusBtnVariant}
               colorScheme={statusBtnColor}

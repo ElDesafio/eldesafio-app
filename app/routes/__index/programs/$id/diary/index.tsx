@@ -208,6 +208,7 @@ export default function ParticipantDiary() {
                         <Tooltip
                           placement="top-start"
                           label="Es un evento en el diario del participante"
+                          color="white"
                         >
                           <IconButton
                             fontSize="lg"

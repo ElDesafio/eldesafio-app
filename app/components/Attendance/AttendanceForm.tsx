@@ -127,6 +127,7 @@ export function AttendanceForm({
                             attendant.wasEverActive
                           )
                         }
+                        color="white"
                       >
                         <Avatar src={attendant.picture || undefined}>
                           {attendant.programStatus !== 'ACTIVE' &&
