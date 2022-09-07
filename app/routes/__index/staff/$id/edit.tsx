@@ -25,6 +25,13 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const user = await getUser(+id);
 
+  if (!user) {
+    throw new Response('El usuario no existe', {
+      status: 404,
+      statusText: 'El usuario no existe',
+    });
+  }
+
   return typedjson(user);
 }
 

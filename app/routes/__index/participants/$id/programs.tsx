@@ -116,7 +116,10 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   if (!participant) {
-    throw new Error("Couldn't get participant");
+    throw new Response('El participante no existe', {
+      status: 404,
+      statusText: 'El participante no existe',
+    });
   }
 
   const programs = await getParticipantProgramsByYear(

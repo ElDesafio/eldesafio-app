@@ -9,6 +9,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Outlet,
+  useCatch,
   useLoaderData,
   useLocation,
   useResolvedPath,
@@ -16,6 +17,7 @@ import {
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
+import { ErrorCaught } from '~/components/ErrorCaught';
 import { TabLink } from '~/components/TabLink';
 import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
@@ -37,6 +39,13 @@ export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
   const user = await getUser(+id);
+
+  if (!user) {
+    throw new Response('El usuario no existe', {
+      status: 404,
+      statusText: 'El usuario no existe',
+    });
+  }
 
   return json({ user });
 }
@@ -94,4 +103,10 @@ export default function User() {
       </Box>
     </>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return <ErrorCaught caught={caught} />;
 }

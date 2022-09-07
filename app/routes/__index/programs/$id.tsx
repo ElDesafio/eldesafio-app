@@ -9,12 +9,14 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Outlet,
+  useCatch,
   useLoaderData,
   useLocation,
   useResolvedPath,
 } from '@remix-run/react';
 import { z } from 'zod';
 
+import { ErrorCaught } from '~/components/ErrorCaught';
 import { TabLink } from '~/components/TabLink';
 import { getProgram } from '~/services/programs.service';
 import { getLoggedInUser } from '~/services/users.service';
@@ -25,6 +27,13 @@ export async function loader({ request, params }: LoaderArgs) {
   const { id } = z.object({ id: z.string() }).parse(params);
 
   const program = await getProgram({ id: +id });
+
+  if (!program) {
+    throw new Response('El programa no existe', {
+      status: 404,
+      statusText: 'El programa no existe',
+    });
+  }
 
   return json({ program });
 }
@@ -94,4 +103,10 @@ export default function Program() {
       </Box>
     </>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return <ErrorCaught caught={caught} />;
 }
