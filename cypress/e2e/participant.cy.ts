@@ -146,13 +146,19 @@ describe('Participants', () => {
       cy.findByText('Ya existe un participante con este DNI').should(
         'be.visible',
       );
-      findDNI().type('5835667000');
+      findDNI().clear().type('5835667000');
       findSendButton().click();
+      cy.findByText('Ya existe un participante con este correo').should(
+        'be.visible',
+      );
+      findEmail().clear().type('gabriela@epumer.fake');
+      findSendButton().click();
+      cy.findByRole('heading', { name: 'Participantes' }).should('exist');
       cy.findByText('Gabriela Epumer').should('exist').click();
       cy.findByRole('heading', { name: 'Datos Personales' }).should('exist');
     });
 
-    it.only('should be possible to add/remove/waitlist participant to program', () => {
+    it('should be possible to add/remove/waitlist participant to program', () => {
       cy.intercept({
         method: 'POST',
         url: '/participants/1/programs**',
