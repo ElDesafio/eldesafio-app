@@ -1,6 +1,6 @@
-# What Changed
+## Release Notes
 
-This won't appear in the changelog
+This will appear in the release notes 😃
 
 ## Change Type
 
@@ -15,7 +15,3 @@ Indicate the type of change your pull request is:
 - [ ] `dependencies` - 🔩 Dependency Updates
 - [ ] `performance` - 🏎 Performance
 - [ ] `skip-release`
-
-## Release Notes
-
-This will 😃
