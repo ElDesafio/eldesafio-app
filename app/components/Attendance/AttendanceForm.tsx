@@ -26,7 +26,11 @@ import { FormStack } from '~/components/Form/FormStack';
 import { FormSubmitButton } from '~/components/Form/FormSubmitButton';
 import type { GetClass } from '~/services/classes.service';
 import type { GetProgramParticipants } from '~/services/programs.service';
-import { getAge, schemaCheckbox } from '~/util/utils';
+import {
+  convertStringToNumberForZod,
+  getAge,
+  schemaCheckbox,
+} from '~/util/utils';
 
 import { AlertED } from '../AlertED';
 import { FormRadioAttendance } from '../Form/FormRadioAttendance';
@@ -37,10 +41,15 @@ export const attendanceSchema = z.object({
   isRainyDay: schemaCheckbox,
   attendants: z
     .object({
-      participantId: z.number(),
+      participantId: z.preprocess(
+        convertStringToNumberForZod,
+        z
+          .number({ required_error: 'Asistencia es un campo requerido' })
+          .positive(),
+      ),
       status: z.preprocess(
         (value) => (value === '' ? null : value),
-        z.nativeEnum(ClassAttendanceStatus).nullable().optional(),
+        z.nativeEnum(ClassAttendanceStatus),
       ),
     })
     .array(),
@@ -76,7 +85,7 @@ export function AttendanceForm({
     <ValidatedForm
       validator={attendanceFormValidator}
       defaultValues={defaultValues}
-      action={`?month=${selectedMonth}`}
+      action={selectedMonth !== null ? `?month=${selectedMonth}` : ''}
       method="post"
       noValidate
     >
