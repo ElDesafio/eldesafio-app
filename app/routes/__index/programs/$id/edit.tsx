@@ -27,8 +27,9 @@ export async function loader({ request, params }: LoaderArgs) {
   const program = await getProgram({ id: Number(id) });
 
   if (!program) {
-    throw new Response('Not Found', {
+    throw new Response('El programa no existe', {
       status: 404,
+      statusText: 'El programa no existe',
     });
   }
 

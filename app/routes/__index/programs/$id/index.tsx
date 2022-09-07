@@ -70,7 +70,10 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   if (!program) {
-    throw new Error('Program not found');
+    throw new Response('El programa no existe', {
+      status: 404,
+      statusText: 'El programa no existe',
+    });
   }
 
   const facilitators = program.educators.filter(

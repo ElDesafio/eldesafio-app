@@ -10,6 +10,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Outlet,
+  useCatch,
   useLoaderData,
   useLocation,
   useResolvedPath,
@@ -17,6 +18,7 @@ import {
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 
+import { ErrorCaught } from '~/components/ErrorCaught';
 import { TabLink } from '~/components/TabLink';
 import { db } from '~/services/db.server';
 import { getLoggedInUser } from '~/services/users.service';
@@ -41,14 +43,19 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const participant = await getParticipant(+id);
 
+  if (!participant) {
+    throw new Response('El participante no existe', {
+      status: 404,
+      statusText: 'El participante no existe',
+    });
+  }
+
   return json({ participant });
 }
 
 export default function Participant() {
   const { participant } = useLoaderData<typeof loader>();
   const location = useLocation();
-
-  if (!participant) throw new Error("Participant doesn't exist");
 
   return (
     <>
@@ -151,4 +158,10 @@ export default function Participant() {
       </Box>
     </>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return <ErrorCaught caught={caught} />;
 }

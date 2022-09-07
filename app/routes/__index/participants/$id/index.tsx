@@ -118,7 +118,10 @@ export async function loader({ params, request }: LoaderArgs) {
   const loggedinUser = await getLoggedInUser(request);
 
   if (!participant) {
-    throw new Error('Participant not found');
+    throw new Response('El participante no existe', {
+      status: 404,
+      statusText: 'El participante no existe',
+    });
   }
 
   const isUserAdmin = loggedinUser.isAdmin;
