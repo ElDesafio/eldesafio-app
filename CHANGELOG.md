@@ -1,3 +1,23 @@
+# v0.26.0 (Wed Sep 07 2022)
+
+### Release Notes
+
+#### add CatchBoundary ([#159](https://github.com/ElDesafio/eldesafio-app/pull/159))
+
+- Add `CatchBondary`
+
+---
+
+#### 🚀 Enhancement
+
+- add CatchBoundary [#159](https://github.com/ElDesafio/eldesafio-app/pull/159) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.25.0 (Wed Sep 07 2022)
 
 ### Release Notes
