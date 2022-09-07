@@ -1,3 +1,24 @@
+# v0.25.0 (Wed Sep 07 2022)
+
+### Release Notes
+
+#### Attendance-and-scroll-fixes ([#157](https://github.com/ElDesafio/eldesafio-app/pull/157))
+
+- Fix scroll when toggling programs in participant's general view
+- Fix issue in attendance form
+
+---
+
+#### 🚀 Enhancement
+
+- Attendance-and-scroll-fixes [#157](https://github.com/ElDesafio/eldesafio-app/pull/157) ([@lucascurti](https://github.com/lucascurti))
+
+#### Authors: 1
+
+- Lucas Curti ([@lucascurti](https://github.com/lucascurti))
+
+---
+
 # v0.24.0 (Tue Sep 06 2022)
 
 ### Release Notes
