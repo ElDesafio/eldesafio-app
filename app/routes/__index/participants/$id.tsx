@@ -38,6 +38,7 @@ export type GetParticipant = Prisma.PromiseReturnType<typeof getParticipant>;
 
 export async function loader({ request, params }: LoaderArgs) {
   await getLoggedInUser(request);
+  // comment
 
   const { id } = z.object({ id: zfd.numeric() }).parse(params);
 
