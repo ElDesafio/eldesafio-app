@@ -18,6 +18,7 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLocation,
   useTransition,
 } from '@remix-run/react';
 import type React from 'react';
@@ -41,6 +42,18 @@ type DocumentProps = {
   children: React.ReactNode;
   title?: string;
 };
+
+function ConditionalScrollRestoration() {
+  const location = useLocation();
+  if (
+    location.state != null &&
+    typeof location.state === 'object' &&
+    (location.state as { scroll: boolean }).scroll === false
+  ) {
+    return null;
+  }
+  return <ScrollRestoration />;
+}
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -150,7 +163,7 @@ const Document = withEmotionCache(
               <ClientOnly>
                 {() => <ProgressBar isAnimating={isTransitioning} />}
               </ClientOnly>
-              <ScrollRestoration />
+              <ConditionalScrollRestoration />
               <Scripts />
             </ChakraProvider>
           </SocketProvider>
