@@ -1,3 +1,15 @@
+# v0.27.1 (Thu Sep 08 2022)
+
+#### 🔩 Dependency Updates
+
+- Update remix monorepo to v1.7.0 [#144](https://github.com/ElDesafio/eldesafio-app/pull/144) ([@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 1
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+
+---
+
 # v0.27.0 (Wed Sep 07 2022)
 
 ### Release Notes
