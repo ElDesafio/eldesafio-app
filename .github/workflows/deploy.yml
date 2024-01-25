@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -90,7 +90,7 @@ jobs:
     steps:
       - name: 🛑 Cancel Previous Runs
         id: cancel-previous-runs-deploy
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -131,7 +131,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
