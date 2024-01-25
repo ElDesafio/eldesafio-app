@@ -17,7 +17,7 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -63,7 +63,7 @@ jobs:
     if: ${{ false }} # disable for now
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -86,7 +86,7 @@ jobs:
     if: ${{ false }} # disable for now
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
