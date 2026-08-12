@@ -62,7 +62,7 @@
     "chakra-react-select": "4.2.1",
     "compression": "1.7.4",
     "cross-env": "7.0.3",
-    "crypto-js": "4.1.1",
+    "crypto-js": "4.2.0",
     "dotenv": "16.0.2",
     "execa": "5.1.1",
     "express": "4.18.1",
