@@ -73,7 +73,7 @@
     "isbot": "3.5.2",
     "lodash": "4.17.21",
     "luxon": "3.0.3",
-    "morgan": "1.10.0",
+    "morgan": "1.11.0",
     "mudder": "2.1.0",
     "newrelic": "9.0.2",
     "patch-package": "6.4.7",
