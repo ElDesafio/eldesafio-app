@@ -75,7 +75,7 @@
     "luxon": "3.0.3",
     "morgan": "1.10.0",
     "mudder": "2.1.0",
-    "newrelic": "9.0.2",
+    "newrelic": "9.15.0",
     "patch-package": "6.4.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
