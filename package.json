@@ -37,7 +37,7 @@
     "/public/build"
   ],
   "dependencies": {
-    "@babel/core": "7.18.13",
+    "@babel/core": "7.29.6",
     "@babel/eslint-parser": "7.18.9",
     "@babel/preset-react": "7.18.6",
     "@chakra-ui/react": "2.3.1",
