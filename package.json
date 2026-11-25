@@ -86,7 +86,7 @@
     "remix-typedjson": "0.1.1",
     "remix-utils": "3.3.0",
     "remix-validated-form": "4.5.5",
-    "socket.io": "4.5.2",
+    "socket.io": "4.6.2",
     "socket.io-client": "4.5.2",
     "tiny-invariant": "1.2.0",
     "tzdata": "1.0.32",
